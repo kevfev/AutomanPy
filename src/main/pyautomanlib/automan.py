@@ -38,13 +38,13 @@ class Automan():
 		self.adptr = pyAutomanlib.make_adapter(adapter["access_id"], adapter["access_key"], sandbox_mode=adapter["sandbox_mode"]) if pyAutomanlib.isGoodAadapter(adapter) else None
 		self.srvr_addr = server_addr
 		self.port = port
-		self.channel = self.init_channel(server_addr, port)
-
+		
+		# check adapter to ensure it passed validation
 		if self.adptr is None:
 			sys.exit("Invalid adapter, check parameters used")
 
 		# set up channel, connect to gRPC server, register adapter credentials with server
-		self.stub = self.init_channel(server_addr, port)
+		self._init_channel(server_addr, port)
 		pyAutomanlib.register_adapter_to_server(self.channel, self.adptr)
 
 	def _handleResponse(self,response):
@@ -69,6 +69,7 @@ class Automan():
 
         """
 		ret_string = None
+
 		if response.return_code == TaskResponse.VALID:
 			return response.outcome
 		if response.return_code == TaskResponse.UNDEFINED_RESP_CODE:
@@ -105,6 +106,7 @@ class Automan():
 
         """
 		self.channel = pyAutomanlib.make_channel(server_addr,str(port))
+		return 
 
 	def estimate(self, text, budget, title, image_url):
 		"""
@@ -141,6 +143,6 @@ class Automan():
 	    								title_ = title,
 	    								image_url_ = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2")
 		resp = pyAutomanlib.submit_task(self.channel, task)
-		outcome = self.handleResponse(resp)
+		outcome = self._handleResponse(resp)
 
 		return outcome

@@ -18,6 +18,7 @@ message Task{
 	string title = 9;
 	string img_alt_txt = 10;
 	bool dry_run = 33;
+	int32 question_timeout_multiplier = 34;
 
 }
 

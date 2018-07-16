@@ -241,5 +241,5 @@ def register_adapter_to_server(channel_, adptr_):
 	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, check application version
 	"""
 	client_stub = _make_client_stub(channel_)
-	response = client_stub.RegisterAdapter(adptr)
+	response = client_stub.RegisterAdapter(adptr_)
 	return response
