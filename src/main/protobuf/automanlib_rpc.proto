@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+import "automanlib_classes.proto";
+
+service EstimationPrototype {
+	rpc KillServer(Empty) returns (ServerStatusResponse) {}
+	rpc RegisterAdapter(AdapterCredentials) returns (RegistrationResponse) {}
+	rpc SubmitTask(AutomanTask) returns (TaskResponse) {}
+	rpc ServerStatus(Empty) returns (ServerStatusResponse) {}
+}
+
+message AutomanTask{
+	Task request = 1 ;
+}
+
+message TaskResponse{
+	enum TaskReturnCode{
+		UNDEFINED_RESP_CODE = 0;
+		VALID = 1;
+		ERROR = 2;
+		EXCEPTION = 3;
+	} 
+	enum ExceptionCode{
+		UNDEFINED_EXCPTION_CODE = 0;
+	}
+	enum ErrorCode{
+		UNDEFINED_ERROR_CODE = 0;
+		NO_CREDENTIALS_REGISTERED = 1;
+	}
+	TaskOutcome outcome = 1;
+	TaskReturnCode return_code = 2;
+	ExceptionCode excep_code = 3;
+	ErrorCode err_code = 4;
+	string err_msg = 5;
+	string excep_msg = 6;
+}
+
+message RegistrationResponse{
+	enum RegReturnCode{
+		UNDEFINED_CODE = 0;
+		OKAY = 1;
+		FAILED = 2;
+	} 
+	RegReturnCode return_code = 1;
+ 	string message = 2;
+}
+
+message ServerStatusResponse{
+	enum StatReturnCode{
+		UNDEFINED_STATUS_CODE = 0;
+		RUNNING = 1;
+		KILLED = 2;
+	} 
+	StatReturnCode return_code = 1;
+}
+
+message Empty{
+	
+}

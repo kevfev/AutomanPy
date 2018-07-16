@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+
+message Task{
+	enum TaskType{
+		UNKNOWN=0;
+		ESTIMATE=1;
+		RADIO=2;
+	}
+	TaskType task_type = 1;
+	string text = 2;
+	string img_url = 3;
+	double budget = 4;
+	double confidence = 5;
+	int32 default_sample_size=6;
+	repeated string options = 7;
+	repeated Dimension dimensions = 8;
+	string title = 9;
+	string img_alt_txt = 10;
+	bool dry_run = 33;
+
+}
+
+message Dimension{
+	string id = 1;
+}
+
+message TaskOutcome{
+	repeated OutcomeAnswer answer = 1;
+	enum OutcomeType{
+		UNKNOWN = 0;
+		ESTIMATE = 1;
+		LOW_CONFIDENCE_EST = 2;
+		OVER_BUDGET_EST = 3;
+		ANSWER=4;
+		LOW_CONFIDENCE_ANSWER = 5;
+		OVERBUDGET_ANSWER =6;
+		MULTIESTIMATE=7;
+		LOW_CONFIDENCE_MULTIESTIMATE = 8;
+		OVER_BUDGET_MULTIESTIMATE = 9;
+		ANSWERS = 10;
+		INCOMPLETE_ANSWERS = 11;
+		OVER_BUDGET_ANSWERS = 12;
+	}
+	OutcomeType outcome_type = 2;
+}
+
+message EstimateOutcome{
+	double est = 1;
+	double low = 2;
+	double high = 3;
+	double cost = 4;
+	double conf = 5;
+
+}
+
+message OverBudgetOutcome{
+	double need = 1;
+	double have = 2;
+}
+
+message OutcomeAnswer{
+	oneof from{
+		OverBudgetOutcome overBudgetAnswer = 1;
+		EstimateOutcome estimateAnswer = 2;
+	}
+}
+
+message AdapterCredentials{
+	enum AdapterType{
+		UNKNOWN = 0;
+		MTURK = 1;
+	}
+	AdapterType adptr_type = 1;
+	string access_id  = 2;
+	string access_key = 3;
+	map<string, string> adapter_options = 4;
+}
