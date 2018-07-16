@@ -38,7 +38,7 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 									.withErrMsg("ERROR: Invalid task"); 
 							println("ERROR: Invalid task");
 			}
-			val tr: TaskResponse = response
+			val tr: TaskResponse = response;
 			Future.successful(tr);
 		}
 
@@ -70,18 +70,18 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 			   sandbox_mode = adptr.adapterOptions("sandbox_mode").toBoolean
 			)
 						
-			def est(title_ : String ,text_ : String, budget_ : Double, image_url_ : String) = estimate(
-				default_sample_size = 2,
+			def est(title_ : String ,text_ : String, budget_ : Double, image_url_ : String, def_samp_size: Int = -1, ques_timeout_mult: Int = 500) = estimate(
+				default_sample_size = def_samp_size,
 				text = text_ ,
 				title = title_ ,
 				image_url = image_url_ ,
 				budget = budget_ ,
-				question_timeout_multiplier = 3
+				question_timeout_multiplier = ques_timeout_mult
 			)
 			
 			automan(mt) {
 				// ask humans for answers
-				val outcome = est(title_ = task.title, text_ =task.text, budget_ =task.budget, image_url_ =task.imgUrl);
+				val outcome = est(title_ = task.title, text_ =task.text, budget_ =task.budget, image_url_ =task.imgUrl, ques_timeout_mult=3, def_samp_size=2);
 				var ans = TaskOutcome()
 				outcome.answer match{
 					case Estimate(est, low, high, cost, conf, _, _) => 

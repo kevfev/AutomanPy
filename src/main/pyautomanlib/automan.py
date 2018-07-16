@@ -3,6 +3,103 @@ from core.automanlib_rpc_pb2 import TaskResponse
 import random
 import sys
 
+class EstimateOutcome():
+	"""
+	The Outcome Class. This class holds the result of an Automan computation
+
+    Attributes
+    ----------
+    outcome : OutcomeAnswer
+        An outcome returned from the gRPC server, the result of the automan computation
+    outcome_type : int
+    	An int representing the type of the outcome. Possible values are:
+    	UNKNOWN = 0;
+		ESTIMATE = 1;
+		LOW_CONFIDENCE_EST = 2;
+		OVER_BUDGET_EST = 3;
+		ANSWER=4;
+		LOW_CONFIDENCE_ANSWER = 5;
+		OVERBUDGET_ANSWER =6;
+		MULTIESTIMATE=7;
+		LOW_CONFIDENCE_MULTIESTIMATE = 8;
+		OVER_BUDGET_MULTIESTIMATE = 9;
+		ANSWERS = 10;
+		INCOMPLETE_ANSWERS = 11;
+		OVER_BUDGET_ANSWERS = 12;
+
+	"""
+
+	def __init__(self, outcome, outcome_type):
+		"""
+		Ensure necessary fields in adapter are initializated and
+		set up the gRPC channel
+
+		Parameters
+		----------
+		outcome : OutcomeAnswer
+			An outcome returned from the gRPC server, the result of the automan computation
+		outcome_type : int 
+			An int representing the type of the outcome. Possible values are:
+		"""
+		self.outcome = outcome
+		self.outcome_type = outcome_type
+		self.low = None
+		self.high = None
+		self.est = None
+		self.cost = None
+		self.conf = None
+		self.need = None
+		self.have = None
+
+		self.types_outcome = {'ESTIMATE':1, 'LOW_CONFIDENCE_EST':2, 'OVER_BUDGET_EST':3}
+
+		if self.isEstimate() or self.isLowConfidence():
+			self.low = self.outcome[0].estimateAnswer.low;
+			self.high = self.outcome[0].estimateAnswer.high;
+			self.est = self.outcome[0].estimateAnswer.est;
+			self.conf = self.outcome[0].estimateAnswer.conf;
+			self.cost = self.outcome[0].estimateAnswer.cost;
+
+		if self.isOverBudget():
+			self.need = self.outcome[0].estimateAnswer.need;
+			self.have = self.outcome[0].estimateAnswer.have;
+
+	def isEstimate(self):
+		"""
+		Indicates that the type of the outcome is an Estimate
+
+		Returns
+		-------
+		bool
+			True if outcome is an estimate
+		False otherwise
+		"""
+		return self.types_outcome['ESTIMATE'] == self.outcome_type
+
+	def isLowConfidence(self):
+		"""
+		Indicates that the type of the outcome is a Low Confidence Estimate
+
+		Returns
+		-------
+		bool
+			True if outcome is a low confidence estimate
+			False otherwise
+		"""
+		return self.types_outcome['LOW_CONFIDENCE_EST'] == self.outcome_type
+
+	def isOverBudget(self):
+		"""
+		Indicates that the outcome is over budget
+
+		Returns
+		-------
+		bool
+			True if outcome is over budget
+			False otherwise
+		"""
+		return self.types_outcome['OVER_BUDGET_EST'] == self.outcome_type
+
 class Automan():
 	"""
 	The Automan Class.
@@ -143,6 +240,6 @@ class Automan():
 	    								title_ = title,
 	    								image_url_ = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2")
 		resp = pyAutomanlib.submit_task(self.channel, task)
-		outcome = self._handleResponse(resp)
-
-		return outcome
+		o = self._handleResponse(resp)
+		o = EstimateOutcome(outcome=o.answer, outcome_type=o.outcome_type)
+		return o
