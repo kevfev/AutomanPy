@@ -74,7 +74,7 @@ if(estim.isOverBudget()):
 	print("Outcome: Over Budget")
 	print(" need: %f have:%f"%(estim.need, estim.have))
 ````
-
+A single response was submitted for this query, generating a Low Confidence estimate.
 Output:
 ```
 Outcome: Low Confidence Estimate
