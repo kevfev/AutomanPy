@@ -74,3 +74,9 @@ if(estim.isOverBudget()):
 	print("Outcome: Over Budget")
 	print(" need: %f have:%f"%(estim.need, estim.have))
 ````
+
+Output:
+```
+Outcome: Low Confidence Estimate
+Estimate low: 62.000000 high:62.000000 est:62.000000 
+```
