@@ -6,6 +6,57 @@ This .proto file defins the rpc service and the messages sent
 and received by the various rpc method calls. 
 *****/
 
+
+/*****
+This service is a prototype of the Estimation functionality of
+AutoMan only. 
+RPC methods:
+
+KillServer 
+	This method shuts the rpc server down
+parameters:
+	None
+returns:
+	ServerStatusResponse
+		Indicates the current status of the server, "KILLED" if the
+		method was successful
+
+RegisterAdapter 
+	Registers a crowdsource back-end for the AutoMan server to use for
+	authentication
+parameters:
+	AdapterCredentials 
+returns:
+	RegistrationResponse
+		Indicates if the credentials were registered successfully or not
+
+
+ServerStatus 
+	Reports the status of the server
+parameters:
+	None 
+returns:
+	ServerStatusResponse
+		Indicates the current status of the server, either "RUNNING" or 
+		"KILLED"
+
+
+SubmitTask 
+	Submits a task to the AutoMan server to post to the crowdsource back-end
+parameters:
+	AutomanTask 
+returns:
+	TaskResponse
+		A response from the Automan server on the submitted task
+		If the response code is VALID, the 
+		task was completed successfully and one of task_outcome will be set depending
+		on the respective task.
+		If the response code was ERROR, an error occured and the err_code and err_msg
+		fields will be set.
+		If the response code was EXCEPTION, an exception occured and the excep_code
+		and excep_msg fields will be set.
+
+*****/
 service EstimationPrototype {
 	rpc KillServer(Empty) returns (ServerStatusResponse) {}
 	rpc RegisterAdapter(AdapterCredentials) returns (RegistrationResponse) {}
@@ -13,6 +64,11 @@ service EstimationPrototype {
 	rpc ServerStatus(Empty) returns (ServerStatusResponse) {}
 }
 
+
+/*
+This message class is a wrapper for the different types of 
+tasks that can be submitted 
+*/
 message AutomanTask{
 	oneof task_type{
 		EstimateTask est_task = 1;
@@ -26,6 +82,27 @@ message AutomanTask{
 	}
 }
 
+
+/*
+This message class is the server response to a submitted task
+fields:
+return_code 				The type of response from the server
+
+*_outcome 					* is replaced by est, mest, free, etc. from the oneof field. The outcome
+							of the AutoMan task, set if return_code is VALID
+
+err_msg 					A message about the type of error that occured, set if return_code is 
+							ERROR
+
+err_code 					A code representing the type of error that occured, set if return_code is 
+							ERROR
+
+excep_msg 					A message about the type of exception that occured, set if return_code is 
+							EXCEPTION
+
+excep_code 					A code representing the type of exception that occured, set if return_code is 
+							EXCEPTION
+*/
 message TaskResponse{
 	enum TaskReturnCode{
 		UNDEFINED_RESP_CODE = 0;
@@ -59,6 +136,14 @@ message TaskResponse{
 	string excep_msg = 19;
 }
 
+
+/*
+This message class is the server response to registering an adapter
+fields:
+return_code 				Indicates whether the adapter was registered successfully
+							or not
+message 					error message, set if the adapter could not be added
+*/
 message RegistrationResponse{
 	enum RegReturnCode{
 		UNDEFINED_CODE = 0;
@@ -66,9 +151,16 @@ message RegistrationResponse{
 		FAILED = 2;
 	} 
 	RegReturnCode return_code = 1;
- 	string message = 2;
+ 	string err_msg = 2;
 }
 
+
+This message class is the server response to registering an adapter
+fields:
+return_code 				Indicates the status of the server, either
+							RUNNING or KILLED depending of the server process
+							is in a alive or has been shutdown
+*/
 message ServerStatusResponse{
 	enum StatReturnCode{
 		UNDEFINED_STATUS_CODE = 0;

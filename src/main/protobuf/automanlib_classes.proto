@@ -23,6 +23,7 @@ AutoMan can perform, i.e. estimate, radio, etc. It contains all fields
 used across tasks. For some types of tasks, some fields may not be applicable,
 e.g. the options field for an estimation task. It is up to the API  to ensure 
 tasks are generated correctly and validated. 
+
 Fields to be added still:
 minimum_spawn_policy (estimate)
 estimator (estimate)
@@ -56,7 +57,6 @@ message Task{
 
 /*
 This message class is part of the reply for an estimation task
-
 fields:
 high 				The highest valued response of a worker
 
@@ -79,7 +79,6 @@ message ValueOutcome{
 /*
 This message class is part of the reply for freetext,radio,
 checkbook and their associated distribution tasks
-
 fields:
 option 				The result of the AutoMan task
 */
@@ -119,7 +118,6 @@ for the back-end crowdsource to AutoMan
 /*
 This message class defines the adapter used to connect to the
 crowdsource backend.
-
 fields:
 adptr_type  		specifies the back-end the adapter connects to
 
