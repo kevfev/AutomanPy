@@ -1,0 +1,254 @@
+syntax = "proto3";
+import "automanlib_classes.proto";
+
+/*****
+This .proto file defines the wrapper classes for the different types of
+tasks and replies to tasks from AutoMan. 
+*****/
+
+/*****
+TASKS:
+These are wrapper classes convenient for Scala pattern matching for AutoMan server.
+These wrapper classes represent the different types of tasks that a user can submit to
+AutoMan.  
+*****/
+
+message EstimateTask{
+	Task task = 1;
+}
+
+message MultiestimateTask{
+	Task task = 1;
+}
+
+message FreetextTask{
+	Task task = 1;
+}
+
+message FreetextDistTask{
+	Task task = 1;
+}
+
+message RadioTask{
+	Task task = 1;
+}
+
+message RadioDistTask{
+	Task task = 1;
+}
+
+message CheckboxTask{
+	Task task = 1;
+}
+
+message CheckboxDistTask{
+	Task task = 1;
+}
+
+
+
+/*****
+OUTCOMES:
+These are wrapper classes for a general outcome
+*****/
+
+/*
+This message class is part reply for an estimation task.
+If the outcome was OVERBUDGET, need and have will be set to the 
+values returned by AutoMan. If the outcome is CONFIDENT, or 
+LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
+will be set to the estimate.
+
+fields:
+answer  		the result of the AutoMan task, only set if the outcome_type
+				is CONFIDENT or LOW_CONFIDENCE
+
+outcome_type  	the type of outcome, can be one of : CONFIDENT,
+				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				default value (good practice for future types)
+
+need  			the amount of funds needed by AutoMan for the budget, only set
+				if the outcome_type is OVERBUDGET
+*/
+message EstimateOutcome{
+	ValueOutcome answer = 1;
+	OutcomeType outcome_type = 2;
+	double need = 3;
+	double have = 4;
+}
+
+
+/*
+This message class is part reply for an multiestimation task.
+If the outcome was OVERBUDGET, need and have will be set to the 
+values returned by AutoMan. If the outcome is CONFIDENT, or 
+LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
+will be set to the estimate.
+
+fields:
+answer  		the result of the AutoMan task, only set if the outcome_type
+				is CONFIDENT or LOW_CONFIDENCE
+
+outcome_type  	the type of outcome, can be one of : CONFIDENT,
+				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				default value (good practice for future types)
+
+need  			the amount of funds needed by AutoMan for the budget, only set
+				if the outcome_type is OVERBUDGET
+*/
+message MultiestimateOutcome{
+	repeated ValueOutcome answer = 1;
+	OutcomeType outcome_type = 2;
+	double need = 3;
+	double have = 4;
+}
+
+/*
+This message class is part reply for an freetext task.
+If the outcome was OVERBUDGET, need and have will be set to the 
+values returned by AutoMan. If the outcome is CONFIDENT, or 
+LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
+will be set to the estimate.
+
+fields:
+answer  		the result of the AutoMan task, only set if the outcome_type
+				is CONFIDENT or LOW_CONFIDENCE
+
+outcome_type  	the type of outcome, can be one of : CONFIDENT,
+				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				default value (good practice for future types)
+
+need  			the amount of funds needed by AutoMan for the budget, only set
+				if the outcome_type is OVERBUDGET
+*/
+message FreetextOutcome{
+	StringOutcome answer = 1;
+	OutcomeType outcome_type = 2;
+	double need = 3;
+	double have = 4;
+}
+
+/*
+This message class is part reply for an freetext distribution task.
+If the outcome was OVERBUDGET, need and have will be set to the 
+values returned by AutoMan. If the outcome is CONFIDENT, or 
+LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
+will be set to the estimate.
+
+fields:
+answer  		the result of the AutoMan task, only set if the outcome_type
+				is CONFIDENT or LOW_CONFIDENCE
+
+outcome_type  	the type of outcome, can be one of : CONFIDENT,
+				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				default value (good practice for future types)
+
+need  			the amount of funds needed by AutoMan for the budget, only set
+				if the outcome_type is OVERBUDGET
+*/
+message FreetextDistOutcome{
+	repeated StringOutcome answer = 1;
+	OutcomeType outcome_type = 2;
+	double need = 3;
+	double have = 4;
+}
+
+/*
+This message class is part reply for an checkbox task.
+If the outcome was OVERBUDGET, need and have will be set to the 
+values returned by AutoMan. If the outcome is CONFIDENT, or 
+LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
+will be set to the estimate.
+
+fields:
+answer  		the result of the AutoMan task, only set if the outcome_type
+				is CONFIDENT or LOW_CONFIDENCE
+
+outcome_type  	the type of outcome, can be one of : CONFIDENT,
+				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				default value (good practice for future types)
+
+need  			the amount of funds needed by AutoMan for the budget, only set
+				if the outcome_type is OVERBUDGET
+*/
+message CheckboxOutcome{
+	repeated StringOutcome answer = 1;
+	OutcomeType outcome_type = 2;
+	double need = 3;
+	double have = 4;
+}
+
+/*
+This message class is part reply for an checkbox distribution task.
+If the outcome was OVERBUDGET, need and have will be set to the 
+values returned by AutoMan. If the outcome is CONFIDENT, or 
+LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
+will be set to the estimate.
+
+fields:
+answer  		the result of the AutoMan task, only set if the outcome_type
+				is CONFIDENT or LOW_CONFIDENCE
+
+outcome_type  	the type of outcome, can be one of : CONFIDENT,
+				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				default value (good practice for future types)
+
+need  			the amount of funds needed by AutoMan for the budget, only set
+				if the outcome_type is OVERBUDGET
+*/
+message CheckboxDistOutcome{
+	repeated StringOutcome answer = 1;
+	OutcomeType outcome_type = 2;
+	double need = 3;
+	double have = 4;
+}
+
+/*
+This message class is part reply for an radio task.
+If the outcome was OVERBUDGET, need and have will be set to the 
+values returned by AutoMan. If the outcome is CONFIDENT, or 
+LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
+will be set to the estimate.
+
+fields:
+answer  		the result of the AutoMan task, only set if the outcome_type
+				is CONFIDENT or LOW_CONFIDENCE
+
+outcome_type  	the type of outcome, can be one of : CONFIDENT,
+				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				default value (good practice for future types)
+
+need  			the amount of funds needed by AutoMan for the budget, only set
+				if the outcome_type is OVERBUDGET
+*/
+message RadioOutcome{
+	StringOutcome answer = 1;
+	OutcomeType outcome_type = 2;
+	double need = 3;
+	double have = 4;
+}
+
+/*
+This message class is part reply for an radio distribution task.
+If the outcome was OVERBUDGET, need and have will be set to the 
+values returned by AutoMan. If the outcome is CONFIDENT, or 
+LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
+will be set to the estimate.
+
+fields:
+answer  		the result of the AutoMan task, only set if the outcome_type
+				is CONFIDENT or LOW_CONFIDENCE
+
+outcome_type  	the type of outcome, can be one of : CONFIDENT,
+				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				default value (good practice for future types)
+
+need  			the amount of funds needed by AutoMan for the budget, only set
+				if the outcome_type is OVERBUDGET
+*/
+message RadioDistOutcome{
+	StringOutcome answer = 1;
+	OutcomeType outcome_type = 2;
+	double need = 3;
+	double have = 4;
+}

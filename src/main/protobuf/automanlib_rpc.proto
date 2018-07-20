@@ -1,6 +1,10 @@
 syntax = "proto3";
+import "automanlib_wrappers.proto";
 
-import "automanlib_classes.proto";
+/*****
+This .proto file defins the rpc service and the messages sent
+and received by the various rpc method calls. 
+*****/
 
 service EstimationPrototype {
 	rpc KillServer(Empty) returns (ServerStatusResponse) {}
@@ -10,7 +14,16 @@ service EstimationPrototype {
 }
 
 message AutomanTask{
-	Task request = 1 ;
+	oneof task_type{
+		EstimateTask est_task = 1;
+		MultiestimateTask mest_task = 2;
+		FreetextTask free_task = 3;
+		FreetextDistTask free_dist_task = 4;
+		RadioTask radio_task = 5;
+		RadioDistTask radio_dist_task = 6;
+		CheckboxTask check_task = 7;
+		CheckboxDistTask check_dist_task = 8;
+	}
 }
 
 message TaskResponse{
@@ -27,12 +40,23 @@ message TaskResponse{
 		UNDEFINED_ERROR_CODE = 0;
 		NO_CREDENTIALS_REGISTERED = 1;
 	}
-	TaskOutcome outcome = 1;
-	TaskReturnCode return_code = 2;
-	ExceptionCode excep_code = 3;
-	ErrorCode err_code = 4;
-	string err_msg = 5;
-	string excep_msg = 6;
+
+	TaskReturnCode return_code = 1;
+	oneof task_outcome{
+		EstimateOutcome est_outcome = 2;
+		MultiestimateOutcome mest_outcome = 3;
+		RadioOutcome rad_outcome = 4;
+		RadioDistOutcome raddist_outcome = 5;
+		FreetextOutcome free_outcome = 6;
+		FreetextDistOutcome freedist_outocme = 7;
+		CheckboxOutcome chec_outcome = 8;
+		CheckboxDistOutcome checdist_outcome = 9;
+	}
+
+	ExceptionCode excep_code = 16;
+	ErrorCode err_code = 17;
+	string err_msg = 18;
+	string excep_msg = 19;
 }
 
 message RegistrationResponse{
