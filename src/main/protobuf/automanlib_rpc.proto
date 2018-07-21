@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "automanlib_wrappers.proto";
+import "automanlib_classes.proto";
 
 /*****
 This .proto file defins the rpc service and the messages sent
@@ -13,48 +14,48 @@ AutoMan only.
 RPC methods:
 
 KillServer 
-	This method shuts the rpc server down
-parameters:
-	None
-returns:
-	ServerStatusResponse
-		Indicates the current status of the server, "KILLED" if the
-		method was successful
+		This method shuts the rpc server down
+	parameters:
+		None
+	returns:
+		ServerStatusResponse
+			Indicates the current status of the server, "KILLED" if the
+			method was successful
 
 RegisterAdapter 
-	Registers a crowdsource back-end for the AutoMan server to use for
-	authentication
-parameters:
-	AdapterCredentials 
-returns:
-	RegistrationResponse
-		Indicates if the credentials were registered successfully or not
+		Registers a crowdsource back-end for the AutoMan server to use for
+		authentication
+	parameters:
+		AdapterCredentials 
+	returns:
+		RegistrationResponse
+			Indicates if the credentials were registered successfully or not
 
 
 ServerStatus 
-	Reports the status of the server
-parameters:
-	None 
-returns:
-	ServerStatusResponse
-		Indicates the current status of the server, either "RUNNING" or 
-		"KILLED"
+		Reports the status of the server
+	parameters:
+		None 
+	returns:
+		ServerStatusResponse
+			Indicates the current status of the server, either "RUNNING" or 
+			"KILLED"
 
 
 SubmitTask 
-	Submits a task to the AutoMan server to post to the crowdsource back-end
-parameters:
-	AutomanTask 
-returns:
-	TaskResponse
-		A response from the Automan server on the submitted task
-		If the response code is VALID, the 
-		task was completed successfully and one of task_outcome will be set depending
-		on the respective task.
-		If the response code was ERROR, an error occured and the err_code and err_msg
-		fields will be set.
-		If the response code was EXCEPTION, an exception occured and the excep_code
-		and excep_msg fields will be set.
+		Submits a task to the AutoMan server to post to the crowdsource back-end
+	parameters:
+		AutomanTask 
+	returns:
+		TaskResponse
+			A response from the Automan server on the submitted task
+			If the response code is VALID, the 
+			task was completed successfully and one of task_outcome will be set depending
+			on the respective task.
+			If the response code was ERROR, an error occured and the err_code and err_msg
+			fields will be set.
+			If the response code was EXCEPTION, an exception occured and the excep_code
+			and excep_msg fields will be set.
 
 *****/
 service EstimationPrototype {
@@ -120,14 +121,14 @@ message TaskResponse{
 
 	TaskReturnCode return_code = 1;
 	oneof task_outcome{
-		EstimateOutcome est_outcome = 2;
-		MultiestimateOutcome mest_outcome = 3;
-		RadioOutcome rad_outcome = 4;
-		RadioDistOutcome raddist_outcome = 5;
-		FreetextOutcome free_outcome = 6;
-		FreetextDistOutcome freedist_outocme = 7;
-		CheckboxOutcome chec_outcome = 8;
-		CheckboxDistOutcome checdist_outcome = 9;
+		EstimateOutcome estimate_outcome = 2;
+		MultiestimateOutcome multiestimate_outcome = 3;
+		RadioOutcome radio_outcome = 4;
+		RadioDistOutcome radio_dist_outcome = 5;
+		FreetextOutcome freetext_outcome = 6;
+		FreetextDistOutcome freetext_dist_outcome = 7;
+		CheckboxOutcome checkbox_outcome = 8;
+		CheckboxDistOutcome checkbox_dist_outcome = 9;
 	}
 
 	ExceptionCode excep_code = 16;
@@ -154,7 +155,7 @@ message RegistrationResponse{
  	string err_msg = 2;
 }
 
-
+/*
 This message class is the server response to registering an adapter
 fields:
 return_code 				Indicates the status of the server, either

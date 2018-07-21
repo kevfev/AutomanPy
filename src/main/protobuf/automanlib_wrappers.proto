@@ -58,7 +58,7 @@ If the outcome was OVERBUDGET, need and have will be set to the
 values returned by AutoMan. If the outcome is CONFIDENT, or 
 LOW_CONFIDENCE outcome, need and have will be set to -1, and answer
 will be set to the estimate.
-
+a
 fields:
 answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
@@ -69,6 +69,8 @@ outcome_type  	the type of outcome, can be one of : CONFIDENT,
 
 need  			the amount of funds needed by AutoMan for the budget, only set
 				if the outcome_type is OVERBUDGET
+
+have			the amout of funds the that was allocated by the budget
 */
 message EstimateOutcome{
 	ValueOutcome answer = 1;
@@ -95,6 +97,8 @@ outcome_type  	the type of outcome, can be one of : CONFIDENT,
 
 need  			the amount of funds needed by AutoMan for the budget, only set
 				if the outcome_type is OVERBUDGET
+
+have			the amout of funds the that was allocated by the budget
 */
 message MultiestimateOutcome{
 	repeated ValueOutcome answer = 1;
@@ -120,6 +124,8 @@ outcome_type  	the type of outcome, can be one of : CONFIDENT,
 
 need  			the amount of funds needed by AutoMan for the budget, only set
 				if the outcome_type is OVERBUDGET
+
+have			the amout of funds the that was allocated by the budget
 */
 message FreetextOutcome{
 	StringOutcome answer = 1;
@@ -145,6 +151,8 @@ outcome_type  	the type of outcome, can be one of : CONFIDENT,
 
 need  			the amount of funds needed by AutoMan for the budget, only set
 				if the outcome_type is OVERBUDGET
+
+have			the amout of funds the that was allocated by the budget
 */
 message FreetextDistOutcome{
 	repeated StringOutcome answer = 1;
@@ -170,6 +178,8 @@ outcome_type  	the type of outcome, can be one of : CONFIDENT,
 
 need  			the amount of funds needed by AutoMan for the budget, only set
 				if the outcome_type is OVERBUDGET
+
+have			the amout of funds the that was allocated by the budget
 */
 message CheckboxOutcome{
 	repeated StringOutcome answer = 1;
@@ -195,6 +205,8 @@ outcome_type  	the type of outcome, can be one of : CONFIDENT,
 
 need  			the amount of funds needed by AutoMan for the budget, only set
 				if the outcome_type is OVERBUDGET
+
+have			the amout of funds the that was allocated by the budget
 */
 message CheckboxDistOutcome{
 	repeated StringOutcome answer = 1;
@@ -220,6 +232,8 @@ outcome_type  	the type of outcome, can be one of : CONFIDENT,
 
 need  			the amount of funds needed by AutoMan for the budget, only set
 				if the outcome_type is OVERBUDGET
+
+have			the amout of funds the that was allocated by the budget
 */
 message RadioOutcome{
 	StringOutcome answer = 1;
@@ -245,6 +259,8 @@ outcome_type  	the type of outcome, can be one of : CONFIDENT,
 
 need  			the amount of funds needed by AutoMan for the budget, only set
 				if the outcome_type is OVERBUDGET
+
+have			the amout of funds the that was allocated by the budget
 */
 message RadioDistOutcome{
 	StringOutcome answer = 1;
