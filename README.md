@@ -26,7 +26,7 @@ sbt:PyAutoman> run 50051
 Server Started on port 50051 ...
 ```
 
-Now, we can run python scripts that can connect to this local automan server to run automan jobs. First, we will need to create an adapter. Currently, only Mechnical Turk adapters are supported. To create an adapter, we must supply an access_id, access_key, any additional options for the adapter e.g. sandbox mode(need to add more options later), and the type of the adapter. Then, we pass the adapter and 
+Now, we can run python scripts that can connect to this local automan server to run automan jobs. First, we will need to create an adapter. Currently, only Mechnical Turk adapters are supported. To create an adapter, we must supply an access_id, access_key, and any additional options for the adapter (e.g. sandbox_mode(need to add more options later)), and the type of the adapter. We then pass the adapter and desired port number for the RPC server (default 50051).
 
 ```
 adapter = {
@@ -35,7 +35,7 @@ adapter = {
     "sandbox_mode" : "true",
     "type" : "MTurk"
 }
-a = Automan(adapter)
+a = Automan(adapter, port = 50051)
 ```
 
 We can now use the Automan object to submit tasks to the crowdsource back-end. Currently, only the `estimate` function of Automan is available. See example code for usage.
@@ -45,13 +45,18 @@ We can now use the Automan object to submit tasks to the crowdsource back-end. C
 ```
 from automan import Automan
 
+# make mechanical turk adapter
 adapter = {
 	"access_id" : "access key here",
     "access_key" : "secret here",
     "sandbox_mode" : "true",
     "type" : "MTurk"
 }
+
+# make AutoMan object 
 a = Automan(adapter, server_addr='localhost',port=50051)
+
+# submit estimation job to AutoMan
 estim = a.estimate(text = "How full is this parking lot?",
     budget = 1.00,
     title = "Car Counting",
@@ -60,7 +65,8 @@ estim = a.estimate(text = "How full is this parking lot?",
 # this is temporary, in future client will automatically handle shutdown
 a._shutdown()
 
-
+# The estimation may be a confident estimate, a low confidence estimate
+# or the task did not complete because it went over budget
 if(estim.isEstimate()):
 	print("Outcome: Estimate")
 	print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
@@ -74,7 +80,9 @@ if(estim.isOverBudget()):
 	print("Outcome: Over Budget")
 	print(" need: %f have:%f"%(estim.need, estim.have))
 ````
-A single response was submitted for this query, generating a Low Confidence estimate.
+You can run the code on MTurk with the 'sandbox_mode' option set to 'true' and submit
+a response (need to create requester developer and worker sandbox accounts) to see output.
+Here is what the output would look like if a single worker submitted a response of 62.
 Output:
 ```
 Outcome: Low Confidence Estimate
