@@ -13,8 +13,8 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 		private var _adptr_credentials: Option[AdapterCredentials] = None;
 		
 		/** rpc method used by client to submit a task to Automan.
-			If adapter credentials are supplied, run the task if it is valid and return the outcome
-			. If either the task is invalid or an adapter is not registered, set returnCode to 
+			If adapter credentials are supplied, run the task if it is valid and return the outcome. 
+			If either the task is invalid or an adapter is not registered, set returnCode to 
 			ERROR and setn error message appropriately
 		*
 		*  @param automanTask - submitted task
@@ -30,30 +30,14 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 				case Some(adptr) => 
 					response = response.withReturnCode(TaskResponse.TaskReturnCode.VALID)
 					automanTask.taskType match {
-						case TaskType.Estimate(etask) =>
-							println("Type: Estimation");
-							response = response.withEstimateOutcome(estimateTask(etask.getTask, adptr));
-						case TaskType.Multiestimate(metask) =>
-							println("Type: Multiestimate");
-							response = response.withMultiestimateOutcome(multiestimateTask(metask.getTask, adptr));
-						case TaskType.Freetext(frtask) =>
-							println("Type: Freetext");
-							response = response.withFreetextOutcome(freetextTask(frtask.getTask, adptr));
-						case TaskType.FreetextDist(frdtask) =>
-							println("Type: FreetextDist");
-							response = response.withFreetextDistOutcome(freetextDistTask(frdtask.getTask, adptr));
-						case TaskType.Radio(rtask) =>
-							println("Type: Radio");
-							response = response.withRadioOutcome(radioTask(rtask.getTask, adptr));
-						case TaskType.RadioDist(rdtask) =>
-							println("Type: RadioDist") ;
-							response = response.withRadioDistOutcome(radioDistTask(rdtask.getTask, adptr));
-						case TaskType.Checkbox(chtask) =>
-							println("Type: Checkbox");
-							response = response.withCheckboxOutcome(checkboxTask(chtask.getTask, adptr));
-						case TaskType.CheckboxDist(chdtask) =>
-							println("Type: CheckboxDist");
-							response = response.withCheckboxDistOutcome(checkboxDistTask(chdtask.getTask, adptr));
+						case TaskType.Estimate(etask) 		=> 	response = response.withEstimateOutcome(estimateTask(etask.getTask, adptr));
+						case TaskType.Multiestimate(metask) => 	response = response.withMultiestimateOutcome(multiestimateTask(metask.getTask, adptr));
+						case TaskType.Freetext(frtask) 		=>	response = response.withFreetextOutcome(freetextTask(frtask.getTask, adptr));
+						case TaskType.FreetextDist(frdtask) =>	response = response.withFreetextDistOutcome(freetextDistTask(frdtask.getTask, adptr));
+						case TaskType.Radio(rtask) 			=>	response = response.withRadioOutcome(radioTask(rtask.getTask, adptr));
+						case TaskType.RadioDist(rdtask) 	=>	response = response.withRadioDistOutcome(radioDistTask(rdtask.getTask, adptr));
+						case TaskType.Checkbox(chtask) 		=>	response = response.withCheckboxOutcome(checkboxTask(chtask.getTask, adptr));
+						case TaskType.CheckboxDist(chdtask) =>	response = response.withCheckboxDistOutcome(checkboxDistTask(chdtask.getTask, adptr));
 						case TaskType.Empty=>
 							println("ERROR: Empty Task ");
 							response =response.withReturnCode(TaskResponse.TaskReturnCode.ERROR)
@@ -111,7 +95,7 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 		*							
 		*/
 		def estimateTask(task : Task, adptr: AdapterCredentials) : EstimateOutcome = {
-			
+			println("Task Type: Estimation");
 			/*
 			* first, make the mech turk adapter, then make our AutoMan function, then execute
 			*/	
@@ -173,6 +157,7 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 		def multiestimateTask(task : Task, adptr: AdapterCredentials) : MultiestimateOutcome = {
 			println("ERROR: MULTIESTIMATE NOT IMPLEMENTED");
 			return MultiestimateOutcome()
+
 		}
 
 		/** internal method used by server, submits a Radio task to Automan
