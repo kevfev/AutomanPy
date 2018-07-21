@@ -83,10 +83,11 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 		*  @return an EstimateOutcome with all fields but outcomeType initialized
 		*							
 		*/
-		def makeValueOutcome( _est : BigDecimal, _low : BigDecimal, _high: BigDecimal, _cost: BigDecimal, _conf: BigDecimal): EstimateOutcome = {
+		def makeValueOutcome( _est : BigDecimal, _low : BigDecimal, _high: BigDecimal, _cost: BigDecimal, _conf: BigDecimal, outcome_type: OutcomeType): EstimateOutcome = {
 			return EstimateOutcome().withAnswer(ValueOutcome(est = _est.toDouble,low = _low.toDouble,high = _high.toDouble,cost = _cost.toDouble,conf = _conf.toDouble))
 									.withNeed(-1.0)
-									.withHave(-1.0);
+									.withHave(-1.0)
+									.withOutcomeType(outcome_type);
 		}
 
 		/** private method used to make an overbudget EstimateOutcome
@@ -150,10 +151,10 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 				automan_outcome.answer match{
 					case Estimate(est, low, high, cost, conf, _, _) => 
 						println("estimated,"); 
-						outcome = makeValueOutcome(est, low, high, cost, conf).withOutcomeType(OutcomeType.CONFIDENT);
+						outcome = makeValueOutcome(est, low, high, cost, conf, OutcomeType.CONFIDENT);
 					case LowConfidenceEstimate(est, low, high, cost, conf, _, _) => 
 						println("low conf estimated,");
-						outcome = makeValueOutcome(est, low, high, cost, conf).withOutcomeType(OutcomeType.LOW_CONFIDENCE);
+						outcome = makeValueOutcome(est, low, high, cost, conf, OutcomeType.LOW_CONFIDENCE);
 					case OverBudgetEstimate(need, have, _) => 
 						println("overbudget,");
 						outcome = makeOverBudgetOutcome(need,have);
