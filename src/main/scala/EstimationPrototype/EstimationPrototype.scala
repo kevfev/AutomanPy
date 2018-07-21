@@ -29,28 +29,28 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 				case Some(adptr) => 
 					response = response.withReturnCode(TaskResponse.TaskReturnCode.VALID)
 					automanTask.taskType match {
-						case TaskType.EstTask(etask) =>
+						case TaskType.Estimate(etask) =>
 							println("Type: Estimation");
 							response = response.withEstimateOutcome(estimateTask(etask.getTask, adptr));
-						case TaskType.MestTask(metask) =>
+						case TaskType.Multiestimate(metask) =>
 							println("Type: Multiestimate");
 							response = response.withMultiestimateOutcome(multiestimateTask(metask.getTask, adptr));
-						case TaskType.FreeTask(frtask) =>
+						case TaskType.Freetext(frtask) =>
 							println("Type: Freetext");
 							response = response.withFreetextOutcome(freetextTask(frtask.getTask, adptr));
-						case TaskType.FreeDistTask(frdtask) =>
+						case TaskType.FreetextDist(frdtask) =>
 							println("Type: FreetextDist");
 							response = response.withFreetextDistOutcome(freetextDistTask(frdtask.getTask, adptr));
-						case TaskType.RadioTask(rtask) =>
+						case TaskType.Radio(rtask) =>
 							println("Type: Radio");
 							response = response.withRadioOutcome(radioTask(rtask.getTask, adptr));
-						case TaskType.RadioDistTask(rdtask) =>
+						case TaskType.RadioDist(rdtask) =>
 							println("Type: RadioDist") ;
 							response = response.withRadioDistOutcome(radioDistTask(rdtask.getTask, adptr));
-						case TaskType.CheckTask(chtask) =>
+						case TaskType.Checkbox(chtask) =>
 							println("Type: Checkbox");
 							response = response.withCheckboxOutcome(checkboxTask(chtask.getTask, adptr));
-						case TaskType.CheckDistTask(chdtask) =>
+						case TaskType.CheckboxDist(chdtask) =>
 							println("Type: CheckboxDist");
 							response = response.withCheckboxDistOutcome(checkboxDistTask(chdtask.getTask, adptr));
 						case TaskType.Empty=>
@@ -109,14 +109,16 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 										.withHave(_have.toDouble);
 			}
 
+
+			/*
+			* first, make the mech turk adapter, then make our AutoMan function, then execute
+			*/	
 			implicit val mt = mturk (
 			   access_key_id = adptr.accessId,
 			   secret_access_key = adptr.accessKey,
 			   sandbox_mode = adptr.adapterOptions("sandbox_mode").toBoolean
 			)
-			
-			/**private method used by estimateTask to run an AutoMan estimation task
-			*/			
+					
 			def est(title_ : String ,text_ : String, budget_ : Double, image_url_ : String, def_samp_size: Int = -1, ques_timeout_mult: Int = 500) = estimate(
 				default_sample_size = def_samp_size,
 				text = text_ ,
@@ -125,10 +127,7 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 				budget = budget_ ,
 				question_timeout_multiplier = ques_timeout_mult
 			)
-			
-			/* Run the task using AutoMan and then package the result appropriately depending on the 
-			type of outcome.
-			*/
+
 			automan(mt) {
 				val automan_outcome = est(title_ = task.title, text_ =task.text, budget_ =task.budget, image_url_ =task.imgUrl, ques_timeout_mult=3, def_samp_size=2);
 				var outcome = EstimateOutcome()
