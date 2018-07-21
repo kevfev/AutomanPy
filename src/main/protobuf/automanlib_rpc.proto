@@ -72,14 +72,14 @@ tasks that can be submitted
 */
 message AutomanTask{
 	oneof task_type{
-		EstimateTask est_task = 1;
-		MultiestimateTask mest_task = 2;
-		FreetextTask free_task = 3;
-		FreetextDistTask free_dist_task = 4;
-		RadioTask radio_task = 5;
-		RadioDistTask radio_dist_task = 6;
-		CheckboxTask check_task = 7;
-		CheckboxDistTask check_dist_task = 8;
+		EstimateTask estimate = 1;
+		MultiestimateTask multiestimate = 2;
+		FreetextTask freetext = 3;
+		FreetextDistTask freetext_dist = 4;
+		RadioTask radio = 5;
+		RadioDistTask radio_dist = 6;
+		CheckboxTask checkbox = 7;
+		CheckboxDistTask checkbox_dist = 8;
 	}
 }
 

@@ -1,5 +1,6 @@
 package automanlib;
 import edu.umass.cs.automan.adapters.mturk.DSL._
+import edu.umass.cs.automan.core.MagicNumbers;
 import automanlib_rpc._;
 import automanlib_rpc.AutomanTask.TaskType;
 import automanlib_classes._;
@@ -72,6 +73,35 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 			Future.successful(tr);
 		}
 
+		/** private method used to make and EstimateOutcome with ValueOutcome message field set
+		*
+		*  @param _est - estimate returned by AutoMan
+		*  @param _low - lowest worker response
+		*  @param _high - highest worker response
+		*  @param _cost - cost of task
+		*  @param _conf - confidence of result
+		*  @return an EstimateOutcome with all fields but outcomeType initialized
+		*							
+		*/
+		def makeValueOutcome( _est : BigDecimal, _low : BigDecimal, _high: BigDecimal, _cost: BigDecimal, _conf: BigDecimal): EstimateOutcome = {
+			return EstimateOutcome().withAnswer(ValueOutcome(est = _est.toDouble,low = _low.toDouble,high = _high.toDouble,cost = _cost.toDouble,conf = _conf.toDouble))
+									.withNeed(-1.0)
+									.withHave(-1.0);
+		}
+
+		/** private method used to make an overbudget EstimateOutcome
+		*
+		*  @param _need - the amount needed by AutoMan to continue trying the task
+		*  @param _have - the amount originally allocated for the task
+		*  @return an EstimateOutcome for an overbudget result
+		*							
+		*/
+		def makeOverBudgetOutcome( _need: BigDecimal, _have: BigDecimal): EstimateOutcome = {
+			return EstimateOutcome().withOutcomeType(OutcomeType.OVERBUDGET)
+									.withNeed(_need.toDouble)
+									.withHave(_have.toDouble);
+		}
+
 		/** internal method used by server, submits an estimate task to Automan
 		*
 		*  @param task - submitted task
@@ -80,36 +110,7 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 		*							
 		*/
 		def estimateTask(task : Task, adptr: AdapterCredentials) : EstimateOutcome = {
-			/** private method used by estimateTask to make and EstimateOutcome with ValueOutcome message field set
-			*
-			*  @param _est - estimate returned by AutoMan
-			*  @param _low - lowest worker response
-			*  @param _high - highest worker response
-			*  @param _cost - cost of task
-			*  @param _conf - confidence of result
-			*  @return an EstimateOutcome with all fields but outcomeType initialized
-			*							
-			*/
-			def _makeValueOutcome( _est : BigDecimal, _low : BigDecimal, _high: BigDecimal, _cost: BigDecimal, _conf: BigDecimal): EstimateOutcome = {
-				return EstimateOutcome().withAnswer(ValueOutcome(est = _est.toDouble,low = _low.toDouble,high = _high.toDouble,cost = _cost.toDouble,conf = _conf.toDouble))
-										.withNeed(-1.0)
-										.withHave(-1.0);
-			}
-
-			/** private method used by estimateTask to make an overbudget EstimateOutcome
-			*
-			*  @param _need - the amount needed by AutoMan to continue trying the task
-			*  @param _have - the amount originally allocated for the task
-			*  @return an EstimateOutcome for an overbudget result
-			*							
-			*/
-			def _makeOverBudgetOutcome( _need: BigDecimal, _have: BigDecimal): EstimateOutcome = {
-				return EstimateOutcome().withOutcomeType(OutcomeType.OVERBUDGET)
-										.withNeed(_need.toDouble)
-										.withHave(_have.toDouble);
-			}
-
-
+			
 			/*
 			* first, make the mech turk adapter, then make our AutoMan function, then execute
 			*/	
@@ -119,28 +120,43 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 			   sandbox_mode = adptr.adapterOptions("sandbox_mode").toBoolean
 			)
 					
-			def est(title_ : String ,text_ : String, budget_ : Double, image_url_ : String, def_samp_size: Int = -1, ques_timeout_mult: Int = 500) = estimate(
-				default_sample_size = def_samp_size,
-				text = text_ ,
-				title = title_ ,
-				image_url = image_url_ ,
-				budget = budget_ ,
-				question_timeout_multiplier = ques_timeout_mult
-			)
+			def est(text_ : String, 
+					budget_ : Double, 
+					image_url_ : String,
+					image_alt_txt_ :String = null,
+					title_ : String = null, 
+					def_samp_size: Int = -1,
+					pay_all_on_failure_ : Boolean = true,
+					dont_reject_ : Boolean = true,
+					dry_run_ : Boolean = false,
+					wage_ : Double = MagicNumbers.USFederalMinimumWage.toDouble,
+					confidence_ : Double = MagicNumbers.DefaultConfidence.toDouble, 
+					max_value_ : Double = Double.MaxValue,
+					min_value_ : Double = Double.MinValue,
+					init_worker_timeout: Int = MagicNumbers.InitialWorkerTimeoutInS,
+					ques_timeout_mult: Double = MagicNumbers.QuestionTimeoutMultiplier
+					) = estimate(text = text_ , budget = budget_ , image_url = image_url_ ,
+								image_alt_text = image_alt_txt_ , title = title_ ,
+								default_sample_size = def_samp_size ,dont_reject = dont_reject_ ,
+								dry_run = dry_run_ , pay_all_on_failure = pay_all_on_failure_ ,
+								confidence = confidence_ , max_value = max_value_ , min_value = min_value_ ,
+								wage = wage_ , initial_worker_timeout_in_s = init_worker_timeout,
+								question_timeout_multiplier = ques_timeout_mult)
 
 			automan(mt) {
-				val automan_outcome = est(title_ = task.title, text_ =task.text, budget_ =task.budget, image_url_ =task.imgUrl, ques_timeout_mult=3, def_samp_size=2);
+				val automan_outcome = est(title_ = task.title, text_ =task.text, budget_ =task.budget, image_url_ =task.imgUrl, 
+											ques_timeout_mult=3, def_samp_size=2);
 				var outcome = EstimateOutcome()
 				automan_outcome.answer match{
 					case Estimate(est, low, high, cost, conf, _, _) => 
 						println("estimated,"); 
-						outcome = _makeValueOutcome(est, low, high, cost, conf).withOutcomeType(OutcomeType.CONFIDENT);
+						outcome = makeValueOutcome(est, low, high, cost, conf).withOutcomeType(OutcomeType.CONFIDENT);
 					case LowConfidenceEstimate(est, low, high, cost, conf, _, _) => 
 						println("low conf estimated,");
-						outcome = _makeValueOutcome(est, low, high, cost, conf).withOutcomeType(OutcomeType.LOW_CONFIDENCE);
+						outcome = makeValueOutcome(est, low, high, cost, conf).withOutcomeType(OutcomeType.LOW_CONFIDENCE);
 					case OverBudgetEstimate(need, have, _) => 
 						println("overbudget,");
-						outcome = _makeOverBudgetOutcome(need,have);
+						outcome = makeOverBudgetOutcome(need,have);
 				}
 				return outcome
 			}
