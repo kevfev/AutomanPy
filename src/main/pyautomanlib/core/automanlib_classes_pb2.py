@@ -3,6 +3,7 @@
 
 import sys
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
+from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
@@ -19,102 +20,45 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='automanlib_classes.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x18\x61utomanlib_classes.proto\"\xc6\x02\n\x04Task\x12!\n\ttask_type\x18\x01 \x01(\x0e\x32\x0e.Task.TaskType\x12\x0c\n\x04text\x18\x02 \x01(\t\x12\x0f\n\x07img_url\x18\x03 \x01(\t\x12\x0e\n\x06\x62udget\x18\x04 \x01(\x01\x12\x12\n\nconfidence\x18\x05 \x01(\x01\x12\x1b\n\x13\x64\x65\x66\x61ult_sample_size\x18\x06 \x01(\x05\x12\x0f\n\x07options\x18\x07 \x03(\t\x12\x1e\n\ndimensions\x18\x08 \x03(\x0b\x32\n.Dimension\x12\r\n\x05title\x18\t \x01(\t\x12\x13\n\x0bimg_alt_txt\x18\n \x01(\t\x12\x0f\n\x07\x64ry_run\x18! \x01(\x08\x12#\n\x1bquestion_timeout_multiplier\x18\" \x01(\x05\"0\n\x08TaskType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0c\n\x08\x45STIMATE\x10\x01\x12\t\n\x05RADIO\x10\x02\"\x17\n\tDimension\x12\n\n\x02id\x18\x01 \x01(\t\"\x85\x03\n\x0bTaskOutcome\x12\x1e\n\x06\x61nswer\x18\x01 \x03(\x0b\x32\x0e.OutcomeAnswer\x12.\n\x0coutcome_type\x18\x02 \x01(\x0e\x32\x18.TaskOutcome.OutcomeType\"\xa5\x02\n\x0bOutcomeType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0c\n\x08\x45STIMATE\x10\x01\x12\x16\n\x12LOW_CONFIDENCE_EST\x10\x02\x12\x13\n\x0fOVER_BUDGET_EST\x10\x03\x12\n\n\x06\x41NSWER\x10\x04\x12\x19\n\x15LOW_CONFIDENCE_ANSWER\x10\x05\x12\x15\n\x11OVERBUDGET_ANSWER\x10\x06\x12\x11\n\rMULTIESTIMATE\x10\x07\x12 \n\x1cLOW_CONFIDENCE_MULTIESTIMATE\x10\x08\x12\x1d\n\x19OVER_BUDGET_MULTIESTIMATE\x10\t\x12\x0b\n\x07\x41NSWERS\x10\n\x12\x16\n\x12INCOMPLETE_ANSWERS\x10\x0b\x12\x17\n\x13OVER_BUDGET_ANSWERS\x10\x0c\"U\n\x0f\x45stimateOutcome\x12\x0b\n\x03\x65st\x18\x01 \x01(\x01\x12\x0b\n\x03low\x18\x02 \x01(\x01\x12\x0c\n\x04high\x18\x03 \x01(\x01\x12\x0c\n\x04\x63ost\x18\x04 \x01(\x01\x12\x0c\n\x04\x63onf\x18\x05 \x01(\x01\"/\n\x11OverBudgetOutcome\x12\x0c\n\x04need\x18\x01 \x01(\x01\x12\x0c\n\x04have\x18\x02 \x01(\x01\"s\n\rOutcomeAnswer\x12.\n\x10overBudgetAnswer\x18\x01 \x01(\x0b\x32\x12.OverBudgetOutcomeH\x00\x12*\n\x0e\x65stimateAnswer\x18\x02 \x01(\x0b\x32\x10.EstimateOutcomeH\x00\x42\x06\n\x04\x66rom\"\x90\x02\n\x12\x41\x64\x61pterCredentials\x12\x33\n\nadptr_type\x18\x01 \x01(\x0e\x32\x1f.AdapterCredentials.AdapterType\x12\x11\n\taccess_id\x18\x02 \x01(\t\x12\x12\n\naccess_key\x18\x03 \x01(\t\x12@\n\x0f\x61\x64\x61pter_options\x18\x04 \x03(\x0b\x32\'.AdapterCredentials.AdapterOptionsEntry\x1a\x35\n\x13\x41\x64\x61pterOptionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"%\n\x0b\x41\x64\x61pterType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\t\n\x05MTURK\x10\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x18\x61utomanlib_classes.proto\"\x17\n\tDimension\x12\n\n\x02id\x18\x01 \x01(\t\"\xbf\x03\n\x04Task\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x11\n\timage_url\x18\x02 \x01(\t\x12\r\n\x05title\x18\x03 \x01(\t\x12\x13\n\x0bimg_alt_txt\x18\x04 \x01(\t\x12\x0f\n\x07pattern\x18\x05 \x01(\t\x12\x0e\n\x06\x62udget\x18\x06 \x01(\x01\x12\x12\n\nconfidence\x18\x07 \x01(\x01\x12\x13\n\x0bsample_size\x18\x08 \x01(\x05\x12\x0f\n\x07options\x18\t \x03(\t\x12\x1e\n\ndimensions\x18\n \x03(\x0b\x32\n.Dimension\x12\x13\n\x0b\x64ont_reject\x18\x0b \x01(\x08\x12\x1a\n\x12pay_all_on_failure\x18\x0c \x01(\x08\x12\x0f\n\x07\x64ry_run\x18\r \x01(\x08\x12\x1b\n\x13\x61llow_empty_pattern\x18\x0e \x01(\x08\x12\x1a\n\x12pattern_error_text\x18\x10 \x01(\t\x12#\n\x1bquestion_timeout_multiplier\x18\x11 \x01(\x05\x12#\n\x1binitial_worker_timeout_in_s\x18\x12 \x01(\x05\x12\x0c\n\x04wage\x18\x13 \x01(\x01\x12\x11\n\tmax_value\x18\x14 \x01(\x01\x12\x11\n\tmin_value\x18\x15 \x01(\x01\"R\n\x0cValueOutcome\x12\x0b\n\x03\x65st\x18\x01 \x01(\x01\x12\x0b\n\x03low\x18\x02 \x01(\x01\x12\x0c\n\x04high\x18\x03 \x01(\x01\x12\x0c\n\x04\x63ost\x18\x04 \x01(\x01\x12\x0c\n\x04\x63onf\x18\x05 \x01(\x01\"\x1f\n\rStringOutcome\x12\x0e\n\x06option\x18\x01 \x01(\t\"\x98\x02\n\x12\x41\x64\x61pterCredentials\x12\x33\n\nadptr_type\x18\x01 \x01(\x0e\x32\x1f.AdapterCredentials.AdapterType\x12\x11\n\taccess_id\x18\x02 \x01(\t\x12\x12\n\naccess_key\x18\x03 \x01(\t\x12@\n\x0f\x61\x64\x61pter_options\x18\x04 \x03(\x0b\x32\'.AdapterCredentials.AdapterOptionsEntry\x1a\x35\n\x13\x41\x64\x61pterOptionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"-\n\x0b\x41\x64\x61pterType\x12\x13\n\x0fUNKNOWN_ADAPTER\x10\x00\x12\t\n\x05MTURK\x10\x01*U\n\x0bOutcomeType\x12\x13\n\x0fUNKNOWN_OUTCOME\x10\x00\x12\r\n\tCONFIDENT\x10\x01\x12\x12\n\x0eLOW_CONFIDENCE\x10\x02\x12\x0e\n\nOVERBUDGET\x10\x03\x62\x06proto3')
 )
 
-
-
-_TASK_TASKTYPE = _descriptor.EnumDescriptor(
-  name='TaskType',
-  full_name='Task.TaskType',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='UNKNOWN', index=0, number=0,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ESTIMATE', index=1, number=1,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='RADIO', index=2, number=2,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=307,
-  serialized_end=355,
-)
-_sym_db.RegisterEnumDescriptor(_TASK_TASKTYPE)
-
-_TASKOUTCOME_OUTCOMETYPE = _descriptor.EnumDescriptor(
+_OUTCOMETYPE = _descriptor.EnumDescriptor(
   name='OutcomeType',
-  full_name='TaskOutcome.OutcomeType',
+  full_name='OutcomeType',
   filename=None,
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='UNKNOWN', index=0, number=0,
+      name='UNKNOWN_OUTCOME', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='ESTIMATE', index=1, number=1,
+      name='CONFIDENT', index=1, number=1,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='LOW_CONFIDENCE_EST', index=2, number=2,
+      name='LOW_CONFIDENCE', index=2, number=2,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='OVER_BUDGET_EST', index=3, number=3,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ANSWER', index=4, number=4,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='LOW_CONFIDENCE_ANSWER', index=5, number=5,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='OVERBUDGET_ANSWER', index=6, number=6,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='MULTIESTIMATE', index=7, number=7,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='LOW_CONFIDENCE_MULTIESTIMATE', index=8, number=8,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='OVER_BUDGET_MULTIESTIMATE', index=9, number=9,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ANSWERS', index=10, number=10,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='INCOMPLETE_ANSWERS', index=11, number=11,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='OVER_BUDGET_ANSWERS', index=12, number=12,
+      name='OVERBUDGET', index=3, number=3,
       options=None,
       type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=479,
-  serialized_end=772,
+  serialized_start=903,
+  serialized_end=988,
 )
-_sym_db.RegisterEnumDescriptor(_TASKOUTCOME_OUTCOMETYPE)
+_sym_db.RegisterEnumDescriptor(_OUTCOMETYPE)
+
+OutcomeType = enum_type_wrapper.EnumTypeWrapper(_OUTCOMETYPE)
+UNKNOWN_OUTCOME = 0
+CONFIDENT = 1
+LOW_CONFIDENCE = 2
+OVERBUDGET = 3
+
 
 _ADAPTERCREDENTIALS_ADAPTERTYPE = _descriptor.EnumDescriptor(
   name='AdapterType',
@@ -123,7 +67,7 @@ _ADAPTERCREDENTIALS_ADAPTERTYPE = _descriptor.EnumDescriptor(
   file=DESCRIPTOR,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='UNKNOWN', index=0, number=0,
+      name='UNKNOWN_ADAPTER', index=0, number=0,
       options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
@@ -133,119 +77,10 @@ _ADAPTERCREDENTIALS_ADAPTERTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1263,
-  serialized_end=1300,
+  serialized_start=856,
+  serialized_end=901,
 )
 _sym_db.RegisterEnumDescriptor(_ADAPTERCREDENTIALS_ADAPTERTYPE)
-
-
-_TASK = _descriptor.Descriptor(
-  name='Task',
-  full_name='Task',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='task_type', full_name='Task.task_type', index=0,
-      number=1, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='text', full_name='Task.text', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='img_url', full_name='Task.img_url', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='budget', full_name='Task.budget', index=3,
-      number=4, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='confidence', full_name='Task.confidence', index=4,
-      number=5, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='default_sample_size', full_name='Task.default_sample_size', index=5,
-      number=6, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='options', full_name='Task.options', index=6,
-      number=7, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='dimensions', full_name='Task.dimensions', index=7,
-      number=8, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='title', full_name='Task.title', index=8,
-      number=9, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='img_alt_txt', full_name='Task.img_alt_txt', index=9,
-      number=10, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='dry_run', full_name='Task.dry_run', index=10,
-      number=33, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='question_timeout_multiplier', full_name='Task.question_timeout_multiplier', index=11,
-      number=34, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-    _TASK_TASKTYPE,
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=29,
-  serialized_end=355,
-)
 
 
 _DIMENSION = _descriptor.Descriptor(
@@ -274,29 +109,155 @@ _DIMENSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=357,
-  serialized_end=380,
+  serialized_start=28,
+  serialized_end=51,
 )
 
 
-_TASKOUTCOME = _descriptor.Descriptor(
-  name='TaskOutcome',
-  full_name='TaskOutcome',
+_TASK = _descriptor.Descriptor(
+  name='Task',
+  full_name='Task',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='answer', full_name='TaskOutcome.answer', index=0,
-      number=1, type=11, cpp_type=10, label=3,
+      name='text', full_name='Task.text', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='image_url', full_name='Task.image_url', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='title', full_name='Task.title', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='img_alt_txt', full_name='Task.img_alt_txt', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='pattern', full_name='Task.pattern', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='budget', full_name='Task.budget', index=5,
+      number=6, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='confidence', full_name='Task.confidence', index=6,
+      number=7, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='sample_size', full_name='Task.sample_size', index=7,
+      number=8, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='options', full_name='Task.options', index=8,
+      number=9, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='outcome_type', full_name='TaskOutcome.outcome_type', index=1,
-      number=2, type=14, cpp_type=8, label=1,
+      name='dimensions', full_name='Task.dimensions', index=9,
+      number=10, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dont_reject', full_name='Task.dont_reject', index=10,
+      number=11, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='pay_all_on_failure', full_name='Task.pay_all_on_failure', index=11,
+      number=12, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='dry_run', full_name='Task.dry_run', index=12,
+      number=13, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='allow_empty_pattern', full_name='Task.allow_empty_pattern', index=13,
+      number=14, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='pattern_error_text', full_name='Task.pattern_error_text', index=14,
+      number=16, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='question_timeout_multiplier', full_name='Task.question_timeout_multiplier', index=15,
+      number=17, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='initial_worker_timeout_in_s', full_name='Task.initial_worker_timeout_in_s', index=16,
+      number=18, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='wage', full_name='Task.wage', index=17,
+      number=19, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='max_value', full_name='Task.max_value', index=18,
+      number=20, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='min_value', full_name='Task.min_value', index=19,
+      number=21, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
@@ -305,7 +266,6 @@ _TASKOUTCOME = _descriptor.Descriptor(
   ],
   nested_types=[],
   enum_types=[
-    _TASKOUTCOME_OUTCOMETYPE,
   ],
   options=None,
   is_extendable=False,
@@ -313,48 +273,48 @@ _TASKOUTCOME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=383,
-  serialized_end=772,
+  serialized_start=54,
+  serialized_end=501,
 )
 
 
-_ESTIMATEOUTCOME = _descriptor.Descriptor(
-  name='EstimateOutcome',
-  full_name='EstimateOutcome',
+_VALUEOUTCOME = _descriptor.Descriptor(
+  name='ValueOutcome',
+  full_name='ValueOutcome',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='est', full_name='EstimateOutcome.est', index=0,
+      name='est', full_name='ValueOutcome.est', index=0,
       number=1, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='low', full_name='EstimateOutcome.low', index=1,
+      name='low', full_name='ValueOutcome.low', index=1,
       number=2, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='high', full_name='EstimateOutcome.high', index=2,
+      name='high', full_name='ValueOutcome.high', index=2,
       number=3, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='cost', full_name='EstimateOutcome.cost', index=3,
+      name='cost', full_name='ValueOutcome.cost', index=3,
       number=4, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='conf', full_name='EstimateOutcome.conf', index=4,
+      name='conf', full_name='ValueOutcome.conf', index=4,
       number=5, type=1, cpp_type=5, label=1,
       has_default_value=False, default_value=float(0),
       message_type=None, enum_type=None, containing_type=None,
@@ -372,29 +332,22 @@ _ESTIMATEOUTCOME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=774,
-  serialized_end=859,
+  serialized_start=503,
+  serialized_end=585,
 )
 
 
-_OVERBUDGETOUTCOME = _descriptor.Descriptor(
-  name='OverBudgetOutcome',
-  full_name='OverBudgetOutcome',
+_STRINGOUTCOME = _descriptor.Descriptor(
+  name='StringOutcome',
+  full_name='StringOutcome',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='need', full_name='OverBudgetOutcome.need', index=0,
-      number=1, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='have', full_name='OverBudgetOutcome.have', index=1,
-      number=2, type=1, cpp_type=5, label=1,
-      has_default_value=False, default_value=float(0),
+      name='option', full_name='StringOutcome.option', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
@@ -410,49 +363,8 @@ _OVERBUDGETOUTCOME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=861,
-  serialized_end=908,
-)
-
-
-_OUTCOMEANSWER = _descriptor.Descriptor(
-  name='OutcomeAnswer',
-  full_name='OutcomeAnswer',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='overBudgetAnswer', full_name='OutcomeAnswer.overBudgetAnswer', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='estimateAnswer', full_name='OutcomeAnswer.estimateAnswer', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  syntax='proto3',
-  extension_ranges=[],
-  oneofs=[
-    _descriptor.OneofDescriptor(
-      name='from', full_name='OutcomeAnswer.from',
-      index=0, containing_type=None, fields=[]),
-  ],
-  serialized_start=910,
-  serialized_end=1025,
+  serialized_start=587,
+  serialized_end=618,
 )
 
 
@@ -489,8 +401,8 @@ _ADAPTERCREDENTIALS_ADAPTEROPTIONSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1208,
-  serialized_end=1261,
+  serialized_start=801,
+  serialized_end=854,
 )
 
 _ADAPTERCREDENTIALS = _descriptor.Descriptor(
@@ -541,43 +453,22 @@ _ADAPTERCREDENTIALS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1028,
-  serialized_end=1300,
+  serialized_start=621,
+  serialized_end=901,
 )
 
-_TASK.fields_by_name['task_type'].enum_type = _TASK_TASKTYPE
 _TASK.fields_by_name['dimensions'].message_type = _DIMENSION
-_TASK_TASKTYPE.containing_type = _TASK
-_TASKOUTCOME.fields_by_name['answer'].message_type = _OUTCOMEANSWER
-_TASKOUTCOME.fields_by_name['outcome_type'].enum_type = _TASKOUTCOME_OUTCOMETYPE
-_TASKOUTCOME_OUTCOMETYPE.containing_type = _TASKOUTCOME
-_OUTCOMEANSWER.fields_by_name['overBudgetAnswer'].message_type = _OVERBUDGETOUTCOME
-_OUTCOMEANSWER.fields_by_name['estimateAnswer'].message_type = _ESTIMATEOUTCOME
-_OUTCOMEANSWER.oneofs_by_name['from'].fields.append(
-  _OUTCOMEANSWER.fields_by_name['overBudgetAnswer'])
-_OUTCOMEANSWER.fields_by_name['overBudgetAnswer'].containing_oneof = _OUTCOMEANSWER.oneofs_by_name['from']
-_OUTCOMEANSWER.oneofs_by_name['from'].fields.append(
-  _OUTCOMEANSWER.fields_by_name['estimateAnswer'])
-_OUTCOMEANSWER.fields_by_name['estimateAnswer'].containing_oneof = _OUTCOMEANSWER.oneofs_by_name['from']
 _ADAPTERCREDENTIALS_ADAPTEROPTIONSENTRY.containing_type = _ADAPTERCREDENTIALS
 _ADAPTERCREDENTIALS.fields_by_name['adptr_type'].enum_type = _ADAPTERCREDENTIALS_ADAPTERTYPE
 _ADAPTERCREDENTIALS.fields_by_name['adapter_options'].message_type = _ADAPTERCREDENTIALS_ADAPTEROPTIONSENTRY
 _ADAPTERCREDENTIALS_ADAPTERTYPE.containing_type = _ADAPTERCREDENTIALS
-DESCRIPTOR.message_types_by_name['Task'] = _TASK
 DESCRIPTOR.message_types_by_name['Dimension'] = _DIMENSION
-DESCRIPTOR.message_types_by_name['TaskOutcome'] = _TASKOUTCOME
-DESCRIPTOR.message_types_by_name['EstimateOutcome'] = _ESTIMATEOUTCOME
-DESCRIPTOR.message_types_by_name['OverBudgetOutcome'] = _OVERBUDGETOUTCOME
-DESCRIPTOR.message_types_by_name['OutcomeAnswer'] = _OUTCOMEANSWER
+DESCRIPTOR.message_types_by_name['Task'] = _TASK
+DESCRIPTOR.message_types_by_name['ValueOutcome'] = _VALUEOUTCOME
+DESCRIPTOR.message_types_by_name['StringOutcome'] = _STRINGOUTCOME
 DESCRIPTOR.message_types_by_name['AdapterCredentials'] = _ADAPTERCREDENTIALS
+DESCRIPTOR.enum_types_by_name['OutcomeType'] = _OUTCOMETYPE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-Task = _reflection.GeneratedProtocolMessageType('Task', (_message.Message,), dict(
-  DESCRIPTOR = _TASK,
-  __module__ = 'automanlib_classes_pb2'
-  # @@protoc_insertion_point(class_scope:Task)
-  ))
-_sym_db.RegisterMessage(Task)
 
 Dimension = _reflection.GeneratedProtocolMessageType('Dimension', (_message.Message,), dict(
   DESCRIPTOR = _DIMENSION,
@@ -586,33 +477,26 @@ Dimension = _reflection.GeneratedProtocolMessageType('Dimension', (_message.Mess
   ))
 _sym_db.RegisterMessage(Dimension)
 
-TaskOutcome = _reflection.GeneratedProtocolMessageType('TaskOutcome', (_message.Message,), dict(
-  DESCRIPTOR = _TASKOUTCOME,
+Task = _reflection.GeneratedProtocolMessageType('Task', (_message.Message,), dict(
+  DESCRIPTOR = _TASK,
   __module__ = 'automanlib_classes_pb2'
-  # @@protoc_insertion_point(class_scope:TaskOutcome)
+  # @@protoc_insertion_point(class_scope:Task)
   ))
-_sym_db.RegisterMessage(TaskOutcome)
+_sym_db.RegisterMessage(Task)
 
-EstimateOutcome = _reflection.GeneratedProtocolMessageType('EstimateOutcome', (_message.Message,), dict(
-  DESCRIPTOR = _ESTIMATEOUTCOME,
+ValueOutcome = _reflection.GeneratedProtocolMessageType('ValueOutcome', (_message.Message,), dict(
+  DESCRIPTOR = _VALUEOUTCOME,
   __module__ = 'automanlib_classes_pb2'
-  # @@protoc_insertion_point(class_scope:EstimateOutcome)
+  # @@protoc_insertion_point(class_scope:ValueOutcome)
   ))
-_sym_db.RegisterMessage(EstimateOutcome)
+_sym_db.RegisterMessage(ValueOutcome)
 
-OverBudgetOutcome = _reflection.GeneratedProtocolMessageType('OverBudgetOutcome', (_message.Message,), dict(
-  DESCRIPTOR = _OVERBUDGETOUTCOME,
+StringOutcome = _reflection.GeneratedProtocolMessageType('StringOutcome', (_message.Message,), dict(
+  DESCRIPTOR = _STRINGOUTCOME,
   __module__ = 'automanlib_classes_pb2'
-  # @@protoc_insertion_point(class_scope:OverBudgetOutcome)
+  # @@protoc_insertion_point(class_scope:StringOutcome)
   ))
-_sym_db.RegisterMessage(OverBudgetOutcome)
-
-OutcomeAnswer = _reflection.GeneratedProtocolMessageType('OutcomeAnswer', (_message.Message,), dict(
-  DESCRIPTOR = _OUTCOMEANSWER,
-  __module__ = 'automanlib_classes_pb2'
-  # @@protoc_insertion_point(class_scope:OutcomeAnswer)
-  ))
-_sym_db.RegisterMessage(OutcomeAnswer)
+_sym_db.RegisterMessage(StringOutcome)
 
 AdapterCredentials = _reflection.GeneratedProtocolMessageType('AdapterCredentials', (_message.Message,), dict(
 

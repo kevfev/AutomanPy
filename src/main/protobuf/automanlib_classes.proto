@@ -32,7 +32,7 @@ before_filter (freetext)
 */
 message Task{
 	string text = 1;
-	string img_url = 2;
+	string image_url = 2;
 	string title = 3;
 	string img_alt_txt = 4;
 	string pattern = 5;

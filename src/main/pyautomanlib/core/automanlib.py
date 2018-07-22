@@ -1,5 +1,6 @@
 from automanlib_rpc_pb2 import *
 from automanlib_classes_pb2 import *
+from automanlib_wrappers_pb2 import *
 import automanlib_rpc_pb2_grpc
 import grpc
 
@@ -92,7 +93,10 @@ def make_channel(address_, port_):
 	channel = grpc.insecure_channel(address_+":"+port_)
 	return channel
 
-def make_est_task(title_, text_, image_url_, budget_):
+def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, confidence_ = None,
+				sample_size_ = -1, dont_reject_ = False, pay_all_on_failure_ = True, dry_run_ = False, 
+				wage_ = None, max_value_ = None, min_value_ = None, question_timeout_multiplier_ = None, 
+				initial_worker_timeout_in_s_ = None):
 	"""
 	Makes an estimation task for an Automan object to service
 
@@ -113,28 +117,24 @@ def make_est_task(title_, text_, image_url_, budget_):
 		A Task object initialized to the supplied parameters
 	------
 	"""
+	task = make_task(text_=text_, image_url_=image_url_, budget_=budget_, img_alt_txt_=img_alt_txt_ , title_=title_ , 
+						confidence_=confidence_ ,sample_size_=sample_size_ , dont_reject_ =dont_reject_ , 
+						pay_all_on_failure_ =pay_all_on_failure_  , dry_run_ = dry_run_ , wage_ = wage_, 
+						max_value_ = max_value_ , min_value_ = min_value_ , 
+						question_timeout_multiplier_ = question_timeout_multiplier_ , 
+						initial_worker_timeout_in_s_ initial_worker_timeout_in_s) 
 
-	return make_task(task_type_ =Task.ESTIMATE, tit=title_ ,txt=text_, image_url = image_url_, budg=budget_)
+	return EstimateTask(task)
 
-def make_task(task_type_, tit, txt, image_url, budg):
+def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pattern_ = None, confidence_ = None,
+				sample_size_ = -1, options_ = None, dimensions_ = None, dont_reject_ = False, pay_all_on_failure_ = True,
+				dry_run_ = False, allow_empty_pattern_ = False, pattern_error_text_ = None, wage_ = None, max_value_ = None,
+				min_value_ = None, question_timeout_multiplier_ = None, initial_worker_timeout_in_s_ = None):
 	"""
 	A general function for making tasks, used by other functions in this library for making specific tasks
 
 	Parameters
 	----------
-	task_type : enum
-		The type of task to perform. Can take the following values:
-		Task.ESTIMATE
-		Task.RADIO
-
-	will expand to
-		Task.RADIO_DISTRIBUTION
-		Task.MULTIESTIMATE
-		Task.FREETEXT
-		Task.FREETEXT_DISTRIBUTION
-		Task.CHECKBOX
-		Task.CHECKBOX_DISTRIBUTION
-
 	title_ : str
 		The title for the task, to display to workers on the crowdsource platform
 	text_ : str
@@ -143,16 +143,53 @@ def make_task(task_type_, tit, txt, image_url, budg):
 		The url of the image for the task
 	budget_ : double
 		The total budget allocated for this task
-
+	img_alt_txt_ : str
+		The alternate text description for the image, for browser use
+	pattern_ : str 
+		The expected pattern (Freetext tasks only)
+	confidence_ : double 
+		The desired confidence level of the estimation		
+	sample_size_ : int 
+		The desired sample size for the task
+	options_ : List(str)
+		The option choices for radio and checkbox type tasks 
+	dimensions_ : List(Dimensions)
+		The dimensions to estimate (Multi-Estimate tasks only) 
+	dont_reject_ : bool
+		? 
+	pay_all_on_failure_ : bool
+		?
+	dry_run_ : bool
+		? 
+	allow_empty_pattern_ : bool
+		?
+	pattern_error_text_ = str 
+		The error message to display if worker response does not match expected pattern (Freetext tasks only)
+	wage_ : double
+		? 
+	max_value_: double
+		? 
+	min_value : double
+		? 
+	question_timeout_multiplier_ : : double
+		? 
+	initial_worker_timeout_in_s : int
+		? 
 
 	Returns
 	-------
 	Task 
-		A Task object initialized to the supplied parameters
+		A general Task object initialized to the supplied parameters
 	"""
 
 	#consider using a task builder classs to make tasks in this method
-	return Task(task_type=task_type_, title=tit ,text=txt, img_url = image_url, budget=budg)
+	return Task(text = text_, image_url = image_url_, budget = budget_, img_alt_txt = img_alt_txt_ , title = title_ , 
+					pattern = pattern_ , confidence = confidence_, sample_size = sample_size_, options = options_ , 
+					dimensions = dimensions_ , dont_reject = dont_reject_ , pay_all_on_failure = pay_all_on_failure_,
+					dry_run = dry_run_, allow_empty_pattern = allow_empty_pattern_, pattern_error_text = pattern_error_text_, 
+					wage = wage_, max_value = max_value_, min_value = min_value_, 
+					question_timeout_multiplier = question_timeout_multiplier_, 
+					initial_worker_timeout_in_s = initial_worker_timeout_in_s_)
 
 def submit_task(channel_,task_):
 	"""
@@ -178,7 +215,8 @@ def submit_task(channel_,task_):
 	Notes
 	-----
 	-fields err_msg and excep_msg set if there is an error or exception, along with err_code and excep_code
-	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, check application version
+	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, if this is seen, check protobuf files and ensure 
+	it is the latest version
 
 	"""
 
@@ -203,7 +241,7 @@ def shutdown_rpc_server(channel_):
 	return stat_resp
 
 
-def get_server_status():
+def get_server_status(channel_):
 	"""
 	Returns the server status
 
@@ -215,9 +253,12 @@ def get_server_status():
 		ServerStatusResponse.KILLED 
 	Notes
 	-----
-	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, check application version
+	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, if this is seen, check protobuf files and ensure 
+	it is the latest version
 	"""
-	pass
+	client_stub = _make_client_stub(channel_)
+	stat_resp = client_stub.ServerStatus(Empty())
+	return stat_resp
 
 def register_adapter_to_server(channel_, adptr_):
 	"""
@@ -238,7 +279,8 @@ def register_adapter_to_server(channel_, adptr_):
 		RegistrationResponse.FAILED 
 	Notes
 	-----
-	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, check application version
+	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, check protobuf files and ensure 
+	it is the latest version
 	"""
 	client_stub = _make_client_stub(channel_)
 	response = client_stub.RegisterAdapter(adptr_)

@@ -129,7 +129,7 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 								question_timeout_multiplier = ques_timeout_mult)
 
 			automan(mt) {
-				val automan_outcome = est(title_ = task.title, text_ =task.text, budget_ =task.budget, image_url_ =task.imgUrl, 
+				val automan_outcome = est(title_ = task.title, text_ =task.text, budget_ =task.budget, image_url_ =task.imageUrl, 
 											ques_timeout_mult=3, def_samp_size=2);
 				var outcome = EstimateOutcome()
 				automan_outcome.answer match{

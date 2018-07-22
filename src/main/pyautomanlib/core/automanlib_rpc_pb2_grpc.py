@@ -6,8 +6,62 @@ import automanlib_rpc_pb2 as automanlib__rpc__pb2
 
 
 class EstimationPrototypeStub(object):
-  # missing associated documentation comment in .proto file
-  pass
+  """****
+  This .proto file defins the rpc service and the messages sent
+  and received by the various rpc method calls. 
+  ***
+
+  ****
+  This service is a prototype of the Estimation functionality of
+  AutoMan only. 
+  RPC methods:
+
+  KillServer 
+  This method shuts the rpc server down
+  parameters:
+  None
+  returns:
+  ServerStatusResponse
+  Indicates the current status of the server, "KILLED" if the
+  method was successful
+
+  RegisterAdapter 
+  Registers a crowdsource back-end for the AutoMan server to use for
+  authentication
+  parameters:
+  AdapterCredentials 
+  returns:
+  RegistrationResponse
+  Indicates if the credentials were registered successfully or not
+
+
+  ServerStatus 
+  Reports the status of the server
+  parameters:
+  None 
+  returns:
+  ServerStatusResponse
+  Indicates the current status of the server, either "RUNNING" or 
+  "KILLED"
+
+
+  SubmitTask 
+  Submits a task to the AutoMan server to post to the crowdsource back-end
+  parameters:
+  AutomanTask 
+  returns:
+  TaskResponse
+  A response from the Automan server on the submitted task
+  If the response code is VALID, the 
+  task was completed successfully and one of task_outcome will be set depending
+  on the respective task.
+  If the response code was ERROR, an error occured and the err_code and err_msg
+  fields will be set.
+  If the response code was EXCEPTION, an exception occured and the excep_code
+  and excep_msg fields will be set.
+
+  ***
+  """
 
   def __init__(self, channel):
     """Constructor.
@@ -38,8 +92,62 @@ class EstimationPrototypeStub(object):
 
 
 class EstimationPrototypeServicer(object):
-  # missing associated documentation comment in .proto file
-  pass
+  """****
+  This .proto file defins the rpc service and the messages sent
+  and received by the various rpc method calls. 
+  ***
+
+  ****
+  This service is a prototype of the Estimation functionality of
+  AutoMan only. 
+  RPC methods:
+
+  KillServer 
+  This method shuts the rpc server down
+  parameters:
+  None
+  returns:
+  ServerStatusResponse
+  Indicates the current status of the server, "KILLED" if the
+  method was successful
+
+  RegisterAdapter 
+  Registers a crowdsource back-end for the AutoMan server to use for
+  authentication
+  parameters:
+  AdapterCredentials 
+  returns:
+  RegistrationResponse
+  Indicates if the credentials were registered successfully or not
+
+
+  ServerStatus 
+  Reports the status of the server
+  parameters:
+  None 
+  returns:
+  ServerStatusResponse
+  Indicates the current status of the server, either "RUNNING" or 
+  "KILLED"
+
+
+  SubmitTask 
+  Submits a task to the AutoMan server to post to the crowdsource back-end
+  parameters:
+  AutomanTask 
+  returns:
+  TaskResponse
+  A response from the Automan server on the submitted task
+  If the response code is VALID, the 
+  task was completed successfully and one of task_outcome will be set depending
+  on the respective task.
+  If the response code was ERROR, an error occured and the err_code and err_msg
+  fields will be set.
+  If the response code was EXCEPTION, an exception occured and the excep_code
+  and excep_msg fields will be set.
+
+  ***
+  """
 
   def KillServer(self, request, context):
     # missing associated documentation comment in .proto file
