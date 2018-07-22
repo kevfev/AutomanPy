@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package automanlib
+package pyautomanlib;
 
 import io.grpc.{ Server, ServerBuilder, ServerServiceDefinition }
 

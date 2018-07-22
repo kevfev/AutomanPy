@@ -1,4 +1,4 @@
-package automanlib;
+package pyautomanlib;
 import edu.umass.cs.automan.adapters.mturk.DSL._
 import edu.umass.cs.automan.core.MagicNumbers;
 import automanlib_rpc._;
