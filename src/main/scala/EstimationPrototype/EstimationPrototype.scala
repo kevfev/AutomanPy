@@ -276,8 +276,8 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 	def main(args: Array[String]) : Unit = {
 		// add argument parsing
 		var localport = 50051;
-		if(args.length >1) localport = args(0).toInt;
-
+		if(args.length >= 1) localport = args(0).toInt;
+		
 		val ssdef = EstimationPrototypeGrpc.bindService(new EstimationServicer(), ExecutionContext.global)
 		println("Server Started on port "+localport+" ...")
 		runServer(ssd = ssdef, port = localport)
