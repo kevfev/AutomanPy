@@ -9,6 +9,9 @@ libraryDependencies ++= Seq(
 )
 
 scalaVersion := "2.11.7"
+
+assemblyOutputPath:= baseDirectory.value /"src/main/pyautomanlib/core/rpc"
+
 PB.targets in Compile := Seq(
   scalapb.gen() -> (sourceManaged in Compile).value
 )
