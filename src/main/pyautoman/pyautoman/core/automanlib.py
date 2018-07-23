@@ -1,7 +1,7 @@
-from rpc_classes.automanlib_rpc_pb2 import *
-from rpc_classes.automanlib_classes_pb2 import *
-from rpc_classes.automanlib_wrappers_pb2 import *
-from grpc_classes import automanlib_rpc_pb2_grpc as rpclib
+from grpc_gen_classes.automanlib_rpc_pb2 import *
+from grpc_gen_classes.automanlib_classes_pb2 import *
+from grpc_gen_classes.automanlib_wrappers_pb2 import *
+from grpc_gen_classes import automanlib_rpc_pb2_grpc as rpclib
 import grpc
 from os import path, devnull
 from time import sleep

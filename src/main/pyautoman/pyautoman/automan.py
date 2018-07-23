@@ -1,5 +1,5 @@
 import core.automanlib as pyAutomanlib
-from core.rpc_classes.automanlib_rpc_pb2 import TaskResponse
+from core.grpc_gen_classes.automanlib_rpc_pb2 import TaskResponse
 import sys
 
 class EstimateOutcome():
