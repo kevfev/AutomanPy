@@ -61,7 +61,7 @@ class EstimateOutcome():
 
 	def outcomeType(self):
 		return self.out
-		
+
 	def printOutcome(self):
 		if(estim.isEstimate()):
 			print("Outcome: Estimate")
@@ -155,6 +155,9 @@ class Automan():
 		self.srvr_addr = server_addr
 		self.port = port
 		self.srvr_popen_obj = None
+		self.supr_lvl = suppress_output
+		self.stdout_file = stdout
+		self.stderr_file = stderr
 		
 		# check adapter to ensure it passed validation
 		if self.adptr is None:
@@ -201,7 +204,8 @@ class Automan():
 
 	def _start(self):
 		print "python client is starting server..."
-		srvr_popen_obj = pyAutomanlib.start_rpc_server(self.port)
+		self.srvr_popen_obj = pyAutomanlib.start_rpc_server(port=self.port, suppress_output = self.supr_lvl,
+			stdout_file = self.stdout_file, stderr_file = self.stderr_file)
 
 	def _shutdown(self):
 		"""

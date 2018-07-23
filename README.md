@@ -41,6 +41,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 When the Automan object is initialized, if the address is 'localhost' it will start a local AutoMan RPC server as a new process configured to listen on the provided port number. Future functionality will allow users to connect to remove RPC servers. We can now use the Automan object to submit tasks to the crowdsource back-end. Currently, only the `estimate` function of Automan is available. See example code for usage.
 
+Each type of task has fields that are required. All tasks require `text` (a text description of the task), `image_url` and `budget` (desired upper limit of cost of task). We specify the tasks we would like AutoMan to carry out, and result computation blocks and returns either when the question has timed out and budget is exceeded (resulting in a low confidence or overbudget outcome, more in this later) or the desired confidence level has been met and the estimate is return.
+
 ```
 >>> a = Automan(adapter, server_addr='localhost',port=50051)
 python client is starting server...
