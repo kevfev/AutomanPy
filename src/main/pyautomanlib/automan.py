@@ -32,7 +32,7 @@ class EstimateOutcome():
 			An int representing the type of the outcome. Possible values are:
 			L
 		"""
-		self.answer = outcome.answer
+		self._answer = outcome.answer
 		self.outcome_type_val = outcome.outcome_type
 		self.low = None
 		self.high = None
@@ -46,15 +46,15 @@ class EstimateOutcome():
 		self.types_outcome = {'ESTIMATE':1, 'LOW_CONFIDENCE':2, 'OVERBUDGET':3}
 
 		if self.isOverBudget():
-			self.need = self.answer.need
-			self.have = self.answer.have
+			self.need = outcome.need
+			self.have = outcome.have
 			self.outcome_type = "OVERBUDGET"
 		else:
-			self.low = self.answer.low
-			self.high = self.answer.high
-			self.est = self.answer.est
-			self.conf = self.answer.conf
-			self.cost = self.answer.cost
+			self.low = outcome.answer.low
+			self.high = outcome.answer.high
+			self.est = outcome.answer.est
+			self.conf = outcome.answer.conf
+			self.cost = outcome.answer.cost
 			if self.isEstimate():
 				self.outcome_type = "ESTIMATE"
 			if self.isLowConfidence():
@@ -134,13 +134,15 @@ class Automan():
 		self.adptr = pyAutomanlib.make_adapter(adapter["access_id"], adapter["access_key"], sandbox_mode=adapter["sandbox_mode"]) if pyAutomanlib.isGoodAadapter(adapter) else None
 		self.srvr_addr = server_addr
 		self.port = port
+		self.srvr_popen_obj = None
 		
 		# check adapter to ensure it passed validation
 		if self.adptr is None:
 			sys.exit("Invalid adapter, check parameters used")
 
-		# set up channel, connect to gRPC server, register adapter credentials with server
+		# set up channel, start and connect to gRPC server, register adapter credentials with server
 		self._init_channel(server_addr, port)
+		self._start()
 		pyAutomanlib.register_adapter_to_server(self.channel, self.adptr)
 
 	def _handleResponse(self,response):
@@ -176,6 +178,10 @@ class Automan():
 			ret_string ="EXCEPTION: An exception occured \n"+ "Message: "+response.excep_msg
 
 		sys.exit(ret_string)
+
+	def _start(self):
+		print "python client is starting server..."
+		srvr_popen_obj = pyAutomanlib.start_rpc_server(self.port)
 
 	def _shutdown(self):
 		"""

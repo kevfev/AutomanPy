@@ -3,6 +3,10 @@ from automanlib_classes_pb2 import *
 from automanlib_wrappers_pb2 import *
 import automanlib_rpc_pb2_grpc
 import grpc
+from os.path import dirname
+from time import sleep
+from subprocess import Popen
+
 
 def isGoodAadapter(adapter):
 	"""
@@ -226,9 +230,24 @@ def submit_task(channel_,task_):
 	response = client_stub.SubmitTask(at_task_)
 	return response
 
+def start_rpc_server(port=50051, sleep_time=3):
+	"""
+	Start the remote gRPC server process
+
+	Parameters
+    ----------
+    channel_ : Channel
+    	A gRPC channel
+	"""
+	# check port for correct type and valid range
+	cmd_string = [dirname(__file__)+"/rpc/pack/bin/PyAutoManRpcServer", str(port)]
+	p = Popen(cmd_string)
+	sleep(sleep_time)
+	return p
+
 def shutdown_rpc_server(channel_):
 	"""
-	Shutdown the remote gRPC server
+	Shutdown the remote gRPC server process
 
 	Parameters
     ----------
