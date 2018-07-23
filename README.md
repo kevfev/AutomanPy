@@ -8,48 +8,69 @@ To use this package you must be running Python 2.7 or 3.2+, and Scala 2.11.7+. T
 
 
 ### How to Build 
-To build this project, run sbt from the /PyAutoman directory, then compile using the "compile" command of SBT. SBT will also compile the necessary .proto into Scala classes automatically. To generate the the python files needed for the python client, from the /PytAutoman directory, run the following command:
+The easiest way to build this project is by using [SBT](https://www.scala-sbt.org/). To build this project, from the /PyAutoman directory, run
+```sbt compile pack```
+ SBT will also compile the necessary .proto into Scala classes automatically. To generate the the python files needed, from the /PytAutoman directory, run the following command:
 
 ```
 python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes --grpc_python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto
 ```
-The python files are already generated and provided (see src/main/pyautomanlib/core/)
+
+The python files are already generated and provided (see src/main/pyautomanlib/core/grpc_gen_classes)
 
 ### How to Use
-First, build this project, then import Automan into your script. (For now, just place in /PyAutoman and import Automan from automan, see example code). For now, the gRPC server that services the Automan request must be started manually using sbt. From the /PyAutoman, launch sbt, then start the server using the run command, supplying a port number. The default port is 50051. See below for an example.
+To run tasks, first create an Automan object. Automan objects require an adapter, and take optional parameters for the RPC server address and port number (default is 'localhost' and 50051).  The adapter we pass to the constructor is simply a dictionary with the following required fields:
+* access_id
+* access_key
+* type
+
+First, import the Automan class:
 
 ```
-user:PyAutoman user$ sbt
-... (sbt will print to console here)
-sbt:PyAutoman>
-sbt:PyAutoman> run 50051
-[info] Running automanlib.EstimationPrototypeServicer 
+Python 2.7.15 |Anaconda, Inc.| (default, May  1 2018, 18:37:05) 
+[GCC 4.2.1 Compatible Clang 4.0.1 (tags/RELEASE_401/final)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> adapter = {
+...     "access_id" : "access id here",
+...     "access_key" : "access key here",
+...     "sandbox_mode" : "true",
+...     "type" : "MTurk"
+... }
+
+```
+
+When the Automan object is initialized, if the address is 'localhost' it will start a local AutoMan RPC server as a new process configured to listen on the provided port number. Future functionality will allow users to connect to remove RPC servers. We can now use the Automan object to submit tasks to the crowdsource back-end. Currently, only the `estimate` function of Automan is available. See example code for usage.
+
+```
+>>> a = Automan(adapter, server_addr='localhost',port=50051)
+python client is starting server...
 Server Started on port 50051 ...
+>>> photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
+>>> estim = a.estimate(text = "How full is this parking lot?",budget = 1.00, title = "Car Counting",image_url = photo_url)
+```
+To print the result of the task.
+```
+estim.printOutcome()
+>>> estim.printOutcome()
+Outcome: Low Confidence Estimate
+Estimate low: 62.000000 high:62.000000 est:62.000000
 ```
 
-Now, we can run python scripts that can connect to this local automan server to run automan jobs. First, we will need to create an adapter. Currently, only Mechnical Turk adapters are supported. To create an adapter, we must supply an access_id, access_key, and any additional options for the adapter (e.g. sandbox_mode(need to add more options later)), and the type of the adapter. We then pass the adapter and desired port number for the RPC server (default 50051).
-
-```
-adapter = {
-	"access_id" : "access key here",
-    "access_key" : "secret here",
-    "sandbox_mode" : "true",
-    "type" : "MTurk"
-}
-a = Automan(adapter, port = 50051)
-```
-
-We can now use the Automan object to submit tasks to the crowdsource back-end. Currently, only the `estimate` function of Automan is available. See example code for usage.
+The outcome can be either:
+*Estimate
+*Low Confidence estimate
+*Overbudget
+`printOutcome()` is a convenient way to print the result, but see the example code for further usage. 
 
 
 ### Example Code 
 ```
-from automan import Automan
+from pyautoman.automan import Automan, EstimateOutcome
 
 # make mechanical turk adapter
 adapter = {
-	"access_id" : "access key here",
-    "access_key" : "secret here",
+	"access_id" : "access id here",
+    "access_key" : "access key here",
     "sandbox_mode" : "true",
     "type" : "MTurk"
 }

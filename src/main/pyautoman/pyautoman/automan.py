@@ -61,6 +61,20 @@ class EstimateOutcome():
 
 	def outcomeType(self):
 		return self.out
+		
+	def printOutcome(self):
+		if(estim.isEstimate()):
+			print("Outcome: Estimate")
+			print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
+
+
+		if(estim.isLowConfidence()):
+			print("Outcome: Low Confidence Estimate")
+			print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
+
+		if(estim.isOverBudget()):
+			print("Outcome: Over Budget")
+			print(" need: %f have:%f"%(estim.need, estim.have))
 
 	def isEstimate(self):
 		"""
@@ -262,3 +276,4 @@ class Automan():
 		o = self._handleResponse(resp)
 		o = EstimateOutcome(outcome=o)
 		return o
+

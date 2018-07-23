@@ -241,7 +241,6 @@ def start_rpc_server(port=50051, sleep_time=3, suppress_output = 'all', stdout_f
 	"""
 	# add check port for correct type and valid range
 	cmd_string = [path.dirname(__file__)+"/rpc_server/pack/bin/PyAutoManRpcServer", str(port)]
-	out = None
 	stout = None
 	sterr = None
 
@@ -255,7 +254,7 @@ def start_rpc_server(port=50051, sleep_time=3, suppress_output = 'all', stdout_f
 		sterr = stderr_file
 
 	# launch server and wait for it to get ready
-	p = Popen(cmd_string, stdout = out, stderr = out)
+	p = Popen(cmd_string, stdout = stout, stderr = strerr)
 	sleep(sleep_time)
 	return p
 
