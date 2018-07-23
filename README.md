@@ -1,4 +1,5 @@
 # PyAutoman
+See [AutoMan](https://automan-lang.github.io/)
 This package is currently in development.
 
 

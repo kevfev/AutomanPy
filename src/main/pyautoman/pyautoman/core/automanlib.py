@@ -1,7 +1,7 @@
 from rpc_classes.automanlib_rpc_pb2 import *
 from rpc_classes.automanlib_classes_pb2 import *
 from rpc_classes.automanlib_wrappers_pb2 import *
-import rpc_classes.grpc.automanlib_rpc_pb2_grpc
+from grpc_classes import automanlib_rpc_pb2_grpc as rpclib
 import grpc
 from os import path, devnull
 from time import sleep
@@ -51,7 +51,7 @@ def _make_client_stub(channel_):
 
 	"""  
 
-	return automanlib_rpc_pb2_grpc.EstimationPrototypeStub(channel_)
+	return rpclib.EstimationPrototypeStub(channel_)
 
 def make_adapter(acc_id, acc_key, **kwargs):
 	"""

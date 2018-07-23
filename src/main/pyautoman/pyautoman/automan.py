@@ -1,6 +1,5 @@
 import core.automanlib as pyAutomanlib
-from core.automanlib_rpc_pb2 import TaskResponse
-import random
+from core.rpc_classes.automanlib_rpc_pb2 import TaskResponse
 import sys
 
 class EstimateOutcome():
@@ -194,8 +193,16 @@ class Automan():
 		"""
 		Internal method. Shutdown the gRPC server
 
-        """
+		"""
 		pyAutomanlib.shutdown_rpc_server(self.channel)
+
+	def _force_shutdown(self):
+		"""
+		Internal method. Forces shutdown the gRPC server by killing spawned process
+
+		"""
+		self.srvr_popen_obj.kill()
+
 
 	def _init_channel(self, server_addr, port):
 		"""
