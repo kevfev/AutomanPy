@@ -11,19 +11,6 @@ libraryDependencies ++= Seq(
     "edu.umass.cs" %% "automan" % "1.2.0"
 )
 
-excludeDependencies ++= Seq(
-  ExclusionRule("commons-logging", "commons-logging"),
-  ExclusionRule("xml-apis", "xml-apis"),
-  ExclusionRule("commons-collections", "commons-collections"),
-  ExclusionRule("commons-discovery", "commons-discovery"),
-  ExclusionRule("commons-logging", "commons-discovery"),
-  ExclusionRule("commons-lang", "commons-lang"),
-  ExclusionRule("dom4j", "dom4j"),
-  ExclusionRule("commons-pool", "commons-pool"),
-  ExclusionRule("commons-digester", "commons-digester"),
-  ExclusionRule("commons-codec", "commons-codec")
-)
-
 PB.targets in Compile := Seq(
   scalapb.gen() -> (sourceManaged in Compile).value
 )

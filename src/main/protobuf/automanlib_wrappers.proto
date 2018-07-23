@@ -64,7 +64,7 @@ answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
 
 outcome_type  	the type of outcome, can be one of : CONFIDENT,
-				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				LOW_CONFIDENCE, or OVERBUDGET. UNKNOWN_OUTCOME is 
 				default value (good practice for future types)
 
 need  			the amount of funds needed by AutoMan for the budget, only set
@@ -92,7 +92,7 @@ answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
 
 outcome_type  	the type of outcome, can be one of : CONFIDENT,
-				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				LOW_CONFIDENCE, or OVERBUDGET. UNKNOWN_OUTCOME is 
 				default value (good practice for future types)
 
 need  			the amount of funds needed by AutoMan for the budget, only set
@@ -119,7 +119,7 @@ answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
 
 outcome_type  	the type of outcome, can be one of : CONFIDENT,
-				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				LOW_CONFIDENCE, or OVERBUDGET. UNKNOWN_OUTCOME is 
 				default value (good practice for future types)
 
 need  			the amount of funds needed by AutoMan for the budget, only set
@@ -146,7 +146,7 @@ answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
 
 outcome_type  	the type of outcome, can be one of : CONFIDENT,
-				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				LOW_CONFIDENCE, or OVERBUDGET. UNKNOWN_OUTCOME is 
 				default value (good practice for future types)
 
 need  			the amount of funds needed by AutoMan for the budget, only set
@@ -173,7 +173,7 @@ answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
 
 outcome_type  	the type of outcome, can be one of : CONFIDENT,
-				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				LOW_CONFIDENCE, or OVERBUDGET. UNKNOWN_OUTCOME is 
 				default value (good practice for future types)
 
 need  			the amount of funds needed by AutoMan for the budget, only set
@@ -200,7 +200,7 @@ answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
 
 outcome_type  	the type of outcome, can be one of : CONFIDENT,
-				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				LOW_CONFIDENCE, or OVERBUDGET. UNKNOWN_OUTCOME is 
 				default value (good practice for future types)
 
 need  			the amount of funds needed by AutoMan for the budget, only set
@@ -227,7 +227,7 @@ answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
 
 outcome_type  	the type of outcome, can be one of : CONFIDENT,
-				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				LOW_CONFIDENCE, or OVERBUDGET. UNKNOWN_OUTCOME is 
 				default value (good practice for future types)
 
 need  			the amount of funds needed by AutoMan for the budget, only set
@@ -254,7 +254,7 @@ answer  		the result of the AutoMan task, only set if the outcome_type
 				is CONFIDENT or LOW_CONFIDENCE
 
 outcome_type  	the type of outcome, can be one of : CONFIDENT,
-				LOW_CONFIDENCES, or OVERBUDGET. UNKNOWN_OUTCOME is 
+				LOW_CONFIDENCE, or OVERBUDGET. UNKNOWN_OUTCOME is 
 				default value (good practice for future types)
 
 need  			the amount of funds needed by AutoMan for the budget, only set

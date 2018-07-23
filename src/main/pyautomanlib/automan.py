@@ -9,40 +9,31 @@ class EstimateOutcome():
 
     Attributes
     ----------
-    outcome : OutcomeAnswer
-        An outcome returned from the gRPC server, the result of the automan computation
-    outcome_type : int
+    outcome : ValueOutcome
+        An answer returned from the gRPC server, the estimation result of the automan computation
+    outcome_type : int (enum)
     	An int representing the type of the outcome. Possible values are:
     	UNKNOWN = 0;
 		ESTIMATE = 1;
-		LOW_CONFIDENCE_EST = 2;
-		OVER_BUDGET_EST = 3;
-		ANSWER=4;
-		LOW_CONFIDENCE_ANSWER = 5;
-		OVERBUDGET_ANSWER =6;
-		MULTIESTIMATE=7;
-		LOW_CONFIDENCE_MULTIESTIMATE = 8;
-		OVER_BUDGET_MULTIESTIMATE = 9;
-		ANSWERS = 10;
-		INCOMPLETE_ANSWERS = 11;
-		OVER_BUDGET_ANSWERS = 12;
-
+		LOW_CONFIDENCE = 2;
+		OVER_BUDGET = 3;
 	"""
 
-	def __init__(self, outcome, outcome_type):
+	def __init__(self, outcome):
 		"""
 		Ensure necessary fields in adapter are initializated and
 		set up the gRPC channel
 
 		Parameters
 		----------
-		outcome : OutcomeAnswer
-			An outcome returned from the gRPC server, the result of the automan computation
-		outcome_type : int 
+		answer : ValueOutcome
+			An ValueOutcome for the estimation task returned from the gRPC server, the result of the automan computation
+		outcome_type : int (enum) 
 			An int representing the type of the outcome. Possible values are:
+			L
 		"""
-		self.outcome = outcome
-		self.outcome_type = outcome_type
+		self.answer = outcome.answer
+		self.outcome_type_val = outcome.outcome_type
 		self.low = None
 		self.high = None
 		self.est = None
@@ -50,19 +41,27 @@ class EstimateOutcome():
 		self.conf = None
 		self.need = None
 		self.have = None
+		self.outcome_type = None
 
-		self.types_outcome = {'ESTIMATE':1, 'LOW_CONFIDENCE_EST':2, 'OVER_BUDGET_EST':3}
-
-		if self.isEstimate() or self.isLowConfidence():
-			self.low = self.outcome[0].estimateAnswer.low;
-			self.high = self.outcome[0].estimateAnswer.high;
-			self.est = self.outcome[0].estimateAnswer.est;
-			self.conf = self.outcome[0].estimateAnswer.conf;
-			self.cost = self.outcome[0].estimateAnswer.cost;
+		self.types_outcome = {'ESTIMATE':1, 'LOW_CONFIDENCE':2, 'OVERBUDGET':3}
 
 		if self.isOverBudget():
-			self.need = self.outcome[0].estimateAnswer.need;
-			self.have = self.outcome[0].estimateAnswer.have;
+			self.need = self.answer.need
+			self.have = self.answer.have
+			self.outcome_type = "OVERBUDGET"
+		else:
+			self.low = self.answer.low
+			self.high = self.answer.high
+			self.est = self.answer.est
+			self.conf = self.answer.conf
+			self.cost = self.answer.cost
+			if self.isEstimate():
+				self.outcome_type = "ESTIMATE"
+			if self.isLowConfidence():
+				self.outcome_type = "LOW_CONFIDENCE"
+
+	def outcomeType(self):
+		return self.out
 
 	def isEstimate(self):
 		"""
@@ -74,7 +73,7 @@ class EstimateOutcome():
 			True if outcome is an estimate
 		False otherwise
 		"""
-		return self.types_outcome['ESTIMATE'] == self.outcome_type
+		return self.types_outcome['ESTIMATE'] == self.outcome_type_val
 
 	def isLowConfidence(self):
 		"""
@@ -86,7 +85,7 @@ class EstimateOutcome():
 			True if outcome is a low confidence estimate
 			False otherwise
 		"""
-		return self.types_outcome['LOW_CONFIDENCE_EST'] == self.outcome_type
+		return self.types_outcome['LOW_CONFIDENCE'] == self.outcome_type_val
 
 	def isOverBudget(self):
 		"""
@@ -98,7 +97,7 @@ class EstimateOutcome():
 			True if outcome is over budget
 			False otherwise
 		"""
-		return self.types_outcome['OVER_BUDGET_EST'] == self.outcome_type
+		return self.types_outcome['OVERBUDGET'] == self.outcome_type_val
 
 class Automan():
 	"""
@@ -168,7 +167,7 @@ class Automan():
 		ret_string = None
 
 		if response.return_code == TaskResponse.VALID:
-			return response.outcome
+			return response.estimate_outcome
 		if response.return_code == TaskResponse.UNDEFINED_RESP_CODE:
 			ret_string= "ERROR: An undefind response code was returned. Application may be out of data or there is an error on the grpc server side"
 		if response.return_code == TaskResponse.ERROR:
@@ -241,5 +240,5 @@ class Automan():
 	    								image_url_ = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2")
 		resp = pyAutomanlib.submit_task(self.channel, task)
 		o = self._handleResponse(resp)
-		o = EstimateOutcome(outcome=o.answer, outcome_type=o.outcome_type)
+		o = EstimateOutcome(outcome=o)
 		return o

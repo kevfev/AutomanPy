@@ -122,9 +122,9 @@ def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None
 						pay_all_on_failure_ =pay_all_on_failure_  , dry_run_ = dry_run_ , wage_ = wage_, 
 						max_value_ = max_value_ , min_value_ = min_value_ , 
 						question_timeout_multiplier_ = question_timeout_multiplier_ , 
-						initial_worker_timeout_in_s_ initial_worker_timeout_in_s) 
+						initial_worker_timeout_in_s_ =initial_worker_timeout_in_s_) 
 
-	return EstimateTask(task)
+	return EstimateTask(task=task)
 
 def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pattern_ = None, confidence_ = None,
 				sample_size_ = -1, options_ = None, dimensions_ = None, dont_reject_ = False, pay_all_on_failure_ = True,
@@ -221,7 +221,7 @@ def submit_task(channel_,task_):
 	"""
 
 	# type check, error check, throw exceptions
-	at_task_ = AutomanTask(request = task_)
+	at_task_ = AutomanTask(estimate=task_)
 	client_stub = _make_client_stub(channel_)
 	response = client_stub.SubmitTask(at_task_)
 	return response
