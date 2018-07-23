@@ -17,7 +17,8 @@ setup(name = 'PyAutoMan',
 	long_description_content_type="text/markdown",
 	python_requires='>=2.7, !=3.0.*, !=3.1.*, <3.5.*',
 	package_data = {
-
+		'' :['*.md'],
+		''
 	},
 	classifiers=(
 		"Programming Language :: Python :: 2.7",
@@ -29,3 +30,4 @@ setup(name = 'PyAutoMan',
 		"Operating System :: OS Independent",
 	),
  )
+
