@@ -10,7 +10,7 @@ To use this package you must be running Python 2.7 or 3.2+, and Scala 2.11.7+. T
 To build this project, run sbt from the /PyAutoman directory, then compile using the "compile" command of SBT. SBT will also compile the necessary .proto into Scala classes automatically. To generate the the python files needed for the python client, from the /PytAutoman directory, run the following command:
 
 ```
-python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/pyautomanlib/core/ --grpc_python_out=src/main/pyautomanlib/core/ src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto
+python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/pyautomanlib/core/rpc_classes --grpc_python_out=src/main/pyautomanlib/core/grpc_classes src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto
 ```
 The python files are already generated and provided (see src/main/pyautomanlib/core/)
 

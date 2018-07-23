@@ -1,9 +1,9 @@
-from automanlib_rpc_pb2 import *
-from automanlib_classes_pb2 import *
-from automanlib_wrappers_pb2 import *
-import automanlib_rpc_pb2_grpc
+from rpc_classes.automanlib_rpc_pb2 import *
+from rpc_classes.automanlib_classes_pb2 import *
+from rpc_classes.automanlib_wrappers_pb2 import *
+import rpc_classes.grpc.automanlib_rpc_pb2_grpc
 import grpc
-from os.path import dirname
+from os import path, devnull
 from time import sleep
 from subprocess import Popen
 
@@ -230,7 +230,7 @@ def submit_task(channel_,task_):
 	response = client_stub.SubmitTask(at_task_)
 	return response
 
-def start_rpc_server(port=50051, sleep_time=3):
+def start_rpc_server(port=50051, sleep_time=3, suppress_output = 'all', stdout_file = None, stderr_file = None):
 	"""
 	Start the remote gRPC server process
 
@@ -239,9 +239,23 @@ def start_rpc_server(port=50051, sleep_time=3):
     channel_ : Channel
     	A gRPC channel
 	"""
-	# check port for correct type and valid range
-	cmd_string = [dirname(__file__)+"/rpc/pack/bin/PyAutoManRpcServer", str(port)]
-	p = Popen(cmd_string)
+	# add check port for correct type and valid range
+	cmd_string = [path.dirname(__file__)+"/rpc_server/pack/bin/PyAutoManRpcServer", str(port)]
+	out = None
+	stout = None
+	sterr = None
+
+	if suppress_output == "all":
+		stout = open(devnull, 'w')
+		strerr = open(devnull, 'w')
+	if suppress_output == "stdout":
+		stout = open(devnull, 'w')
+	if suppress_output == "file":
+		stout = stdout_file
+		sterr = stderr_file
+
+	# launch server and wait for it to get ready
+	p = Popen(cmd_string, stdout = out, stderr = out)
 	sleep(sleep_time)
 	return p
 

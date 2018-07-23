@@ -116,7 +116,7 @@ class Automan():
 
     """
 
-	def __init__(self, adapter, server_addr = 'localhost', port = 50051):
+	def __init__(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', stdout =None, stderr = None):
 		"""
 		Ensure necessary fields in adapter are initializated and
 		set up the gRPC channel
@@ -129,6 +129,13 @@ class Automan():
 	    	The hostname for the gRPC server
 	    port : int 
 	    	The port to connect to on the hostname 
+	    suppress_output : string
+	    	Specifies how much of the output to suppress from the RPC server. Values are:
+	    		all 	- suppress all output from rpc server
+	    		stdout 	- suppress all output from rpc server
+	    		file 	- redirect output from rpc server to files specified by 
+	    					stdout and stderr 
+	    		none 	- suppress no output from rpc server
 
         """
 		self.adptr = pyAutomanlib.make_adapter(adapter["access_id"], adapter["access_key"], sandbox_mode=adapter["sandbox_mode"]) if pyAutomanlib.isGoodAadapter(adapter) else None
