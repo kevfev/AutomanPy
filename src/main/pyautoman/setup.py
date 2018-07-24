@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
 from setuptools import setup, find_packages
+from os import path
 
-with open("../../../README.md", "r") as fh:
+with open("README.md", "r") as fh:
 	ld = fh.read()
 
 setup(name = 'pyautoman',
-	version= '0.1.0.dev',
+	version= '0.1.0.dev0',
 	description = 'Python bindings for AutoMan Runtime (in Scala)',
 	author = 'Kevin Feveck',
 	packages = find_packages(),
@@ -14,16 +15,11 @@ setup(name = 'pyautoman',
 	keywords = 'automan crowdsource quality-assurance',
 	long_description = ld,
 	long_description_content_type="text/markdown",
+	include_package_data=True,
 	python_requires = '>=2.7, !=3.0.*, !=3.1.*, <3.5.*',
 	install_requires = ['googleapis-common-protos>=1.5.3',
 						'grpcio>=1.13.0',
 						'grpcio-tools>=1.13.0'],
-	package_data = {
-		'' :['*.md'],
-		'' :['*.txt'],
-		'core/rpc_server/pack/lib' :['core/rpc_server/pack/lib/*.jar'],
-		'core/rpc_server/pack/bin' :['core/rpc_server/pack/bin/*']
-	},
 	classifiers=(
 		"Programming Language :: Python :: 2.7",
 		"Programming Language :: Python :: 3.2",

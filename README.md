@@ -18,6 +18,15 @@ python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/pyautoma
 
 The python files are already generated and provided (see src/main/pyautomanlib/core/grpc_gen_classes)
 
+To build the from python source, first you need to copy the contents of the folder 'pack' found at `PyAutoMan/target/pack` to `PyAutoMan/src/main/pyautoman/pyautoman/core/rpc_server/pack`, then change directory to `PyAutoMan/src/main/pyautoman` and run 
+```
+python setup.py bdist_wheel
+```
+To build python wheels. 
+
+### How to Install
+To install this package, 
+
 ### How to Use
 To run tasks, first create an Automan object. Automan objects require an adapter, and take optional parameters for the RPC server address and port number (default is 'localhost' and 50051).  The adapter we pass to the constructor is simply a dictionary with the following required fields:
 * access_id
