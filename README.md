@@ -13,7 +13,8 @@ The easiest way to build this project is by using [SBT](https://www.scala-sbt.or
  SBT will also compile the necessary .proto into Scala classes automatically. To generate the the python files needed, from the /PytAutoman directory, run the following command:
 
 ```
-python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes --grpc_python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto
+python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes --grpc_python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes   <br />
+src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto
 ```
 
 The python files are already generated and provided (see src/main/pyautomanlib/core/grpc_gen_classes)
