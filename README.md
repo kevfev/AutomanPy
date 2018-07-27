@@ -138,7 +138,7 @@ if(estim.isOverBudget()):
 # or else the server will kill itself before the computation is finished 
 a._shutdown()
 ```
-You can run the code on MTurk with the 'sandbox_mode' option set to 'true' and submit a response (need to create requester developer sandbox and worker sandbox accounts) to submit dummy worker responses. Here is what the output would look like if a single worker submitted a response of 62.
+You can run the code on MTurk with the 'sandbox_mode' option set to 'true' and submit a response (need to create requester developer sandbox and worker sandbox accounts) to submit dummy worker responses. Here is what the output would look like if a single worker submitted a response of 62.  
 Output:
 ```python
 Outcome: Low Confidence Estimate
@@ -150,10 +150,10 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ```python
 Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all')
 ```
-**adapter** 		- the adapter credentials to use to connect to the crowdsource backend
-**server_addr**		- the hostname address of the gRPC Automan server to connect to
-**port** 			- the port number to connect to the gRPC Automan server
-**supress_output**	- the level of output to show from the gRPC Automan server. "none" shows all output, "all" supresses all output from server
+* **adapter** 		- the adapter credentials to use to connect to the crowdsource backend
+* **server_addr**		- the hostname address of the gRPC Automan server to connect to
+* **port** 			- the port number to connect to the gRPC Automan server
+* **supress_output**	- the level of output to show from the gRPC Automan server. "none" shows all output, "all" supresses all output from server
 
 #### AutoMan Class Methods
 ```python
@@ -162,12 +162,12 @@ sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False,
 max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
 initial_worker_timeout_in_s = 30)
 ```
-###### Description
-	Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a 
-	quality-controlled estimate of a single real value. 
-###### Return Type
-	`EstimateOutcome`
-###### Parameters
+**Description**  
+		Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a 
+		quality-controlled estimate of a single real value. 
+**Return Type**  
+		`EstimateOutcome`
+**Parameters**
 * **text** 							- the text description of the task to display to the worker 
 * **budget** 						- the threshold cost for the task
 * **image_url**  					- an image url to be associated with the task
@@ -205,21 +205,21 @@ For `OverBudget` outcomes:
 
 #### EstimateOutcome Class Methods
 ##### EstimateOutcome.isConfident()
-###### Description
+**Description**  
 		Indicates if the outcome of the task is a confident estimate
-###### Return Type
+**Return Type**  
 		`boolean` : True if the outcome met the desired confidence level and interval, False otherwise
  
 ##### EstimateOutcome.isLowConfidence()
-###### Description
+**Description**  
 		Indicates if the outcome of the task is a low confidence estimate
-###### Return Type
+**Return Type**  
 		`boolean` : True if the outcome was a low confidence estimate, False otherwise
  
  
 ##### EstimateOutcome.isOverBudget()
-###### Description
+**Description**  
 		Indicates if the outcome of the task is over budget or not
-###### Return Type
+**Return Type**  
 		`boolean` : True if the outcome was over budget, False otherwise
 
