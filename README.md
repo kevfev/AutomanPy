@@ -162,11 +162,9 @@ sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False,
 max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
 initial_worker_timeout_in_s = 30)
 ```
-Description  
-    Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled estimate of a single real value.  
-Returns  
-    `EstimateOutcome`  
-Parameters
+*Description* : Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled estimate of a single real value.  
+*Returns* : `EstimateOutcome`  
+*Parameters*
 * **text** 							- the text description of the task to display to the worker 
 * **budget** 						- the threshold cost for the task
 * **image_url**  					- an image url to be associated with the task
@@ -204,21 +202,15 @@ For `OverBudget` outcomes:
 
 #### EstimateOutcome Class Methods
 ##### EstimateOutcome.isConfident()
-Description  
-    Indicates if the outcome of the task is a confident estimate  
-Returns  
-    `boolean` : True if the outcome met the desired confidence level and interval, False otherwise  
+*Description* : Indicates if the outcome of the task is a confident estimate  
+*Returns* : `boolean` - True if the outcome met the desired confidence level and interval, False otherwise  
  
 ##### EstimateOutcome.isLowConfidence()
-Description  
-    Indicates if the outcome of the task is a low confidence estimate  
-Returns  
-    `boolean` : True if the outcome was a low confidence estimate, False otherwise  
+*Description* :Indicates if the outcome of the task is a low confidence estimate  
+*Returns* : `boolean` - True if the outcome was a low confidence estimate, False otherwise  
  
  
 ##### EstimateOutcome.isOverBudget()
-Description  
-    Indicates if the outcome of the task is over budget or not  
-Returns  
-    `boolean` : True if the outcome was over budget, False otherwise  
+*Description* : Indicates if the outcome of the task is over budget or not  
+*Returns* : `boolean` - True if the outcome was over budget, False otherwise  
 
