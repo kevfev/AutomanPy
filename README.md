@@ -36,7 +36,7 @@ python setup.py sdist
 Alternaltively, you can run './buildproject.sh' located in the root directory, PyAutoMan to build the project tar for you.
 
 ### How to Install
-To install this package, find the tarball in the directory PyAutoMan/src/main/pyautoman/dist/ and use pip install to install the package.
+To install this package without building, find the tarball in the directory PyAutoMan/src/main/pyautoman/dist/ and use pip install to install the PyAutoman.
 
 ### How to Use
 To run tasks, first create an Automan object. Automan objects require an adapter, and take optional parameters for the RPC server address and port number (default is 'localhost' and 50051).  The adapter we pass to the constructor is simply a dictionary with the following required fields:
@@ -44,7 +44,7 @@ To run tasks, first create an Automan object. Automan objects require an adapter
 * access_key - the login access key for the crowdsource backend
 * type - the type of crowdsource backend. currently only "mturk" is an accepted type
 
-First, import the Automan and EstimateOutcome classes from pyautoman.automan import, then create an adapter
+First, import the Automan and EstimateOutcome classes from pyautoman.automan, then create an adapter
 
 ```
 
