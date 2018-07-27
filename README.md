@@ -2,7 +2,6 @@
 See [AutoMan](https://automan-lang.github.io/)
 This package is currently in development.
 
-
 ### System Requirements
 To use this package you must be running Python 2.7.15 or 3.2+, and Scala 2.11.7+. This package relies on [ScalaPB](https://scalapb.github.io/) and [gRPC](https://grpc.io/). If you use SBT to build this project, all Scala dependencies will be downloaded. To install gRPC for Python (needed for the Python client), follow these [instructions](https://grpc.io/docs/quickstart/python.html).
 
@@ -49,8 +48,7 @@ To run tasks, first create an Automan object. Automan objects require an adapter
 
 First, import the Automan and EstimateOutcome classes from pyautoman.automan, then create an adapter
 
-```
-
+```python
 Python 2.7.15 |Anaconda, Inc.| (default, May  1 2018, 18:37:05) 
 [GCC 4.2.1 Compatible Clang 4.0.1 (tags/RELEASE_401/final)] on darwin
 Type "help", "copyright", "credits" or "license" for more information.
@@ -66,7 +64,7 @@ from pyautoman.automan import Automan, EstimateOutcome
 
 When the creating Automan object is being initialized, if the server_addr is 'localhost' it will start a local AutoMan RPC server as a new process, configured to listen on the provided port number. Future functionality will allow users to connect to remote RPC servers. We can now use the Automan object to submit tasks to the crowdsource back-end. Currently, only the `estimate` function of Automan is available. See example code for usage.
 
-```
+```python
 >>> a = Automan(adapter, server_addr='localhost',port=50051)
 python client is starting server...
 Server Started on port 50051 ...
@@ -78,7 +76,7 @@ Each type of task has fields that are required. All tasks require `text` (a text
 
 
 To simply print the result of the task, use `printOutcome()`.
-```
+```python
 estim.printOutcome()
 >>> estim.printOutcome()
 Outcome: Low Confidence Estimate
@@ -93,7 +91,7 @@ The outcome can be either:
 
 
 ### Example Code 
-```
+```python
 from pyautoman.automan import Automan, EstimateOutcome
 
 # make mechanical turk adapter
@@ -146,8 +144,9 @@ Output:
 Outcome: Low Confidence Estimate
 Estimate low: 62.000000 high:62.000000 est:62.000000 
 ```
+## API
 ### AutoMan Class 
-##Constructor:
+#### **Constructor**
 ```
 Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all')
 ```
@@ -156,39 +155,40 @@ server_addr		- the hostname address of the gRPC Automan server to connect to
 port 			- the port number to connect to the gRPC Automan server
 supress_output	- the level of output to show from the gRPC Automan server. "none" shows all output, "all" supresses all output from server
 
-## AutoMan Class Methods
+#### **AutoMan Class Methods**
 ```
-Automan.estimate(self, text, budget, image_url, title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",sample_size = -1,  
-dont_reject = True, pay_all_on_failure = True, dry_run = False, wage = 11.00, max_value = sys.float_info.max, min_value = sys.float_info.min,  
-question_timeout_multiplier = 500,initial_worker_timeout_in_s = 30)
+Automan.estimate(self, text, budget, image_url, title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
+sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False, wage = 11.00,  
+max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
+initial_worker_timeout_in_s = 30)
 ```
-# Description
+##### Description
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a 
 quality-controlled estimate of a single real value. 
-# Return Type
+##### Return Type
 EstimateOutcome
-# Parameters
-* text 							- the text description of the task to display to the worker 
-* budget 						- the threshold cost for the task
-* image_url  					- an image url to be associated with the task
-* title   						- title of the task, displayed to worker
-* confidence 					- desired confidence leve
-* confidence_int 				- desired confidence interval
-* img_alt_txt 					- alternative image text, for generated webpage displayed to worker
-* sample_size 					- desired sample size, default of -1 indicates to use default samp. size of 30
-* dont_reject 					- indicate whether to accept all answers automatically or not (?)
-* pay_all_on_failure 			- indicate whether to pay all workers on task failure or note (?)
-* dry_run 						- indicate whether to do a dry run or not
-* wage 							- minimum wage to pay the worker, in USD/hr
-* max_value 					- min value for dimension being estimated
-* min_value 					- max value for dimension being estimated
-* question_timeout_multiplier 	- timeout for the question on the crowdsource backend (default 500 mins?)
-* initial_worker_timeout_in_s 	- timeout in seconds for the worker thread in the RPC server (defaul value )
+##### Parameters
+* **text** 							- the text description of the task to display to the worker 
+* **budget** 						- the threshold cost for the task
+* **image_url**  					- an image url to be associated with the task
+* **title**   						- title of the task, displayed to worker
+* **confidence** 					- desired confidence leve
+* **confidence_int** 				- desired confidence interval
+* **img_alt_txt** 					- alternative image text, for generated webpage displayed to worker
+* **sample_size** 					- desired sample size, default of -1 indicates to use default samp. size of 30
+* **dont_reject** 					- indicate whether to accept all answers automatically or not (?)
+* **pay_all_on_failure** 			- indicate whether to pay all workers on task failure or note (?)
+* **dry_run** 						- indicate whether to do a dry run or not
+* **wage** 							- minimum wage to pay the worker, in USD/hr
+* **max_value** 					- min value for dimension being estimated
+* **min_value** 					- max value for dimension being estimated
+* **question_timeout_multiplier** 	- timeout for the question on the crowdsource backend (default 500 mins?)
+* **initial_worker_timeout_in_s** 	- timeout in seconds for the worker thread in the RPC server (defaul value )
 
 ### EstimateOutcome Class
 Instances of this class will always be created for the user. This class will never need to be instantiated manually.  
 
-## EstimateOutcome Class Attributes
+#### **EstimateOutcome Class Attributes**
 This class contains a Future, representing the outcome of the task. To ensure that the future is always resolved first
 and the respective attributes are initialized, always use attributes of an EstimateOutcome in a code block that ensures
 those values are set. Attributes are as follows:  
@@ -202,28 +202,22 @@ For `OverBudget` outcomes:
 * need 	- the amount needed for AutoMan to continue attempting to obtain an estimate
 * have 	- the current amount budgeted for the task  
 
-## EstimateOutcome Class Methods
-```
-EstimateOutcome.isConfident()
-```
-# Description
+#### **EstimateOutcome Class Methods**
+#### EstimateOutcome.isConfident()
+##### Description
 Indicates if the outcome of the task is a confident estimate
-# Return Type
+##### Return Type
 boolean : True if the outcome met the desired confidence level and interval, False otherwise
  
-```
-EstimateOutcome.isLowConfidence()
-```
-# Description
+#### EstimateOutcome.isLowConfidence()
+##### Description
 Indicates if the outcome of the task is a low confidence estimate
-# Return Type
+##### Return Type
 boolean : True if the outcome was a low confidence estimate, False otherwise
  
-```
-EstimateOutcome.isOverBudget()
-```
-# Description
+#### EstimateOutcome.isOverBudget()
+##### Description
 Indicates if the outcome of the task is over budget or not
-# Return Type
+##### Return Type
 boolean : True if the outcome was over budget, False otherwise
 
