@@ -52,6 +52,22 @@ message Task{
 	double wage = 19;
 	double max_value = 20;
 	double min_value = 21;
+	double confidence_int = 22;
+}
+
+
+message UnconstrainedConInt{
+	
+}
+
+message SymmetricConInt{
+	double err = 1;
+}
+
+
+message AsymmetricConInt{
+	double low_err = 1;
+	double high_err  = 2;
 }
 
 

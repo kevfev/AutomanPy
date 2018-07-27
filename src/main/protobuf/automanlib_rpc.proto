@@ -22,16 +22,6 @@ KillServer
 			Indicates the current status of the server, "KILLED" if the
 			method was successful
 
-RegisterAdapter 
-		Registers a crowdsource back-end for the AutoMan server to use for
-		authentication
-	parameters:
-		AdapterCredentials 
-	returns:
-		RegistrationResponse
-			Indicates if the credentials were registered successfully or not
-
-
 ServerStatus 
 		Reports the status of the server
 	parameters:
@@ -58,9 +48,8 @@ SubmitTask
 			and excep_msg fields will be set.
 
 *****/
-service EstimationPrototype {
+service PyautomanPrototype {
 	rpc KillServer(Empty) returns (ServerStatusResponse) {}
-	rpc RegisterAdapter(AdapterCredentials) returns (RegistrationResponse) {}
 	rpc SubmitTask(AutomanTask) returns (TaskResponse) {}
 	rpc ServerStatus(Empty) returns (ServerStatusResponse) {}
 }
@@ -81,6 +70,7 @@ message AutomanTask{
 		CheckboxTask checkbox = 7;
 		CheckboxDistTask checkbox_dist = 8;
 	}
+	AdapterCredentials adapter = 9;
 }
 
 
@@ -135,24 +125,6 @@ message TaskResponse{
 	ErrorCode err_code = 17;
 	string err_msg = 18;
 	string excep_msg = 19;
-}
-
-
-/*
-This message class is the server response to registering an adapter
-fields:
-return_code 				Indicates whether the adapter was registered successfully
-							or not
-message 					error message, set if the adapter could not be added
-*/
-message RegistrationResponse{
-	enum RegReturnCode{
-		UNDEFINED_CODE = 0;
-		OKAY = 1;
-		FAILED = 2;
-	} 
-	RegReturnCode return_code = 1;
- 	string err_msg = 2;
 }
 
 /*

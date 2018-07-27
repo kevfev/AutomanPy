@@ -1,5 +1,6 @@
 package pyautomanlib;
 import edu.umass.cs.automan.adapters.mturk.DSL._
+import edu.umass.cs.automan.core.question.confidence.ConfidenceInterval;
 import edu.umass.cs.automan.core.MagicNumbers;
 import automanlib_rpc._;
 import automanlib_rpc.AutomanTask.TaskType;
@@ -8,10 +9,8 @@ import automanlib_wrappers._;
 import scala.concurrent.{ ExecutionContext, Future };
 
 
-object EstimationPrototypeServicer extends GrpcServer{ self => 
-	private class EstimationServicer extends EstimationPrototypeGrpc.EstimationPrototype {
-		private var _adptr_credentials: Option[AdapterCredentials] = None;
-		
+object PyautomanPrototypeServicer extends GrpcServer{ self => 
+	private class PyautomanServicer extends PyautomanPrototypeGrpc.PyautomanPrototype {	
 		/** rpc method used by client to submit a task to Automan.
 			If adapter credentials are supplied, run the task if it is valid and return the outcome. 
 			If either the task is invalid or an adapter is not registered, set returnCode to 
@@ -24,35 +23,25 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 		*							
 		*/
 		def submitTask(automanTask: AutomanTask) : Future[TaskResponse] = {
-			var response: TaskResponse = TaskResponse()
-			println("Received Task")
-			_adptr_credentials match {
-				case Some(adptr) => 
-					response = response.withReturnCode(TaskResponse.TaskReturnCode.VALID)
-					automanTask.taskType match {
-						case TaskType.Estimate(etask) 		=> 	response = response.withEstimateOutcome(estimateTask(etask.getTask, adptr));
-						case TaskType.Multiestimate(metask) => 	response = response.withMultiestimateOutcome(multiestimateTask(metask.getTask, adptr));
-						case TaskType.Freetext(frtask) 		=>	response = response.withFreetextOutcome(freetextTask(frtask.getTask, adptr));
-						case TaskType.FreetextDist(frdtask) =>	response = response.withFreetextDistOutcome(freetextDistTask(frdtask.getTask, adptr));
-						case TaskType.Radio(rtask) 			=>	response = response.withRadioOutcome(radioTask(rtask.getTask, adptr));
-						case TaskType.RadioDist(rdtask) 	=>	response = response.withRadioDistOutcome(radioDistTask(rdtask.getTask, adptr));
-						case TaskType.Checkbox(chtask) 		=>	response = response.withCheckboxOutcome(checkboxTask(chtask.getTask, adptr));
-						case TaskType.CheckboxDist(chdtask) =>	response = response.withCheckboxDistOutcome(checkboxDistTask(chdtask.getTask, adptr));
-						case TaskType.Empty=>
-							println("ERROR: Empty Task ");
-							response =response.withReturnCode(TaskResponse.TaskReturnCode.ERROR)
-										.withErrMsg("ERROR: Empty Task. Refer to rpc API for a list of task types and usage"); 
-						case _ =>
-							println("ERROR: Task Type Unknown.");
-							response =response.withReturnCode(TaskResponse.TaskReturnCode.ERROR)
-										.withErrMsg("ERROR: Task Type Unknown. Refer to rpc API for a list of task types"); 
-						}
-				case _ => 
-					println("ERROR: no credentials registered");
+			var response: TaskResponse = TaskResponse().withReturnCode(TaskResponse.TaskReturnCode.VALID)
+			automanTask.taskType match {
+				case TaskType.Estimate(etask) 		=> 	response = response.withEstimateOutcome(estimateTask(etask.getTask, automanTask.getAdapter));
+				case TaskType.Multiestimate(metask) => 	response = response.withMultiestimateOutcome(multiestimateTask(metask.getTask, automanTask.getAdapter));
+				case TaskType.Freetext(frtask)		=>	response = response.withFreetextOutcome(freetextTask(frtask.getTask, automanTask.getAdapter));
+				case TaskType.FreetextDist(frdtask) =>	response = response.withFreetextDistOutcome(freetextDistTask(frdtask.getTask, automanTask.getAdapter));
+				case TaskType.Radio(rtask) 			=>	response = response.withRadioOutcome(radioTask(rtask.getTask, automanTask.getAdapter));
+				case TaskType.RadioDist(rdtask) 	=>	response = response.withRadioDistOutcome(radioDistTask(rdtask.getTask, automanTask.getAdapter));
+				case TaskType.Checkbox(chtask) 		=>	response = response.withCheckboxOutcome(checkboxTask(chtask.getTask, automanTask.getAdapter));
+				case TaskType.CheckboxDist(chdtask) =>	response = response.withCheckboxDistOutcome(checkboxDistTask(chdtask.getTask, automanTask.getAdapter));
+				case TaskType.Empty=>
+					println("ERROR: Empty Task ");
 					response =response.withReturnCode(TaskResponse.TaskReturnCode.ERROR)
-								.withErrMsg("ERROR: no crowdsource adapter credentials registered"); 
-					
-			}
+								.withErrMsg("ERROR: Empty Task. Refer to rpc API for a list of task types and usage"); 
+				case _ =>
+					println("ERROR: Task Type Unknown.");
+					response =response.withReturnCode(TaskResponse.TaskReturnCode.ERROR)
+								.withErrMsg("ERROR: Task Type Unknown. Refer to rpc API for a list of task types"); 
+				}
 			val tr: TaskResponse = response;
 			Future.successful(tr);
 		}
@@ -96,6 +85,10 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 		*/
 		def estimateTask(task : Task, adptr: AdapterCredentials) : EstimateOutcome = {
 			println("Task Type: Estimation");
+			println("Adapter: access " + adptr.accessId)
+			println("Adapter: key " + adptr.accessKey)
+			println("Adapter: sandbox_mode " + adptr.adapterOptions("sandbox_mode").toBoolean)
+
 			/*
 			* first, make the mech turk adapter, then make our AutoMan function, then execute
 			*/	
@@ -104,7 +97,13 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 			   secret_access_key = adptr.accessKey,
 			   sandbox_mode = adptr.adapterOptions("sandbox_mode").toBoolean
 			)
-					
+
+			var ci : ConfidenceInterval = UnconstrainedCI()
+			if (task.confidenceInt > 0) {
+				println("CI is symmetric with value " + task.confidenceInt)
+				ci = SymmetricCI(task.confidenceInt)
+			}
+
 			def est(text_ : String, 
 					budget_ : Double, 
 					image_url_ : String,
@@ -116,6 +115,7 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 					dry_run_ : Boolean = false,
 					wage_ : Double = MagicNumbers.USFederalMinimumWage.toDouble,
 					confidence_ : Double = MagicNumbers.DefaultConfidence.toDouble, 
+					confidence_interval_ : ConfidenceInterval = UnconstrainedCI(),
 					max_value_ : Double = Double.MaxValue,
 					min_value_ : Double = Double.MinValue,
 					init_worker_timeout: Int = MagicNumbers.InitialWorkerTimeoutInS,
@@ -124,37 +124,35 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 								image_alt_text = image_alt_txt_ , title = title_ ,
 								default_sample_size = def_samp_size ,dont_reject = dont_reject_ ,
 								dry_run = dry_run_ , pay_all_on_failure = pay_all_on_failure_ ,
-								confidence = confidence_ , max_value = max_value_ , min_value = min_value_ ,
+								confidence = confidence_ , confidence_interval = confidence_interval_ ,
+								max_value = max_value_ , min_value = min_value_ ,
 								wage = wage_ , initial_worker_timeout_in_s = init_worker_timeout,
 								question_timeout_multiplier = ques_timeout_mult)
-
 			automan(mt) {
 				val automan_outcome = est(text_ =task.text, 
 											budget_  = task.budget, 
 											image_url_ =task.imageUrl,
 											image_alt_txt_ =task.imgAltTxt,
 											title_ = task.title, 
-											def_samp_size = task.sample_size,
-											pay_all_on_failure_ = task.pay_all_on_failure,
-											dont_reject_  = task.dont_reject,
-											dry_run_  = task.dry_run,
+											def_samp_size = task.sampleSize,
+											pay_all_on_failure_ = task.payAllOnFailure,
+											dont_reject_  = task.dontReject,
+											dry_run_  = task.dryRun,
 											wage_ = task.wage,
 											confidence_ = task.confidence, 
+											confidence_interval_ = ci,
 											max_value_ = task.maxValue,
 											min_value_ = task.minValue,
-											init_worker_timeout = task.initial_worker_timeout_in_s,
-											ques_timeout_mult = question_timeout_multiplier);
+											init_worker_timeout = task.initialWorkerTimeoutInS,
+											ques_timeout_mult = task.questionTimeoutMultiplier);
 									
 				var outcome = EstimateOutcome()
 				automan_outcome.answer match{
 					case Estimate(est, low, high, cost, conf, _, _) => 
-						println("estimated,"); 
 						outcome = makeValueOutcome(est, low, high, cost, conf, OutcomeType.CONFIDENT);
 					case LowConfidenceEstimate(est, low, high, cost, conf, _, _) => 
-						println("low conf estimated,");
 						outcome = makeValueOutcome(est, low, high, cost, conf, OutcomeType.LOW_CONFIDENCE);
 					case OverBudgetEstimate(need, have, _) => 
-						println("overbudget,");
 						outcome = makeOverBudgetOutcome(need,have);
 				}
 				return outcome
@@ -262,18 +260,6 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 			Future.successful(ssr);
 		}
 
-		/** Register a crowdsource back-end adapter to the server.
-		*
-		*  @param adptr - adapter with credentials to connect to the crowdsource back-end
-		*  @return a new RegistrationResponse, representing the whether the adapter was registered successfully or not
-		*							
-		*/
-		def registerAdapter(adptr : AdapterCredentials) : Future[RegistrationResponse] = {
-			// add error checking
-			_adptr_credentials = Some(adptr);
-			Future.successful(RegistrationResponse().withReturnCode(RegistrationResponse.RegReturnCode.OKAY));
-		}
-
 		/** Shutdown the gRPC server
 		*
 		*  @return a new ServerStatusResponse, representing the state of the server. Either Running or Killed
@@ -292,7 +278,7 @@ object EstimationPrototypeServicer extends GrpcServer{ self =>
 		var localport = 50051;
 		if(args.length >= 1) localport = args(0).toInt;
 		
-		val ssdef = EstimationPrototypeGrpc.bindService(new EstimationServicer(), ExecutionContext.global)
+		val ssdef = PyautomanPrototypeGrpc.bindService(new PyautomanServicer(), ExecutionContext.global)
 		println("Server Started on port "+localport+" ...")
 		runServer(ssd = ssdef, port = localport)
 	}

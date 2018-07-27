@@ -3,7 +3,7 @@ enablePlugins(PackPlugin)
 name := "PyautomanlibPrototype"
 version := "1.0"
 scalaVersion := "2.11.7"
-packMain := Map("PyAutoManRpcServer" -> "pyautomanlib.EstimationPrototypeServicer")
+packMain := Map("PyAutoManRpcServer" -> "pyautomanlib.PyautomanPrototypeServicer")
 
 libraryDependencies ++= Seq(
     "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion ,

@@ -51,7 +51,7 @@ def _make_client_stub(channel_):
 
 	"""  
 
-	return rpclib.EstimationPrototypeStub(channel_)
+	return rpclib.PyautomanPrototypeStub(channel_)
 
 def make_adapter(acc_id, acc_key, **kwargs):
 	"""
@@ -97,7 +97,7 @@ def make_channel(address_, port_):
 	channel = grpc.insecure_channel(address_+":"+port_)
 	return channel
 
-def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, confidence_ = None,
+def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, confidence_ = None, confidence_int_ = None,
 				sample_size_ = -1, dont_reject_ = False, pay_all_on_failure_ = True, dry_run_ = False, 
 				wage_ = None, max_value_ = None, min_value_ = None, question_timeout_multiplier_ = None, 
 				initial_worker_timeout_in_s_ = None):
@@ -106,14 +106,7 @@ def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None
 
 	Parameters
 	----------
-	title_ : str
-		The title for the task, to display to workers on the crowdsource platform
-	text_ : str
-		The text description of the task, to display to workers on the crowdsource platform
-	image_url_ : str
-		The url of the image for the task
-	budget_ : double
-		The total budget allocated for this task
+	see make_task for description
 
 	Returns
 	-------
@@ -122,7 +115,7 @@ def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None
 	------
 	"""
 	task = make_task(text_=text_, image_url_=image_url_, budget_=budget_, img_alt_txt_=img_alt_txt_ , title_=title_ , 
-						confidence_=confidence_ ,sample_size_=sample_size_ , dont_reject_ =dont_reject_ , 
+						confidence_=confidence_ ,confidence_int_ = confidence_int_,sample_size_=sample_size_ , dont_reject_ =dont_reject_ , 
 						pay_all_on_failure_ =pay_all_on_failure_  , dry_run_ = dry_run_ , wage_ = wage_, 
 						max_value_ = max_value_ , min_value_ = min_value_ , 
 						question_timeout_multiplier_ = question_timeout_multiplier_ , 
@@ -130,7 +123,7 @@ def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None
 
 	return EstimateTask(task=task)
 
-def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pattern_ = None, confidence_ = None,
+def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pattern_ = None, confidence_ = None, confidence_int_ = None,
 				sample_size_ = -1, options_ = None, dimensions_ = None, dont_reject_ = False, pay_all_on_failure_ = True,
 				dry_run_ = False, allow_empty_pattern_ = False, pattern_error_text_ = None, wage_ = None, max_value_ = None,
 				min_value_ = None, question_timeout_multiplier_ = None, initial_worker_timeout_in_s_ = None):
@@ -152,7 +145,10 @@ def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pa
 	pattern_ : str 
 		The expected pattern (Freetext tasks only)
 	confidence_ : double 
-		The desired confidence level of the estimation		
+		The desired confidence level of the estimation	
+	confidence_int_ : double
+			The desired confidence interval. If 'None', an Unconstrained Confidence Internal is used,
+			if set to a value, a symmetric confidence interval of with confidence_int is used.	
 	sample_size_ : int 
 		The desired sample size for the task
 	options_ : List(str)
@@ -187,15 +183,15 @@ def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pa
 	"""
 
 	#consider using a task builder classs to make tasks in this method
-	return Task(text = text_, image_url = image_url_, budget = budget_, img_alt_txt = img_alt_txt_ , title = title_ , 
-					pattern = pattern_ , confidence = confidence_, sample_size = sample_size_, options = options_ , 
-					dimensions = dimensions_ , dont_reject = dont_reject_ , pay_all_on_failure = pay_all_on_failure_,
-					dry_run = dry_run_, allow_empty_pattern = allow_empty_pattern_, pattern_error_text = pattern_error_text_, 
-					wage = wage_, max_value = max_value_, min_value = min_value_, 
-					question_timeout_multiplier = question_timeout_multiplier_, 
-					initial_worker_timeout_in_s = initial_worker_timeout_in_s_)
+	t = Task(text = text_, image_url = image_url_, budget = budget_, img_alt_txt = img_alt_txt_ , title = title_ , 
+					pattern = pattern_ , confidence = confidence_, confidence_int = confidence_int_, sample_size = sample_size_, options = options_ , 
+					dimensions = dimensions_ , dont_reject = dont_reject_ , pay_all_on_failure = pay_all_on_failure_,dry_run = dry_run_, 
+					allow_empty_pattern = allow_empty_pattern_, pattern_error_text = pattern_error_text_, wage = wage_, max_value = max_value_, 
+					min_value = min_value_, question_timeout_multiplier = question_timeout_multiplier_, initial_worker_timeout_in_s = initial_worker_timeout_in_s_)
 
-def submit_task(channel_,task_):
+	return t
+
+def submit_task(channel_,task_, adapter_):
 	"""
 	Submits task_ to the gRPC server listening on channel_
 
@@ -208,10 +204,11 @@ def submit_task(channel_,task_):
 
 	Returns
 	-------
-	TaskResponse
-		A response from the gRPC server on the outcome of the task. If the response is valid, the outcome
-		will be stored in the field 'outcome' of type TaskOutcome. The field return_code determine
-		if the response is valid or an error/exception happened. values of the enum are: 
+	gRPC Future TaskResponse
+		A future response from the gRPC server on that will hold the outcome of the task. If the future 
+		response is valid, the outcome will be stored in the gRPC oneof task_outcome. The calling method will need to
+		know what type of outcome to expect . The return_code determines if the response is valid or an error/exception 
+		happened. values of the enum are: 
 		TaskResponse.VALID 
 		TaskResponse.ERROR
 		TaskResponse.EXCEPTION
@@ -225,27 +222,38 @@ def submit_task(channel_,task_):
 	"""
 
 	# type check, error check, throw exceptions
-	at_task_ = AutomanTask(estimate=task_)
+	at_task_ = AutomanTask(estimate=task_, adapter = adapter_)
 	client_stub = _make_client_stub(channel_)
-	response = client_stub.SubmitTask(at_task_)
+	response = client_stub.SubmitTask.future(at_task_)
 	return response
 
-def start_rpc_server(port=50051, sleep_time=3, suppress_output = 'all', stdout_file = None, stderr_file = None):
+def start_rpc_server(port=50051, sleep_time=5, suppress_output = 'all', stdout_file = None, stderr_file = None):
 	"""
 	Start the remote gRPC server process
 
 	Parameters
     ----------
-    channel_ : Channel
-    	A gRPC channel
+    port : int
+    	The desired port number to have the started server listen on
+    sleep_time : int
+    	The amount of time to wait to give to let the server boot up 
+	suppress_output : string
+		Setting for suppressing the output of the RPC server from stdout.
+		Values are:
+	    		all 	- suppress all output from rpc server
+	    		stdout 	- suppress all output from rpc server
+	    		file 	- redirect output from rpc server to files specified by 
+	    					stdout and stderr 
+	    		none 	- suppress no output from rpc server
 	"""
 	# add check port for correct type and valid range
 	cmd_string = [path.dirname(__file__)+"/rpc_server/pack/bin/PyAutoManRpcServer", str(port)]
 	stout = open(devnull, 'w')
-	strerr = open(devnull, 'w')
+	sterr = open(devnull, 'w')
 
 	if suppress_output == "stdout":
 		stout = open(devnull, 'w')
+		sterr = None
 	if suppress_output == "file":
 		stout = stdout_file
 		sterr = stderr_file
@@ -254,7 +262,7 @@ def start_rpc_server(port=50051, sleep_time=3, suppress_output = 'all', stdout_f
 		sterr = None
 
 	# launch server and wait for it to get ready
-	p = Popen(cmd_string, stdout = stout, stderr = strerr)
+	p = Popen(cmd_string, stdout = stout, stderr = sterr)
 	sleep(sleep_time)
 	return p
 
@@ -292,28 +300,3 @@ def get_server_status(channel_):
 	stat_resp = client_stub.ServerStatus(Empty())
 	return stat_resp
 
-def register_adapter_to_server(channel_, adptr_):
-	"""
-	Registers the adapter to the gRPC server to carry out Automan jobs
-
-	Parameters
-    ----------
-    channel_ : Channel
-    	A gRPC channel
-	adptr_ : AdapterCredentials
-		an adapter object for authenticating to the crowdsource back-end
-
-	Returns
-	-------
-	RegistrationResponse
-		An enum that indicates whether the adapter was registered successfully or not, with following values:
-		RegistrationResponse.OKAY 
-		RegistrationResponse.FAILED 
-	Notes
-	-----
-	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, check protobuf files and ensure 
-	it is the latest version
-	"""
-	client_stub = _make_client_stub(channel_)
-	response = client_stub.RegisterAdapter(adptr_)
-	return response
