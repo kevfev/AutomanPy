@@ -204,27 +204,22 @@ For `OverBudget` outcomes:
 * **have** 	- the current amount budgeted for the task  
 
 #### EstimateOutcome Class Methods
-```python 
-EstimateOutcome.isConfident()
-```
+##### EstimateOutcome.isConfident()
 ###### Description
-	Indicates if the outcome of the task is a confident estimate
+		Indicates if the outcome of the task is a confident estimate
 ###### Return Type
-	`boolean` : True if the outcome met the desired confidence level and interval, False otherwise
+		`boolean` : True if the outcome met the desired confidence level and interval, False otherwise
  
-```python 
-EstimateOutcome.isLowConfidence()
-```
+##### EstimateOutcome.isLowConfidence()
 ###### Description
-	Indicates if the outcome of the task is a low confidence estimate
+		Indicates if the outcome of the task is a low confidence estimate
 ###### Return Type
-	`boolean` : True if the outcome was a low confidence estimate, False otherwise
+		`boolean` : True if the outcome was a low confidence estimate, False otherwise
  
-```python 
-EstimateOutcome.isOverBudget()
-```
+ 
+##### EstimateOutcome.isOverBudget()
 ###### Description
 		Indicates if the outcome of the task is over budget or not
 ###### Return Type
-	`boolean` : True if the outcome was over budget, False otherwise
+		`boolean` : True if the outcome was over budget, False otherwise
 
