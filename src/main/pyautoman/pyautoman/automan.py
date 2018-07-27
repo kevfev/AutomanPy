@@ -327,7 +327,7 @@ class Automan():
 		self.channel = pyAutomanlib.make_channel(server_addr,str(port))
 		return 
 
-	def estimate(self, text, budget, image_url, title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",sample_size = -1, dont_reject = False, 
+	def estimate(self, text, budget, image_url="", title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",sample_size = -1, dont_reject = True, 
 				pay_all_on_failure = True, dry_run = False, wage = 11.00, max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500, 
 				initial_worker_timeout_in_s = 30):
 		"""

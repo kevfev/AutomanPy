@@ -95,7 +95,6 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 
 			var ci : ConfidenceInterval = UnconstrainedCI()
 			if (task.confidenceInt > 0) {
-				println("CI is symmetric with value " + task.confidenceInt)
 				ci = SymmetricCI(task.confidenceInt)
 			}
 

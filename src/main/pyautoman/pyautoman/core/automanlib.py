@@ -251,13 +251,13 @@ def start_rpc_server(port=50051, sleep_time=5, suppress_output = 'all', stdout_f
 	stout = open(devnull, 'w')
 	sterr = open(devnull, 'w')
 
-	if suppress_output == "stdout":
+	if suppress_output.lower() == "stdout":
 		stout = open(devnull, 'w')
 		sterr = None
-	if suppress_output == "file":
+	if suppress_output.lower() == "file":
 		stout = stdout_file
 		sterr = stderr_file
-	if suppress_output == "none":
+	if suppress_output.lower() == "none":
 		stout = None
 		sterr = None
 
