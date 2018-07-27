@@ -110,9 +110,10 @@ adapter = {
 photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
 
 # make AutoMan object 
-# 'suppress_output' sets the how much output from the RPC server to print to stdout. current valid values are
-# 	"all" 	- suppress all output
-# 	"none "	- show all output 
+# 'suppress_output' is a string argument for setting the how much output 
+# from the RPC server to print to stdout. current valid values are
+# 	"all" 	- suppress all output from rpc server 
+# 	"none"	- show all output  from rpc server
 a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none")
 
 estim = a.estimate(text = "How many cars are in this parking lot?",
