@@ -137,10 +137,10 @@ if(estim.isOverBudget()):
 # to be safe, only call _shutdown() after the future has resolved,
 # or else the server will kill itself before the computation is finished 
 a._shutdown()
-````
+```
 You can run the code on MTurk with the 'sandbox_mode' option set to 'true' and submit a response (need to create requester developer sandbox and worker sandbox accounts) to submit dummy worker responses. Here is what the output would look like if a single worker submitted a response of 62.
 Output:
-```
+```python
 Outcome: Low Confidence Estimate
 Estimate low: 62.000000 high:62.000000 est:62.000000 
 ```
@@ -163,10 +163,10 @@ max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout
 initial_worker_timeout_in_s = 30)
 ```
 ##### Description
-Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a 
-quality-controlled estimate of a single real value. 
+	Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a 
+	quality-controlled estimate of a single real value. 
 ##### Return Type
-`EstimateOutcome`
+	`EstimateOutcome`
 ##### Parameters
 * **text** 							- the text description of the task to display to the worker 
 * **budget** 						- the threshold cost for the task
@@ -198,26 +198,27 @@ For `Confident` and `LowConfidence` outcomes:
 * **est** 	- AutoMan's estimate value
 * **cost**	- the cost to complete the task
 * **conf** 	- the confidence interval of the estimate  
+
 For `OverBudget` outcomes:  
 * **need** 	- the amount needed for AutoMan to continue attempting to obtain an estimate
 * **have** 	- the current amount budgeted for the task  
 
 #### EstimateOutcome Class Methods
-`EstimateOutcome.isConfident()`
+`python EstimateOutcome.isConfident()`
 ##### Description
-Indicates if the outcome of the task is a confident estimate
+	Indicates if the outcome of the task is a confident estimate
 ##### Return Type
-`boolean` : True if the outcome met the desired confidence level and interval, False otherwise
+	`boolean` : True if the outcome met the desired confidence level and interval, False otherwise
  
-`EstimateOutcome.isLowConfidence()`
+`python EstimateOutcome.isLowConfidence()`
 ##### Description
-Indicates if the outcome of the task is a low confidence estimate
+	Indicates if the outcome of the task is a low confidence estimate
 ##### Return Type
-`boolean` : True if the outcome was a low confidence estimate, False otherwise
+	`boolean` : True if the outcome was a low confidence estimate, False otherwise
  
-`EstimateOutcome.isOverBudget()`
+`python EstimateOutcome.isOverBudget()`
 ##### Description
-Indicates if the outcome of the task is over budget or not
+	Indicates if the outcome of the task is over budget or not
 ##### Return Type
-`boolean` : True if the outcome was over budget, False otherwise
+	`boolean` : True if the outcome was over budget, False otherwise
 
