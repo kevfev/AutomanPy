@@ -164,7 +164,8 @@ initial_worker_timeout_in_s = 30)
 ```
 *Description* : 
 ```
-Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled estimate of a single real value.  
+Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
+estimate of a single real value.  
 ```
 *Returns* : `EstimateOutcome`  
 *Parameters*
