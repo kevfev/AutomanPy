@@ -12,7 +12,12 @@ The easiest way to build this project is by using [SBT](https://www.scala-sbt.or
 ```
 sbt compile pack
 ```
- SBT will also compile the necessary .proto into Scala classes automatically. To generate the the python files needed, from the /PytAutoman directory, run the following command:
+SBT will also compile the necessary .proto into Scala classes automatically. To generate the the python files needed, `grpcio-tools` and `googleapis-common-protos` need to be installed. To install these packages, run the following two commands:
+```
+pip install grpcio-tools
+pip install googleapis-common-protos
+```
+To generate the pythong files, from the /PytAutoman directory, run the following command:
 
 ```
 python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes --grpc_python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto
@@ -96,23 +101,24 @@ adapter = {
     "type" : "MTurk"
 }
 
-# make AutoMan object 
-a = Automan(adapter, server_addr='localhost',port=50051)
+
+
 
 # image to submit with our task
 photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
 
-# submit estimation job to AutoMan
+# make AutoMan object 
+# 'suppress_output' sets the level of output for RPC server to stdout. current valid values are
+# 	"all" 	- suppress all output
+# 	"none "	- show all output 
+a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none")
+
 estim = a.estimate(text = "How full is this parking lot?",
-    budget = 1.00,
+    budget = 6.00,
     title = "Car Counting",
+    confidence_int = 10,
     image_url = photo_url)
 
-# this is temporary, in future client will automatically handle shutdown
-a._shutdown()
-
-# The estimation may be a confident estimate, a low confidence estimate
-# or the task did not complete because it went over budget
 if(estim.isConfident()):
 	print("Outcome: Estimate")
 	print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
@@ -125,6 +131,11 @@ if(estim.isLowConfidence()):
 if(estim.isOverBudget()):
 	print("Outcome: Over Budget")
 	print(" need: %f have:%f"%(estim.need, estim.have))
+
+# this is temporary, in future client will automatically handle shutdown
+# to be safe, only call _shutdown() after the future has resolved,
+# or else the server will kill itself before the computation is finished 
+a._shutdown()
 ````
 You can run the code on MTurk with the 'sandbox_mode' option set to 'true' and submit
 a response (need to create requester developer and worker sandbox accounts) to see output.

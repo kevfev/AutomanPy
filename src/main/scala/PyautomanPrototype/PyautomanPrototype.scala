@@ -84,11 +84,6 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 		*							
 		*/
 		def estimateTask(task : Task, adptr: AdapterCredentials) : EstimateOutcome = {
-			println("Task Type: Estimation");
-			println("Adapter: access " + adptr.accessId)
-			println("Adapter: key " + adptr.accessKey)
-			println("Adapter: sandbox_mode " + adptr.adapterOptions("sandbox_mode").toBoolean)
-
 			/*
 			* first, make the mech turk adapter, then make our AutoMan function, then execute
 			*/	
