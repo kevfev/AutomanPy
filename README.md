@@ -166,7 +166,7 @@ Description
 		Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a 
 		quality-controlled estimate of a single real value.  
 Return Type  
-		`EstimateOutcome`
+		`EstimateOutcome`  
 Parameters
 * **text** 							- the text description of the task to display to the worker 
 * **budget** 						- the threshold cost for the task
@@ -206,20 +206,20 @@ For `OverBudget` outcomes:
 #### EstimateOutcome Class Methods
 ##### EstimateOutcome.isConfident()
 Description  
-		Indicates if the outcome of the task is a confident estimate
+		Indicates if the outcome of the task is a confident estimate  
 Return Type  
-		`boolean` : True if the outcome met the desired confidence level and interval, False otherwise
+		`boolean` : True if the outcome met the desired confidence level and interval, False otherwise  
  
 ##### EstimateOutcome.isLowConfidence()
 Description  
-		Indicates if the outcome of the task is a low confidence estimate
+		Indicates if the outcome of the task is a low confidence estimate  
 Return Type  
-		`boolean` : True if the outcome was a low confidence estimate, False otherwise
+		`boolean` : True if the outcome was a low confidence estimate, False otherwise  
  
  
 ##### EstimateOutcome.isOverBudget()
 Description  
-		Indicates if the outcome of the task is over budget or not
+		Indicates if the outcome of the task is over budget or not  
 Return Type  
-		`boolean` : True if the outcome was over budget, False otherwise
+		`boolean` : True if the outcome was over budget, False otherwise  
 
