@@ -2,6 +2,7 @@ import core.automanlib as pyAutomanlib
 from core.grpc_gen_classes.automanlib_rpc_pb2 import TaskResponse
 from core.grpc_gen_classes.automanlib_classes_pb2 import SymmetricConInt, AsymmetricConInt, UnconstrainedConInt, Task
 import sys
+import grpc
 
 
 class ConfidenceInterval():
@@ -278,6 +279,7 @@ class Automan():
 		self.supr_lvl = suppress_output
 		self.stdout_file = stdout
 		self.stderr_file = stderr
+		self.channel = None
 		
 		# check adapter to ensure it passed validation
 		if self.adptr is None:
@@ -288,20 +290,32 @@ class Automan():
 		self._start()
 
 	def _start(self):
-		print "python client is starting rpc server..."
-		self.srvr_popen_obj = pyAutomanlib.start_rpc_server(port=self.port, suppress_output = self.supr_lvl,
-			stdout_file = self.stdout_file, stderr_file = self.stderr_file)
+		"""
+		Private method, used to start the gRPC AutoMan server. If a server address is set to 'localhost', the client
+		will attempt to start a server listening on the specified port (default 55051). If a server is already started on
+		this port, the client will send requests. If a server is not started, the client will start one.
+
+        """
+		try:
+			resp = pyAutomanlib.get_server_status(self.channel)
+		except grpc.RpcError as rpc_err:
+			if rpc_err.code() == grpc.StatusCode.UNAVAILABLE:
+				self.srvr_popen_obj = pyAutomanlib.start_rpc_server(port=self.port, suppress_output = self.supr_lvl,
+					stdout_file = self.stdout_file, stderr_file = self.stderr_file)
+			else:
+				sys.exit("Unable to start server, "+rpc_err.details())
+		
 
 	def _shutdown(self):
 		"""
-		Internal method. Shutdown the gRPC server
+		Private method. Shutdown the gRPC server
 
 		"""
 		pyAutomanlib.shutdown_rpc_server(self.channel)
 
 	def _force_shutdown(self):
 		"""
-		Internal method. Forces shutdown the gRPC server by killing spawned process
+		Private method. Forces shutdown the gRPC server by killing spawned process
 
 		"""
 		self.srvr_popen_obj.kill()
@@ -309,7 +323,7 @@ class Automan():
 
 	def _init_channel(self, server_addr, port):
 		"""
-		Internal method. Create the gRPC channel
+		Private method. Create the gRPC channel
 
 		Parameters
         ----------
