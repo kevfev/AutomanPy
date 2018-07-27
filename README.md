@@ -10,14 +10,14 @@ To use this package you must be running Python 2.7.15 or 3.2+, and Scala 2.11.7+
 ### How to Build 
 The easiest way to build this project is by using [SBT](https://www.scala-sbt.org/). To build this project, from the /PyAutoman directory, run
 ```
-sbt compile pack
+sbt clean compile pack
 ```
-SBT will also compile the necessary .proto into Scala classes automatically. To generate the the python files needed, `grpcio-tools` and `googleapis-common-protos` need to be installed. To install these packages, run the following two commands:
+SBT will also compile the necessary .proto into Scala classes automatically. To generate the the python files needed, `grpcio-tools` and `googleapis-common-protos` need to be installed. These python dependencies are automatically installed by pip if this package is installed from the provided tarball (). To install the necessary packages manually, run the following two commands:
 ```
 pip install grpcio-tools
 pip install googleapis-common-protos
 ```
-To generate the pythong files, from the /PytAutoman directory, run the following command:
+To use gRPC generate the python files needed for interacting with the RPC service, from the /PytAutoman directory, run the following command:
 
 ```
 python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes --grpc_python_out=src/main/pyautoman/pyautoman/core/grpc_gen_classes src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto
@@ -37,6 +37,9 @@ Alternaltively, you can run './buildproject.sh' located in the root directory, P
 
 ### How to Install
 To install this package without building, find the tarball in the directory PyAutoMan/src/main/pyautoman/dist/ and use pip install to install the PyAutoman.
+```
+pip install pyautoman-0.1.0.dev0.tar.gz
+```
 
 ### How to Use
 To run tasks, first create an Automan object. Automan objects require an adapter, and take optional parameters for the RPC server address and port number (default is 'localhost' and 50051).  The adapter we pass to the constructor is simply a dictionary with the following required fields:
