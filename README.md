@@ -84,9 +84,9 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ```
 
 The outcome can be either:
-*Estimate
-*Low Confidence estimate
-*Overbudget
+* Confident estimate
+* Low Confidence estimate
+* Overbudget
 
 
 
