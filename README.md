@@ -147,16 +147,16 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ## API
 ### AutoMan Class 
 #### **Constructor**
-```
+```python
 Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all')
 ```
-adapter 		- the adapter credentials to use to connect to the crowdsource backend
-server_addr		- the hostname address of the gRPC Automan server to connect to
-port 			- the port number to connect to the gRPC Automan server
-supress_output	- the level of output to show from the gRPC Automan server. "none" shows all output, "all" supresses all output from server
+**adapter** 		- the adapter credentials to use to connect to the crowdsource backend
+**server_addr**		- the hostname address of the gRPC Automan server to connect to
+**port** 			- the port number to connect to the gRPC Automan server
+**supress_output**	- the level of output to show from the gRPC Automan server. "none" shows all output, "all" supresses all output from server
 
-#### **AutoMan Class Methods**
-```
+#### AutoMan Class Methods
+```python
 Automan.estimate(self, text, budget, image_url, title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
 sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False, wage = 11.00,  
 max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
@@ -166,7 +166,7 @@ initial_worker_timeout_in_s = 30)
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a 
 quality-controlled estimate of a single real value. 
 ##### Return Type
-EstimateOutcome
+`EstimateOutcome`
 ##### Parameters
 * **text** 							- the text description of the task to display to the worker 
 * **budget** 						- the threshold cost for the task
@@ -188,36 +188,36 @@ EstimateOutcome
 ### EstimateOutcome Class
 Instances of this class will always be created for the user. This class will never need to be instantiated manually.  
 
-#### **EstimateOutcome Class Attributes**
+#### EstimateOutcome Class Attributes
 This class contains a Future, representing the outcome of the task. To ensure that the future is always resolved first
 and the respective attributes are initialized, always use attributes of an EstimateOutcome in a code block that ensures
 those values are set. Attributes are as follows:  
 For `Confident` and `LowConfidence` outcomes:
-* high 	- the highest value a worker reported
-* low 	- the lowest value a worker reported
-* est 	- AutoMan's estimate value
-* cost	- the cost to complete the task
-* conf 	- the confidence interval of the estimate  
+* **high** 	- the highest value a worker reported
+* **low** 	- the lowest value a worker reported
+* **est** 	- AutoMan's estimate value
+* **cost**	- the cost to complete the task
+* **conf** 	- the confidence interval of the estimate  
 For `OverBudget` outcomes:  
-* need 	- the amount needed for AutoMan to continue attempting to obtain an estimate
-* have 	- the current amount budgeted for the task  
+* **need** 	- the amount needed for AutoMan to continue attempting to obtain an estimate
+* **have** 	- the current amount budgeted for the task  
 
-#### **EstimateOutcome Class Methods**
-#### EstimateOutcome.isConfident()
+#### EstimateOutcome Class Methods
+`EstimateOutcome.isConfident()`
 ##### Description
 Indicates if the outcome of the task is a confident estimate
 ##### Return Type
-boolean : True if the outcome met the desired confidence level and interval, False otherwise
+`boolean` : True if the outcome met the desired confidence level and interval, False otherwise
  
-#### EstimateOutcome.isLowConfidence()
+`EstimateOutcome.isLowConfidence()`
 ##### Description
 Indicates if the outcome of the task is a low confidence estimate
 ##### Return Type
-boolean : True if the outcome was a low confidence estimate, False otherwise
+`boolean` : True if the outcome was a low confidence estimate, False otherwise
  
-#### EstimateOutcome.isOverBudget()
+`EstimateOutcome.isOverBudget()`
 ##### Description
 Indicates if the outcome of the task is over budget or not
 ##### Return Type
-boolean : True if the outcome was over budget, False otherwise
+`boolean` : True if the outcome was over budget, False otherwise
 
