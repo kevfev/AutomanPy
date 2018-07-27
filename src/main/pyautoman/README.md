@@ -73,7 +73,14 @@ Server Started on port 50051 ...
 >>> estim = a.estimate(text = "How many cars are in this parking lot?",budget = 6.00, title = "Car Counting",image_url = photo_url)
 ```
 
-Each type of task has fields that are required. All tasks require `text` (a text description of the task), and `budget` (desired upper limit of cost of task). We specify the tasks we would like AutoMan to carry out, and either when the question has timed out and budget is exceeded (resulting in a low confidence or overbudget outcome respectively) or the desired confidence level has been met. If the task went overbudget, the `need` and `have` fields of the returned EstimateOutcome are initialized, otherwise `high`, `low`, `est`, `cost`, and `conf` are initialized. PyAutoman returns gRPC's implementation of Futures. To ensure the future is resolved before values are accessed, only try to access respective values within code blocks that ensure those values are set. See methods `isConfident()`, `isLowConfidence()`, and `isOverBudget()` below.
+Each type of task has fields that are required. All tasks require `text` (a text description of the task), and `budget` (desired upper limit of cost of task). We specify the tasks we would like AutoMan to carry out, and either when the question has timed out and budget is exceeded (resulting in a low confidence or overbudget outcome respectively) or the desired confidence level has been met.  
+
+The outcome can be either:
+* Confident estimate
+* Low Confidence estimate
+* Overbudget  
+
+If the task went overbudget, the `need` and `have` fields of the returned EstimateOutcome are initialized, otherwise `high`, `low`, `est`, `cost`, and `conf` are initialized. PyAutoman uses gRPC's implementation of Futures. To ensure the future is resolved before values are accessed, only try to access respective values within code blocks that ensure those values are set. See methods `isConfident()`, `isLowConfidence()`, and `isOverBudget()` below.
 
 
 To simply print the result of the task, use `printOutcome()`.
@@ -84,10 +91,6 @@ Outcome: Low Confidence Estimate
 Estimate low: 62.000000 high:62.000000 est:62.000000
 ```
 
-The outcome can be either:
-* Confident estimate
-* Low Confidence estimate
-* Overbudget
 
 
 
@@ -98,13 +101,10 @@ from pyautoman.automan import Automan, EstimateOutcome
 # make mechanical turk adapter
 adapter = {
 	"access_id" : "access id here",
-    "access_key" : "access key here",
-    "sandbox_mode" : "true",
-    "type" : "MTurk"
+	"access_key" : "access key here",
+	"sandbox_mode" : "true",
+	"type" : "MTurk"
 }
-
-
-
 
 # image to submit with our task
 photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
@@ -116,10 +116,10 @@ photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
 a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none")
 
 estim = a.estimate(text = "How many cars are in this parking lot?",
-    budget = 6.00,
-    title = "Car Counting",
-    confidence_int = 10,
-    image_url = photo_url)
+	budget = 6.00,
+	title = "Car Counting",
+	confidence_int = 10,
+	image_url = photo_url)
 
 if(estim.isConfident()):
 	print("Outcome: Estimate")
