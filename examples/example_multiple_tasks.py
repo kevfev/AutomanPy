@@ -36,7 +36,7 @@ for i in range(spawn):
 		image_url = photo_url)
 
 # this is temporary, in future there will be a better construct for
-# handling results from AutoMan as the future resolves, rather than
+# handling results from AutoMan as the futures resolve, rather than
 # having to manually do this
 for task in task_list:
 	task.done()

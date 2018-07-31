@@ -35,9 +35,9 @@ python setup.py sdist
 Alternaltively, you can run `./buildproject.sh` located in the root directory, to do the steps outlined above.
 
 ### How to Install
-To install this package without building, use pip install to install the tarball in the directory PyAutoMan/src/main/pyautoman/dist/ 
+To install this package without building, use pip install to install the tarball in the directory PyAutoMan/src/main/pyautoman/dist/. There are currently multiple development versions, current latest version is pyautoman-0.2.0.dev0.
 ```
-pip install pyautoman-0.1.0.dev0.tar.gz
+pip install pyautoman-0.2.0.dev0.tar.gz
 ```
 
 ### How to Use
@@ -80,7 +80,7 @@ The outcome can be either:
 * Low Confidence estimate
 * Overbudget  
 
-If the task went overbudget, the `need` and `have` fields of the returned EstimateOutcome are initialized, otherwise `high`, `low`, `est`, `cost`, and `conf` are initialized. PyAutoman uses gRPC's implementation of Futures. To ensure the future is resolved before values are accessed, only try to access respective values within code blocks that ensure those values are set. See methods `isConfident()`, `isLowConfidence()`, and `isOverBudget()` below.
+If the task went overbudget, the `need` and `have` fields of the returned EstimateOutcome are initialized, otherwise `high`, `low`, `est`, `cost`, and `conf` are initialized. PyAutoman uses gRPC's implementation of Futures. To ensure the future is resolved before values are accessed, only try to access respective values within code blocks that ensure those values are set. See methods `isConfident()`, `isLowConfidence()`, and `isOverBudget()` below. To see more example code, and an example for posting multiple tasks, see PyAutoMan/examples
 
 
 To simply print the result of the task, use `printOutcome()`.
@@ -111,14 +111,22 @@ photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
 
 # make AutoMan object 
 # 'suppress_output' sets the how much output from the RPC server to print to stdout. current valid values are
-# 	"all" 	- suppress all output
-# 	"none "	- show all output 
-a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none")
+# 		"all" 	- suppress all output
+# 		"none "	- show all output 
+
+# 'loglevel' sets the the logging level for Automan. valid values are
+#		'debug' - debug level 
+#		'info' 	- information level 
+#		'warn' 	- warnings only
+#		'fatal' - fatal messages only (default)
+
+a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none", loglevel='fatal')
 
 estim = a.estimate(text = "How many cars are in this parking lot?",
 	budget = 6.00,
 	title = "Car Counting",
 	confidence_int = 10,
+#	question_timeout_multiplier = 40,# uncomment to set question to timeout on mturk, good for testing purposes, set no less than 40. see docs for more detail
 	image_url = photo_url)
 
 if(estim.isConfident()):
@@ -149,16 +157,21 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ### AutoMan Class 
 #### Constructor
 ```python
-Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all')
+Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', loglevel='info')
 ```
-* **adapter** 		- the adapter credentials to use to connect to the crowdsource backend
-* **server_addr**		- the hostname address of the gRPC Automan server to connect to
-* **port** 			- the port number to connect to the gRPC Automan server
-* **supress_output**	- the level of output to show from the gRPC Automan server. "none" shows all output, "all" supresses all output from server
+* **adapter** 			- a dictionary storing adapter credentials to use to connect to the crowdsource backend. Must contain necessary adapter fields
+* **server_addr**		- the string hostname address of the gRPC Automan server to connect to
+* **port** 				- the port number to connect to the gRPC Automan server
+* **supress_output**	- the level of output to show from the gRPC Automan server. "none" displays all output, "all" supresses all output from server
+* **loglevel** 			- Specifies the AutoMan worker log level, for setting the level of output directly from AutoMan. values
+						  *'debug' 	- debug level 
+						  *'info' 	- information level 
+						  *'warn' 	- warnings only
+						  *'fatal' 	- fatal messages only (default)
 
 #### AutoMan Class Methods
 ```python
-Automan.estimate(self, text, budget, image_url, title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
+Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
 sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False, wage = 11.00,  
 max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
 initial_worker_timeout_in_s = 30)
@@ -166,15 +179,19 @@ initial_worker_timeout_in_s = 30)
 *Description* : 
 ```
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
-estimate of a single real value.  
+estimate of a single real value.     
+  
+*Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
+Setting too low can cause the question to timeout too soon and result in failure to get results.  
+Use, at minimum, values 40 or higher for `question_timeout_multiplier` and 30 or higher for `initial_worker_timeout_in_s`. 
 ```
 *Returns* : `EstimateOutcome`  
 *Parameters*
-* **text** 							- the text description of the task to display to the worker 
-* **budget** 						- the threshold cost for the task
+* **text** 							- the text description of the task to display to the worker (required)
+* **budget** 						- the threshold cost for the task (required)
 * **image_url**  					- an image url to be associated with the task
 * **title**   						- title of the task, displayed to worker
-* **confidence** 					- desired confidence leve
+* **confidence** 					- desired confidence level
 * **confidence_int** 				- desired confidence interval
 * **img_alt_txt** 					- alternative image text, for generated webpage displayed to worker
 * **sample_size** 					- desired sample size, default of -1 indicates to use default samp. size of 30
@@ -184,22 +201,22 @@ estimate of a single real value.
 * **wage** 							- minimum wage to pay the worker, in USD/hr
 * **max_value** 					- min value for dimension being estimated
 * **min_value** 					- max value for dimension being estimated
-* **question_timeout_multiplier** 	- timeout for the question on the crowdsource backend (default 500 mins?)
-* **initial_worker_timeout_in_s** 	- timeout in seconds for the worker thread in the RPC server (defaul value )
+* **question_timeout_multiplier** 	- multiplier to calculate question timeout on MTurk. Question timeout = question_timeout_multiplier * initial_worker_timeout_in_s
+* **initial_worker_timeout_in_s** 	- timeout in seconds for the worker thread in the RPC server 
 
 ### EstimateOutcome Class
 Instances of this class will always be created for the user. This class will never need to be instantiated manually.  
 
 #### EstimateOutcome Class Attributes
-This class contains a Future, representing the outcome of the task. To ensure that the future is always resolved first
+This class contains a Future, representing the outcome of the task. Value attributes in this class (e.g. high, est, cost, need, etc) are initially set to NaN so that they're values cannot be accidentally used unless the future has resolved to a case where those values are valid (e.g., if the outcome_type was `OVERBUDGET` then `need` and `have` are the only valid attributes). To ensure that the future is always resolved first
 and the respective attributes are initialized, always use attributes of an EstimateOutcome in a code block that ensures
 those values are set. Attributes are as follows:  
 For `Confident` and `LowConfidence` outcomes:
-* **high** 	- the highest value a worker reported
-* **low** 	- the lowest value a worker reported
-* **est** 	- AutoMan's estimated value
-* **cost**	- the cost to complete the task
-* **conf** 	- the confidence interval of the estimate  
+* **high** 	- the highest value a worker reported, set to NaN intially
+* **low** 	- the lowest value a worker reported, set to NaN intially
+* **est** 	- AutoMan's estimated value, set to NaN intially
+* **cost**	- the cost to complete the task, set to NaN intially
+* **conf** 	- the confidence interval of the estimate, set to NaN intially  
 
 For `OverBudget` outcomes:  
 * **need** 	- the amount needed for AutoMan to continue attempting to obtain an estimate

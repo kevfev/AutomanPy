@@ -179,9 +179,11 @@ initial_worker_timeout_in_s = 30)
 *Description* : 
 ```
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
-estimate of a single real value.  
-
-*Note*: Be careful when setting `question_timeout_multiplier` and `initial_worker_timeout_in_s`. Setting too low can cause the question to timeout too soon and result in failure to get results. Use, at minimum, values 40 or higher for `question_timeout_multiplier` and 30 or higher for `initial_worker_timeout_in_s`. 
+estimate of a single real value.     
+  
+*Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
+Setting too low can cause the question to timeout too soon and result in failure to get results.  
+Use, at minimum, values 40 or higher for `question_timeout_multiplier` and 30 or higher for `initial_worker_timeout_in_s`. 
 ```
 *Returns* : `EstimateOutcome`  
 *Parameters*
