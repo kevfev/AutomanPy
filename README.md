@@ -116,9 +116,9 @@ photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
 
 # 'loglevel' sets the the logging level for Automan. valid values are
 #		'debug' - debug level 
-#		'info' 	- information level (default)
+#		'info' 	- information level 
 #		'warn' 	- warnings only
-#		'fatal' - fatal messages only
+#		'fatal' - fatal messages only (default)
 
 a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none", loglevel='fatal')
 
@@ -206,15 +206,15 @@ estimate of a single real value.
 Instances of this class will always be created for the user. This class will never need to be instantiated manually.  
 
 #### EstimateOutcome Class Attributes
-This class contains a Future, representing the outcome of the task. To ensure that the future is always resolved first
+This class contains a Future, representing the outcome of the task. Value attributes in this class (e.g. high, est, cost, need, etc) are initially set to NaN so that they're values cannot be accidentally used unless the future has resolved to a case where those values are valid (e.g., if the outcome_type was `OVERBUDGET` then `need` and `have` are the only valid attributes). To ensure that the future is always resolved first
 and the respective attributes are initialized, always use attributes of an EstimateOutcome in a code block that ensures
 those values are set. Attributes are as follows:  
 For `Confident` and `LowConfidence` outcomes:
-* **high** 	- the highest value a worker reported
-* **low** 	- the lowest value a worker reported
-* **est** 	- AutoMan's estimated value
-* **cost**	- the cost to complete the task
-* **conf** 	- the confidence interval of the estimate  
+* **high** 	- the highest value a worker reported, set to NaN intially
+* **low** 	- the lowest value a worker reported, set to NaN intially
+* **est** 	- AutoMan's estimated value, set to NaN intially
+* **cost**	- the cost to complete the task, set to NaN intially
+* **conf** 	- the confidence interval of the estimate, set to NaN intially  
 
 For `OverBudget` outcomes:  
 * **need** 	- the amount needed for AutoMan to continue attempting to obtain an estimate
