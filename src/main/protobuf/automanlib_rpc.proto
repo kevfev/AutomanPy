@@ -22,6 +22,16 @@ KillServer
 			Indicates the current status of the server, "KILLED" if the
 			method was successful
 
+RegisterAdapter 
+		Registers a crowdsource adapter with one of the RPC workers. To be 
+		used when submitting jobs
+	parameters:
+		AdapterCredentials 
+	returns:
+		ServerStatusResponse
+			Indicates whether the adapter was added successfully or not,
+			SUCCESS if it was successful, otherwise FAILED
+
 ServerStatus 
 		Reports the status of the server
 	parameters:
@@ -52,6 +62,7 @@ service PyautomanPrototype {
 	rpc KillServer(Empty) returns (ServerStatusResponse) {}
 	rpc SubmitTask(AutomanTask) returns (TaskResponse) {}
 	rpc ServerStatus(Empty) returns (ServerStatusResponse) {}
+	rpc RegisterAdapter(AdapterCredentials) returns (ServerStatusResponse) {}
 }
 
 
@@ -70,7 +81,7 @@ message AutomanTask{
 		CheckboxTask checkbox = 7;
 		CheckboxDistTask checkbox_dist = 8;
 	}
-	AdapterCredentials adapter = 9;
+	int32 timeout = 9;
 }
 
 
@@ -130,15 +141,20 @@ message TaskResponse{
 /*
 This message class is the server response to registering an adapter
 fields:
-return_code 				Indicates the status of the server, either
-							RUNNING or KILLED depending of the server process
-							is in a alive or has been shutdown
+return_code 				Indicates the result of an operation by the server.
+							Codes:
+								RUNNING - server is running (in response to ServerStatus RPC call)
+								KILLED 	- server is killed (in response to ServerStatus RPC call)
+								SUCCESS - adapter registered successfully (in response to RegisterAdapter RPC call)
+								KILLED 	- adapter failed to register (in response to RegisterAdapter RPC call)
 */
 message ServerStatusResponse{
 	enum StatReturnCode{
 		UNDEFINED_STATUS_CODE = 0;
 		RUNNING = 1;
 		KILLED = 2;
+		SUCCESS = 3;
+		FAILED = 4;
 	} 
 	StatReturnCode return_code = 1;
 }

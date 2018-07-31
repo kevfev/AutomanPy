@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 	ld = fh.read()
 
 setup(name = 'pyautoman',
-	version= '0.1.0.dev0',
+	version= '0.2.0.dev0',
 	description = 'Python bindings for AutoMan Runtime (in Scala)',
 	author = 'Kevin Feveck',
 	packages = find_packages(),

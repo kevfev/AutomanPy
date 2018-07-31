@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='automanlib_rpc.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x14\x61utomanlib_rpc.proto\x1a\x19\x61utomanlib_wrappers.proto\x1a\x18\x61utomanlib_classes.proto\"\xf1\x02\n\x0b\x41utomanTask\x12!\n\x08\x65stimate\x18\x01 \x01(\x0b\x32\r.EstimateTaskH\x00\x12+\n\rmultiestimate\x18\x02 \x01(\x0b\x32\x12.MultiestimateTaskH\x00\x12!\n\x08\x66reetext\x18\x03 \x01(\x0b\x32\r.FreetextTaskH\x00\x12*\n\rfreetext_dist\x18\x04 \x01(\x0b\x32\x11.FreetextDistTaskH\x00\x12\x1b\n\x05radio\x18\x05 \x01(\x0b\x32\n.RadioTaskH\x00\x12$\n\nradio_dist\x18\x06 \x01(\x0b\x32\x0e.RadioDistTaskH\x00\x12!\n\x08\x63heckbox\x18\x07 \x01(\x0b\x32\r.CheckboxTaskH\x00\x12*\n\rcheckbox_dist\x18\x08 \x01(\x0b\x32\x11.CheckboxDistTaskH\x00\x12$\n\x07\x61\x64\x61pter\x18\t \x01(\x0b\x32\x13.AdapterCredentialsB\x0b\n\ttask_type\"\x9e\x06\n\x0cTaskResponse\x12\x31\n\x0breturn_code\x18\x01 \x01(\x0e\x32\x1c.TaskResponse.TaskReturnCode\x12,\n\x10\x65stimate_outcome\x18\x02 \x01(\x0b\x32\x10.EstimateOutcomeH\x00\x12\x36\n\x15multiestimate_outcome\x18\x03 \x01(\x0b\x32\x15.MultiestimateOutcomeH\x00\x12&\n\rradio_outcome\x18\x04 \x01(\x0b\x32\r.RadioOutcomeH\x00\x12/\n\x12radio_dist_outcome\x18\x05 \x01(\x0b\x32\x11.RadioDistOutcomeH\x00\x12,\n\x10\x66reetext_outcome\x18\x06 \x01(\x0b\x32\x10.FreetextOutcomeH\x00\x12\x35\n\x15\x66reetext_dist_outcome\x18\x07 \x01(\x0b\x32\x14.FreetextDistOutcomeH\x00\x12,\n\x10\x63heckbox_outcome\x18\x08 \x01(\x0b\x32\x10.CheckboxOutcomeH\x00\x12\x35\n\x15\x63heckbox_dist_outcome\x18\t \x01(\x0b\x32\x14.CheckboxDistOutcomeH\x00\x12/\n\nexcep_code\x18\x10 \x01(\x0e\x32\x1b.TaskResponse.ExceptionCode\x12)\n\x08\x65rr_code\x18\x11 \x01(\x0e\x32\x17.TaskResponse.ErrorCode\x12\x0f\n\x07\x65rr_msg\x18\x12 \x01(\t\x12\x11\n\texcep_msg\x18\x13 \x01(\t\"N\n\x0eTaskReturnCode\x12\x17\n\x13UNDEFINED_RESP_CODE\x10\x00\x12\t\n\x05VALID\x10\x01\x12\t\n\x05\x45RROR\x10\x02\x12\r\n\tEXCEPTION\x10\x03\",\n\rExceptionCode\x12\x1b\n\x17UNDEFINED_EXCPTION_CODE\x10\x00\"D\n\tErrorCode\x12\x18\n\x14UNDEFINED_ERROR_CODE\x10\x00\x12\x1d\n\x19NO_CREDENTIALS_REGISTERED\x10\x01\x42\x0e\n\x0ctask_outcome\"\x97\x01\n\x14ServerStatusResponse\x12\x39\n\x0breturn_code\x18\x01 \x01(\x0e\x32$.ServerStatusResponse.StatReturnCode\"D\n\x0eStatReturnCode\x12\x19\n\x15UNDEFINED_STATUS_CODE\x10\x00\x12\x0b\n\x07RUNNING\x10\x01\x12\n\n\x06KILLED\x10\x02\"\x07\n\x05\x45mpty2\xa1\x01\n\x12PyautomanPrototype\x12-\n\nKillServer\x12\x06.Empty\x1a\x15.ServerStatusResponse\"\x00\x12+\n\nSubmitTask\x12\x0c.AutomanTask\x1a\r.TaskResponse\"\x00\x12/\n\x0cServerStatus\x12\x06.Empty\x1a\x15.ServerStatusResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x14\x61utomanlib_rpc.proto\x1a\x19\x61utomanlib_wrappers.proto\x1a\x18\x61utomanlib_classes.proto\"\xdc\x02\n\x0b\x41utomanTask\x12!\n\x08\x65stimate\x18\x01 \x01(\x0b\x32\r.EstimateTaskH\x00\x12+\n\rmultiestimate\x18\x02 \x01(\x0b\x32\x12.MultiestimateTaskH\x00\x12!\n\x08\x66reetext\x18\x03 \x01(\x0b\x32\r.FreetextTaskH\x00\x12*\n\rfreetext_dist\x18\x04 \x01(\x0b\x32\x11.FreetextDistTaskH\x00\x12\x1b\n\x05radio\x18\x05 \x01(\x0b\x32\n.RadioTaskH\x00\x12$\n\nradio_dist\x18\x06 \x01(\x0b\x32\x0e.RadioDistTaskH\x00\x12!\n\x08\x63heckbox\x18\x07 \x01(\x0b\x32\r.CheckboxTaskH\x00\x12*\n\rcheckbox_dist\x18\x08 \x01(\x0b\x32\x11.CheckboxDistTaskH\x00\x12\x0f\n\x07timeout\x18\t \x01(\x05\x42\x0b\n\ttask_type\"\x9e\x06\n\x0cTaskResponse\x12\x31\n\x0breturn_code\x18\x01 \x01(\x0e\x32\x1c.TaskResponse.TaskReturnCode\x12,\n\x10\x65stimate_outcome\x18\x02 \x01(\x0b\x32\x10.EstimateOutcomeH\x00\x12\x36\n\x15multiestimate_outcome\x18\x03 \x01(\x0b\x32\x15.MultiestimateOutcomeH\x00\x12&\n\rradio_outcome\x18\x04 \x01(\x0b\x32\r.RadioOutcomeH\x00\x12/\n\x12radio_dist_outcome\x18\x05 \x01(\x0b\x32\x11.RadioDistOutcomeH\x00\x12,\n\x10\x66reetext_outcome\x18\x06 \x01(\x0b\x32\x10.FreetextOutcomeH\x00\x12\x35\n\x15\x66reetext_dist_outcome\x18\x07 \x01(\x0b\x32\x14.FreetextDistOutcomeH\x00\x12,\n\x10\x63heckbox_outcome\x18\x08 \x01(\x0b\x32\x10.CheckboxOutcomeH\x00\x12\x35\n\x15\x63heckbox_dist_outcome\x18\t \x01(\x0b\x32\x14.CheckboxDistOutcomeH\x00\x12/\n\nexcep_code\x18\x10 \x01(\x0e\x32\x1b.TaskResponse.ExceptionCode\x12)\n\x08\x65rr_code\x18\x11 \x01(\x0e\x32\x17.TaskResponse.ErrorCode\x12\x0f\n\x07\x65rr_msg\x18\x12 \x01(\t\x12\x11\n\texcep_msg\x18\x13 \x01(\t\"N\n\x0eTaskReturnCode\x12\x17\n\x13UNDEFINED_RESP_CODE\x10\x00\x12\t\n\x05VALID\x10\x01\x12\t\n\x05\x45RROR\x10\x02\x12\r\n\tEXCEPTION\x10\x03\",\n\rExceptionCode\x12\x1b\n\x17UNDEFINED_EXCPTION_CODE\x10\x00\"D\n\tErrorCode\x12\x18\n\x14UNDEFINED_ERROR_CODE\x10\x00\x12\x1d\n\x19NO_CREDENTIALS_REGISTERED\x10\x01\x42\x0e\n\x0ctask_outcome\"\xb0\x01\n\x14ServerStatusResponse\x12\x39\n\x0breturn_code\x18\x01 \x01(\x0e\x32$.ServerStatusResponse.StatReturnCode\"]\n\x0eStatReturnCode\x12\x19\n\x15UNDEFINED_STATUS_CODE\x10\x00\x12\x0b\n\x07RUNNING\x10\x01\x12\n\n\x06KILLED\x10\x02\x12\x0b\n\x07SUCCESS\x10\x03\x12\n\n\x06\x46\x41ILED\x10\x04\"\x07\n\x05\x45mpty2\xe2\x01\n\x12PyautomanPrototype\x12-\n\nKillServer\x12\x06.Empty\x1a\x15.ServerStatusResponse\"\x00\x12+\n\nSubmitTask\x12\x0c.AutomanTask\x1a\r.TaskResponse\"\x00\x12/\n\x0cServerStatus\x12\x06.Empty\x1a\x15.ServerStatusResponse\"\x00\x12?\n\x0fRegisterAdapter\x12\x13.AdapterCredentials\x1a\x15.ServerStatusResponse\"\x00\x62\x06proto3')
   ,
   dependencies=[automanlib__wrappers__pb2.DESCRIPTOR,automanlib__classes__pb2.DESCRIPTOR,])
 
@@ -52,8 +52,8 @@ _TASKRESPONSE_TASKRETURNCODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1038,
-  serialized_end=1116,
+  serialized_start=1017,
+  serialized_end=1095,
 )
 _sym_db.RegisterEnumDescriptor(_TASKRESPONSE_TASKRETURNCODE)
 
@@ -70,8 +70,8 @@ _TASKRESPONSE_EXCEPTIONCODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1118,
-  serialized_end=1162,
+  serialized_start=1097,
+  serialized_end=1141,
 )
 _sym_db.RegisterEnumDescriptor(_TASKRESPONSE_EXCEPTIONCODE)
 
@@ -92,8 +92,8 @@ _TASKRESPONSE_ERRORCODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1164,
-  serialized_end=1232,
+  serialized_start=1143,
+  serialized_end=1211,
 )
 _sym_db.RegisterEnumDescriptor(_TASKRESPONSE_ERRORCODE)
 
@@ -115,11 +115,19 @@ _SERVERSTATUSRESPONSE_STATRETURNCODE = _descriptor.EnumDescriptor(
       name='KILLED', index=2, number=2,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SUCCESS', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='FAILED', index=4, number=4,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=1334,
-  serialized_end=1402,
+  serialized_start=1313,
+  serialized_end=1406,
 )
 _sym_db.RegisterEnumDescriptor(_SERVERSTATUSRESPONSE_STATRETURNCODE)
 
@@ -188,9 +196,9 @@ _AUTOMANTASK = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='adapter', full_name='AutomanTask.adapter', index=8,
-      number=9, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='timeout', full_name='AutomanTask.timeout', index=8,
+      number=9, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
@@ -210,7 +218,7 @@ _AUTOMANTASK = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=78,
-  serialized_end=447,
+  serialized_end=426,
 )
 
 
@@ -330,8 +338,8 @@ _TASKRESPONSE = _descriptor.Descriptor(
       name='task_outcome', full_name='TaskResponse.task_outcome',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=450,
-  serialized_end=1248,
+  serialized_start=429,
+  serialized_end=1227,
 )
 
 
@@ -362,8 +370,8 @@ _SERVERSTATUSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1251,
-  serialized_end=1402,
+  serialized_start=1230,
+  serialized_end=1406,
 )
 
 
@@ -386,8 +394,8 @@ _EMPTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1404,
-  serialized_end=1411,
+  serialized_start=1408,
+  serialized_end=1415,
 )
 
 _AUTOMANTASK.fields_by_name['estimate'].message_type = automanlib__wrappers__pb2._ESTIMATETASK
@@ -398,7 +406,6 @@ _AUTOMANTASK.fields_by_name['radio'].message_type = automanlib__wrappers__pb2._R
 _AUTOMANTASK.fields_by_name['radio_dist'].message_type = automanlib__wrappers__pb2._RADIODISTTASK
 _AUTOMANTASK.fields_by_name['checkbox'].message_type = automanlib__wrappers__pb2._CHECKBOXTASK
 _AUTOMANTASK.fields_by_name['checkbox_dist'].message_type = automanlib__wrappers__pb2._CHECKBOXDISTTASK
-_AUTOMANTASK.fields_by_name['adapter'].message_type = automanlib__classes__pb2._ADAPTERCREDENTIALS
 _AUTOMANTASK.oneofs_by_name['task_type'].fields.append(
   _AUTOMANTASK.fields_by_name['estimate'])
 _AUTOMANTASK.fields_by_name['estimate'].containing_oneof = _AUTOMANTASK.oneofs_by_name['task_type']
@@ -505,8 +512,8 @@ _PYAUTOMANPROTOTYPE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=1414,
-  serialized_end=1575,
+  serialized_start=1418,
+  serialized_end=1644,
   methods=[
   _descriptor.MethodDescriptor(
     name='KillServer',
@@ -532,6 +539,15 @@ _PYAUTOMANPROTOTYPE = _descriptor.ServiceDescriptor(
     index=2,
     containing_service=None,
     input_type=_EMPTY,
+    output_type=_SERVERSTATUSRESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='RegisterAdapter',
+    full_name='PyautomanPrototype.RegisterAdapter',
+    index=3,
+    containing_service=None,
+    input_type=automanlib__classes__pb2._ADAPTERCREDENTIALS,
     output_type=_SERVERSTATUSRESPONSE,
     options=None,
   ),

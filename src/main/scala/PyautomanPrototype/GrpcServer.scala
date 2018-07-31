@@ -21,10 +21,7 @@ trait GrpcServer {
 	private[this] var server :Server = null;
   private[this] var status :Int = 0;
   private[this] var running_status: Boolean = false;
-  //FIX LATER, 0 = undef, 1 = not started, 2 = running, 3 = killed
-  /**
-    * Just for demo purposes
-    */
+  private[this] val poolSize: Int = 1;
 
   def start_server(): Unit = {
     server.start()
@@ -36,6 +33,7 @@ trait GrpcServer {
     return false;
   }
   def stop_server(): Unit ={
+    running_status = false;
   	server.shutdown()
   }
   def runServer(ssd: ServerServiceDefinition, port: Int): Unit = {

@@ -222,7 +222,8 @@ def submit_task(channel_,task_, adapter_):
 	"""
 
 	# type check, error check, throw exceptions
-	at_task_ = AutomanTask(estimate=task_, adapter = adapter_)
+	timeout_ = int(task_.task.question_timeout_multiplier)
+	at_task_ = AutomanTask(estimate=task_, timeout = timeout_)
 	client_stub = _make_client_stub(channel_)
 	response = client_stub.SubmitTask.future(at_task_)
 	return response
@@ -280,6 +281,28 @@ def shutdown_rpc_server(channel_):
 	stat_resp = client_stub.KillServer(Empty())
 	return stat_resp
 
+def register_adapter_to_server(channel_, adptr):
+	"""
+	Registers the adapter to the gRPC server to carry out Automan jobs
+ 	Parameters
+    ----------
+    channel_ : Channel
+    	A gRPC channel
+	adptr_ : AdapterCredentials
+		an adapter object for authenticating to the crowdsource back-end
+ 	Returns
+	-------
+	RegistrationResponse
+		An enum that indicates whether the adapter was registered successfully or not, with following values:
+		RegistrationResponse.OKAY 
+		RegistrationResponse.FAILED 
+	Notes
+	-----
+	-UNDEFINED_RESP_CODE refers to an unknown response code, if this is seen, check application version
+	"""
+	client_stub = _make_client_stub(channel_)
+	response = client_stub.RegisterAdapter(adptr)
+	return response
 
 def get_server_status(channel_):
 	"""

@@ -34,9 +34,9 @@ class SymmetricCI(ConfidenceInterval):
 	"""
 	A Symmetric confidence interval
 	Attributes
-    ----------
-    error : double
-    	The desired confidence interval
+	----------
+	error : double
+		The desired confidence interval
 	"""
 	def __init__(self, error):
 		self.error = error
@@ -53,9 +53,9 @@ class AsymmetricCI(ConfidenceInterval):
 	"""
 	A Symmetric confidence interval
 	Attributes
-    ----------
-    error : double
-    	The desired confidence interval
+	----------
+	error : double
+		The desired confidence interval
 	"""
 	def __init__(self, low_error, high_error):
 		self.low_error = low_error
@@ -71,13 +71,13 @@ class EstimateOutcome():
 	"""
 	The Outcome Class. This class holds the result of an Automan computation
 
-    Attributes
-    ----------
-    outcome : ValueOutcome
-        An answer returned from the gRPC server, the estimation result of the automan computation
-    outcome_type : int (enum)
-    	An int representing the type of the outcome. Possible values are:
-    	UNKNOWN = 0;
+	Attributes
+	----------
+	outcome : ValueOutcome
+		An answer returned from the gRPC server, the estimation result of the automan computation
+	outcome_type : int (enum)
+		An int representing the type of the outcome. Possible values are:
+		UNKNOWN = 0;
 		ESTIMATE = 1;
 		LOW_CONFIDENCE = 2;
 		OVER_BUDGET = 3;
@@ -117,19 +117,19 @@ class EstimateOutcome():
 			TaskResponse.ERROR
 			TaskResponse.EXCEPTION
 
-        Parameters
-        ----------
-        response : TaskResponse
-            The response from the server
+		Parameters
+		----------
+		response : TaskResponse
+			The response from the server
 
-        Returns
-        -------
-        TaskOutcome
-        	If the response is valid, it returns the outcome of the task
-        None
-            If there was an error or exception, the function terminates the script and prints an error message to output
+		Returns
+		-------
+		TaskOutcome
+			If the response is valid, it returns the outcome of the task
+		None
+			If there was an error or exception, the function terminates the script and prints an error message to output
 
-        """
+		"""
 		ret_string = None
 		if response.return_code == TaskResponse.VALID:
 			return response.estimate_outcome
@@ -233,45 +233,45 @@ class Automan():
 	"""
 	The Automan Class.
 
-    Attributes
-    ----------
-    adptr : dict
-        A dictionary containing the parameters for the adapter
-    srvr_addr : str
-    	The hostname for the gRPC server
-    port : int 
-    	The port to connect to on the hostname 
-    channel: Channel
-    	The gRPC channel to communicate over
+	Attributes
+	----------
+	adptr : dict
+		A dictionary containing the parameters for the adapter
+	srvr_addr : str
+		The hostname for the gRPC server
+	port : int 
+		The port to connect to on the hostname 
+	channel: Channel
+		The gRPC channel to communicate over
 
-    """
+	"""
 
 	def __init__(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', stdout =None, stderr = None):
 		"""
 		Ensure necessary fields in adapter are initializated and
 		set up the gRPC channel
 
-        Parameters
-        ----------
-        adapter : dict
-            A dictionary containing the parameters for the adapter
-	    server_addr : str
-	    	The hostname for the gRPC server
-	    port : int 
-	    	The port to connect to on the hostname 
-	    suppress_output : string
-	    	Specifies how much of the output to suppress from the RPC server. Values are:
-	    		all 	- suppress all output from rpc server
-	    		stdout 	- suppress all output from rpc server
-	    		file 	- redirect output from rpc server to files specified by 
-	    					stdout and stderr 
-	    		none 	- suppress no output from rpc server
-	    stdout : string
-	    	File path to write RPC server standard output to
-	    stderr : string
-	    	File path to write RPC server error output to
+		Parameters
+		----------
+		adapter : dict
+			A dictionary containing the parameters for the adapter
+		server_addr : str
+			The hostname for the gRPC server
+		port : int 
+			The port to connect to on the hostname 
+		suppress_output : string
+			Specifies how much of the output to suppress from the RPC server. Values are:
+				all 	- suppress all output from rpc server
+				stdout 	- suppress all output from rpc server
+				file 	- redirect output from rpc server to files specified by 
+							stdout and stderr 
+				none 	- suppress no output from rpc server
+		stdout : string
+			File path to write RPC server standard output to
+		stderr : string
+			File path to write RPC server error output to
 
-        """
+		"""
 		self.adptr = pyAutomanlib.make_adapter(adapter["access_id"], adapter["access_key"], sandbox_mode=adapter["sandbox_mode"]) if pyAutomanlib.isGoodAadapter(adapter) else None
 		self.srvr_addr = server_addr
 		self.port = port
@@ -288,6 +288,7 @@ class Automan():
 		# set up channel, start and connect to gRPC server
 		self._init_channel(server_addr, port)
 		self._start()
+		self._register_adptr()
 
 	def _start(self):
 		"""
@@ -295,7 +296,7 @@ class Automan():
 		will attempt to start a server listening on the specified port (default 55051). If a server is already started on
 		this port, the client will send requests. If a server is not started, the client will start one.
 
-        """
+		"""
 		try:
 			resp = pyAutomanlib.get_server_status(self.channel)
 		except grpc.RpcError as rpc_err:
@@ -304,14 +305,22 @@ class Automan():
 					stdout_file = self.stdout_file, stderr_file = self.stderr_file)
 			else:
 				sys.exit("Unable to start server, "+rpc_err.details())
-		
+	
+	def _register_adptr(self):
+		"""
+		Private method, used to register an adapter with the server
+
+		"""
+		# handle response
+		resp = pyAutomanlib.register_adapter_to_server(self.channel, self.adptr)
 
 	def _shutdown(self):
 		"""
 		Private method. Shutdown the gRPC server
 
 		"""
-		pyAutomanlib.shutdown_rpc_server(self.channel)
+		# handle response
+		resp = pyAutomanlib.shutdown_rpc_server(self.channel)
 
 	def _force_shutdown(self):
 		"""
@@ -326,20 +335,20 @@ class Automan():
 		Private method. Create the gRPC channel
 
 		Parameters
-        ----------
-	    server_addr : str
-	    	The hostname for the gRPC server
-	    port : int 
-	    	The port to connect to on the hostname 
+		----------
+		server_addr : str
+			The hostname for the gRPC server
+		port : int 
+			The port to connect to on the hostname 
 
-        Returns
-        -------
-        Channel
-            A channel that connects to the gRPC back-end server
+		Returns
+		-------
+		Channel
+			A channel that connects to the gRPC back-end server
 
-        """
+		"""
 		self.channel = pyAutomanlib.make_channel(server_addr,str(port))
-		return 
+		 
 
 	def estimate(self, text, budget, image_url="", title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",sample_size = -1, dont_reject = True, 
 				pay_all_on_failure = True, dry_run = False, wage = 11.00, max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500, 
@@ -348,7 +357,7 @@ class Automan():
 		Estimates the answer to the provided task. Calls AutoMan's estimate functionality on the back-end
 
 		Parameters
-        ----------
+		----------
 		title_ : str
 			The title for the task, to display to workers on the crowdsource platform
 		text_ : str
@@ -383,21 +392,21 @@ class Automan():
 		initial_worker_timeout_in_s : int
 			?
 
-        Returns
-        -------
-        EstimateOutcome
-            A wrapper class that contains a future estimation outcome.
+		Returns
+		-------
+		EstimateOutcome
+			A wrapper class that contains a future estimation outcome.
 
-        """
+		"""
 
 
 		task = pyAutomanlib.make_est_task(text_ = text,
-	    								budget_ = budget,
-	    								title_ = title,
-	    								image_url_ = image_url,
-	    								confidence_ = confidence,
-	    								confidence_int_ = confidence_int,
-	    								img_alt_txt_ = img_alt_txt,
+										budget_ = budget,
+										title_ = title,
+										image_url_ = image_url,
+										confidence_ = confidence,
+										confidence_int_ = confidence_int,
+										img_alt_txt_ = img_alt_txt,
 										sample_size_ = sample_size, 
 										dont_reject_ = dont_reject, 
 										pay_all_on_failure_ = pay_all_on_failure, 
@@ -410,5 +419,3 @@ class Automan():
 		resp = pyAutomanlib.submit_task(self.channel, task, self.adptr)
 		eo = EstimateOutcome(future_tr=resp)
 		return eo
-
-

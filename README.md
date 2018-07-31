@@ -35,9 +35,9 @@ python setup.py sdist
 Alternaltively, you can run `./buildproject.sh` located in the root directory, to do the steps outlined above.
 
 ### How to Install
-To install this package without building, use pip install to install the tarball in the directory PyAutoMan/src/main/pyautoman/dist/ 
+To install this package without building, use pip install to install the tarball in the directory PyAutoMan/src/main/pyautoman/dist/. There are currently multiple development versions, current latest version is pyautoman-0.2.0.dev0.
 ```
-pip install pyautoman-0.1.0.dev0.tar.gz
+pip install pyautoman-0.2.0.dev0.tar.gz
 ```
 
 ### How to Use
@@ -159,7 +159,7 @@ Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output 
 
 #### AutoMan Class Methods
 ```python
-Automan.estimate(self, text, budget, image_url, title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
+Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
 sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False, wage = 11.00,  
 max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
 initial_worker_timeout_in_s = 30)
@@ -171,11 +171,11 @@ estimate of a single real value.
 ```
 *Returns* : `EstimateOutcome`  
 *Parameters*
-* **text** 							- the text description of the task to display to the worker 
-* **budget** 						- the threshold cost for the task
+* **text** 							- the text description of the task to display to the worker (required)
+* **budget** 						- the threshold cost for the task (required)
 * **image_url**  					- an image url to be associated with the task
 * **title**   						- title of the task, displayed to worker
-* **confidence** 					- desired confidence leve
+* **confidence** 					- desired confidence level
 * **confidence_int** 				- desired confidence interval
 * **img_alt_txt** 					- alternative image text, for generated webpage displayed to worker
 * **sample_size** 					- desired sample size, default of -1 indicates to use default samp. size of 30
