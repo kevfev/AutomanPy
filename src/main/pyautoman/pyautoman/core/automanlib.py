@@ -222,7 +222,7 @@ def submit_task(channel_,task_, adapter_):
 	"""
 
 	# type check, error check, throw exceptions
-	timeout_ = int(task_.task.question_timeout_multiplier)
+	timeout_ = int(task_.task.question_timeout_multiplier) * int(task_.task.initial_worker_timeout_in_s)
 	at_task_ = AutomanTask(estimate=task_, timeout = timeout_)
 	client_stub = _make_client_stub(channel_)
 	response = client_stub.SubmitTask.future(at_task_)

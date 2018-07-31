@@ -143,6 +143,9 @@ access_key  		the secret login access key
 
 adapter_options 	any additional options specific for the adapter e.g
 					sandbox_mode, etc.
+
+log_level 			the log level for the AutoMan service, 0 - Debug, 1 - Info, 2 - Warn, 3 - Fatal
+
 */
 message AdapterCredentials{
 	enum AdapterType{

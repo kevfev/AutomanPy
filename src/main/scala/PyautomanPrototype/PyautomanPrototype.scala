@@ -71,9 +71,9 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 		*  @return the Future outcome returned by AutoMan for this task ID
 		*							
 		*/
-		def waitOnResult(id: String, timeout_minutes: Int) : AnyRef = {
+		def waitOnResult(id: String, timeout_seconds: Int) : AnyRef = {
 			var wait_count : Int = 0;
-			val max_checks = (timeout_minutes * 60.0 * 1000.0 / pollFrequency) + 10.0;
+			val max_checks = (timeout_seconds * pollFrequency/1000) + 10;
 			while(answerMap.get(id) == null)
 			{
 				Thread.sleep(pollFrequency);

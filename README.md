@@ -80,7 +80,7 @@ The outcome can be either:
 * Low Confidence estimate
 * Overbudget  
 
-If the task went overbudget, the `need` and `have` fields of the returned EstimateOutcome are initialized, otherwise `high`, `low`, `est`, `cost`, and `conf` are initialized. PyAutoman uses gRPC's implementation of Futures. To ensure the future is resolved before values are accessed, only try to access respective values within code blocks that ensure those values are set. See methods `isConfident()`, `isLowConfidence()`, and `isOverBudget()` below.
+If the task went overbudget, the `need` and `have` fields of the returned EstimateOutcome are initialized, otherwise `high`, `low`, `est`, `cost`, and `conf` are initialized. PyAutoman uses gRPC's implementation of Futures. To ensure the future is resolved before values are accessed, only try to access respective values within code blocks that ensure those values are set. See methods `isConfident()`, `isLowConfidence()`, and `isOverBudget()` below. To see more example code, and an example for posting multiple tasks, see PyAutoMan/examples
 
 
 To simply print the result of the task, use `printOutcome()`.
@@ -110,17 +110,23 @@ adapter = {
 photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
 
 # make AutoMan object 
-# 'suppress_output' is a string argument for setting the how much output 
-# from the RPC server to print to stdout. current valid values are
-# 	"all" 	- suppress all output from rpc server 
-# 	"none"	- show all output  from rpc server
-a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none")
+# 'suppress_output' sets the how much output from the RPC server to print to stdout. current valid values are
+# 		"all" 	- suppress all output
+# 		"none "	- show all output 
+
+# 'loglevel' sets the the logging level for Automan. valid values are
+#		'debug' - debug level 
+#		'info' 	- information level (default)
+#		'warn' 	- warnings only
+#		'fatal' - fatal messages only
+
+a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none", loglevel='fatal')
 
 estim = a.estimate(text = "How many cars are in this parking lot?",
 	budget = 6.00,
 	title = "Car Counting",
 	confidence_int = 10,
-#	question_timeout_multiplier = 5,# uncomment to set time in min. for the question to timeout on mturk, good for testing purposes 
+#	question_timeout_multiplier = 40,# uncomment to set question to timeout on mturk, good for testing purposes, set no less than 40. see docs for more detail
 	image_url = photo_url)
 
 if(estim.isConfident()):
@@ -153,15 +159,15 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ```python
 Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', loglevel='info')
 ```
-* **adapter** 		- the adapter credentials to use to connect to the crowdsource backend
-* **server_addr**		- the hostname address of the gRPC Automan server to connect to
-* **port** 			- the port number to connect to the gRPC Automan server
+* **adapter** 			- a dictionary storing adapter credentials to use to connect to the crowdsource backend. Must contain necessary adapter fields
+* **server_addr**		- the string hostname address of the gRPC Automan server to connect to
+* **port** 				- the port number to connect to the gRPC Automan server
 * **supress_output**	- the level of output to show from the gRPC Automan server. "none" displays all output, "all" supresses all output from server
 * **loglevel** 			- Specifies the AutoMan worker log level, for setting the level of output directly from AutoMan. values
-						  *'debug' - debug level 
-						  *'info' 	- information level (default)
+						  *'debug' 	- debug level 
+						  *'info' 	- information level 
 						  *'warn' 	- warnings only
-						  *'fatal' - fatal messages only 
+						  *'fatal' 	- fatal messages only (default)
 
 #### AutoMan Class Methods
 ```python
@@ -174,6 +180,8 @@ initial_worker_timeout_in_s = 30)
 ```
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
 estimate of a single real value.  
+
+*Note*: Be careful when setting `question_timeout_multiplier` and `initial_worker_timeout_in_s`. Setting too low can cause the question to timeout too soon and result in failure to get results. Use, at minimum, values 40 or higher for `question_timeout_multiplier` and 30 or higher for `initial_worker_timeout_in_s`. 
 ```
 *Returns* : `EstimateOutcome`  
 *Parameters*
@@ -191,8 +199,8 @@ estimate of a single real value.
 * **wage** 							- minimum wage to pay the worker, in USD/hr
 * **max_value** 					- min value for dimension being estimated
 * **min_value** 					- max value for dimension being estimated
-* **question_timeout_multiplier** 	- timeout for the question on the crowdsource backend (default 500 mins?)
-* **initial_worker_timeout_in_s** 	- timeout in seconds for the worker thread in the RPC server (defaul value )
+* **question_timeout_multiplier** 	- multiplier to calculate question timeout on MTurk. Question timeout = question_timeout_multiplier * initial_worker_timeout_in_s
+* **initial_worker_timeout_in_s** 	- timeout in seconds for the worker thread in the RPC server 
 
 ### EstimateOutcome Class
 Instances of this class will always be created for the user. This class will never need to be instantiated manually.  

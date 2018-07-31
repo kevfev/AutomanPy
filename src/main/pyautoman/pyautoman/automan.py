@@ -107,7 +107,7 @@ class EstimateOutcome():
 		self.have = float('nan')
 
 
-		self.types_outcome = {'ESTIMATE':1, 'LOW_CONFIDENCE':2, 'OVERBUDGET':3}
+		self.types_outcome = {'CONFIDENT':1, 'LOW_CONFIDENCE':2, 'OVERBUDGET':3}
 
 	def _resolveResponse(self,response):
 		"""
@@ -160,28 +160,54 @@ class EstimateOutcome():
 			self.est = outcome.answer.est
 			self.conf = outcome.answer.conf
 			self.cost = outcome.answer.cost
-			if self.types_outcome['ESTIMATE'] ==  outcome.outcome_type:
-				self._outcome_type_val = "ESTIMATE"
+			if self.types_outcome['CONFIDENT'] ==  outcome.outcome_type:
+				self._outcome_type_val = "CONFIDENT"
 			if self.types_outcome['LOW_CONFIDENCE'] ==  outcome.outcome_type:
 				self._outcome_type_val = "LOW_CONFIDENCE"
 		self._evaluated = True
 
 	def outcomeType(self):
-		return self.types_outcome
+		"""
+		Returns the string outcome type
+		Returns
+		-------
+		String
+			The outcome type. One of: CONFIDENT, LOW_CONFIDENCE or OVERBUDGET
+
+		"""
+		return self._outcome_type_val
+
+	def done(self):
+		"""
+		waits for the future to resolve,blocks
+
+		"""
+		self._evalOutcome()
+
+	def isDone(self):
+		"""
+		Returns a boolean indicating whether the outcome's future is resolved or not as yet
+		Returns
+		-------
+		boolean
+			True if the outcome's future is resolved, False otherwise. Does not block.
+
+		"""
+		return self._evaluated
 
 	def printOutcome(self):
-		if(estim.isEstimate()):
+		if(self.isConfident()):
 			print("Outcome: Estimate")
-			print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
+			print("Estimate low: %f high:%f est:%f "%(self.low, self.high, self.est))
 
 
-		if(estim.isLowConfidence()):
+		if(self.isLowConfidence()):
 			print("Outcome: Low Confidence Estimate")
-			print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
+			print("Estimate low: %f high:%f est:%f "%(self.low, self.high, self.est))
 
-		if(estim.isOverBudget()):
+		if(self.isOverBudget()):
 			print("Outcome: Over Budget")
-			print(" need: %f have:%f"%(estim.need, estim.have))
+			print(" need: %f have:%f"%(self.need, self.have))
 
 	def isConfident(self):
 		"""
@@ -253,7 +279,7 @@ class Automan():
 	}
 
 	def __init__(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', 
-					loglevel = 'info',stdout =None, stderr = None):
+					loglevel = 'fatal',stdout =None, stderr = None):
 		"""
 		Ensure necessary fields in adapter are initializated and
 		set up the gRPC channel
@@ -285,7 +311,7 @@ class Automan():
 			File path to write RPC server error output to
 
 		"""
-		self.lglvl = Automan.LogLevels.get(loglevel.lower(), Automan.LogLevels['info'])
+		self.lglvl = Automan.LogLevels.get(loglevel.lower(), Automan.LogLevels['fatal'])
 		self.adptr = pyAutomanlib.make_adapter(adapter["access_id"], adapter["access_key"], self.lglvl, sandbox_mode=adapter["sandbox_mode"]) if pyAutomanlib.isGoodAadapter(adapter) else None
 		self.srvr_addr = server_addr
 		self.port = port
