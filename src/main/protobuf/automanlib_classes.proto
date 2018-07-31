@@ -153,4 +153,5 @@ message AdapterCredentials{
 	string access_id  = 2;
 	string access_key = 3;
 	map<string, string> adapter_options = 4;
+	int32 log_level = 5;
 }

@@ -21,6 +21,7 @@ estim = a.estimate(text = "How many cars are in this parking lot?",
 	budget = 6.00,
 	title = "Car Counting",
 	confidence_int = 10,
+#	question_timeout_multiplier = 5,# uncomment to set time in min. for the question to timeout on mturk, good for testing purposes 
 	image_url = photo_url)
 
 if(estim.isConfident()):

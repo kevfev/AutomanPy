@@ -53,7 +53,7 @@ def _make_client_stub(channel_):
 
 	return rpclib.PyautomanPrototypeStub(channel_)
 
-def make_adapter(acc_id, acc_key, **kwargs):
+def make_adapter(acc_id, acc_key, lglvl, **kwargs):
 	"""
 	Makes an adapter from the provided parameter credentials
 
@@ -73,7 +73,7 @@ def make_adapter(acc_id, acc_key, **kwargs):
 		an adapter object for authenticating to the crowdsource back-end
 	"""
 
-	adptr = AdapterCredentials(adptr_type = AdapterCredentials.MTURK, access_id = acc_id, access_key = acc_key, adapter_options = kwargs )
+	adptr = AdapterCredentials(adptr_type = AdapterCredentials.MTURK, access_id = acc_id, access_key = acc_key, adapter_options = kwargs , log_level = lglvl)
 	return adptr
 
 

@@ -245,8 +245,15 @@ class Automan():
 		The gRPC channel to communicate over
 
 	"""
+	LogLevels = {
+		'debug' : 0,
+		'info' : 1,
+		'warn' : 2,
+		'fatal' : 3
+	}
 
-	def __init__(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', stdout =None, stderr = None):
+	def __init__(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', 
+					loglevel = 'info',stdout =None, stderr = None):
 		"""
 		Ensure necessary fields in adapter are initializated and
 		set up the gRPC channel
@@ -266,13 +273,20 @@ class Automan():
 				file 	- redirect output from rpc server to files specified by 
 							stdout and stderr 
 				none 	- suppress no output from rpc server
+		loglevel : string
+			Specifies the AutoMan worker log level, for setting the level of output from AutoMan. values
+				'debug' - debug level 
+				'info' 	- information level (default)
+				'warn' 	- warnings only
+				'fatal' - fatal messages only
 		stdout : string
 			File path to write RPC server standard output to
 		stderr : string
 			File path to write RPC server error output to
 
 		"""
-		self.adptr = pyAutomanlib.make_adapter(adapter["access_id"], adapter["access_key"], sandbox_mode=adapter["sandbox_mode"]) if pyAutomanlib.isGoodAadapter(adapter) else None
+		self.lglvl = Automan.LogLevels.get(loglevel.lower(), Automan.LogLevels['info'])
+		self.adptr = pyAutomanlib.make_adapter(adapter["access_id"], adapter["access_key"], self.lglvl, sandbox_mode=adapter["sandbox_mode"]) if pyAutomanlib.isGoodAadapter(adapter) else None
 		self.srvr_addr = server_addr
 		self.port = port
 		self.srvr_popen_obj = None
@@ -280,6 +294,7 @@ class Automan():
 		self.stdout_file = stdout
 		self.stderr_file = stderr
 		self.channel = None
+		
 		
 		# check adapter to ensure it passed validation
 		if self.adptr is None:

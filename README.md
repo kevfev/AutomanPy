@@ -120,6 +120,7 @@ estim = a.estimate(text = "How many cars are in this parking lot?",
 	budget = 6.00,
 	title = "Car Counting",
 	confidence_int = 10,
+#	question_timeout_multiplier = 5,# uncomment to set time in min. for the question to timeout on mturk, good for testing purposes 
 	image_url = photo_url)
 
 if(estim.isConfident()):
@@ -150,12 +151,17 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ### AutoMan Class 
 #### Constructor
 ```python
-Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all')
+Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', loglevel='info')
 ```
 * **adapter** 		- the adapter credentials to use to connect to the crowdsource backend
 * **server_addr**		- the hostname address of the gRPC Automan server to connect to
 * **port** 			- the port number to connect to the gRPC Automan server
-* **supress_output**	- the level of output to show from the gRPC Automan server. "none" shows all output, "all" supresses all output from server
+* **supress_output**	- the level of output to show from the gRPC Automan server. "none" displays all output, "all" supresses all output from server
+* **loglevel** 			- Specifies the AutoMan worker log level, for setting the level of output directly from AutoMan. values
+						  *'debug' - debug level 
+						  *'info' 	- information level (default)
+						  *'warn' 	- warnings only
+						  *'fatal' - fatal messages only 
 
 #### AutoMan Class Methods
 ```python

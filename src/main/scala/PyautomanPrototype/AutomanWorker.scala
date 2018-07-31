@@ -21,9 +21,19 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 	val queue: AbstractQueue[(String, AutomanTask.TaskType)] = workQueue;
 	val map: ConcurrentMap[String, AnyRef] = resultMap;
 
+	var ll = adptr.logLevel;
+	var loglevel : LogLevel = LogLevelInfo()
+ 	ll match {
+		case 0 => loglevel = LogLevelDebug()
+		case 2 => loglevel = LogLevelWarn()
+		case 3 => loglevel = LogLevelFatal()
+		case _ => loglevel = LogLevelInfo()
+
+	}
+
 	implicit val mt = mturk (access_key_id = adptr.accessId,
 							secret_access_key = adptr.accessKey,
-							log_verbosity = LogLevelInfo(),
+							log_verbosity = loglevel,
 							sandbox_mode = adptr.adapterOptions("sandbox_mode").toBoolean)
 
 
@@ -100,29 +110,28 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 	*							
 	*/
 	def launchEstimateTask(taskID: String, task : Task) : Unit = {
+
 		var ci : ConfidenceInterval = UnconstrainedCI();
 		if (task.confidenceInt > 0) {
 			ci = SymmetricCI(task.confidenceInt)
 		}
-		automan(mt){
-			val outcome = estimate(text =task.text, 
-									budget = task.budget, 
-									image_url =task.imageUrl,
-									image_alt_text =task.imgAltTxt,
-									title = task.title, 
-									default_sample_size = task.sampleSize,
-									pay_all_on_failure = task.payAllOnFailure,
-									dont_reject  = task.dontReject,
-									dry_run  = task.dryRun,
-									wage = task.wage,
-									confidence = task.confidence, 
-									confidence_interval = ci,
-									max_value = task.maxValue,
-									min_value = task.minValue,
-									initial_worker_timeout_in_s = task.initialWorkerTimeoutInS,
-									question_timeout_multiplier = task.questionTimeoutMultiplier);
-			addToResultMap(taskID,outcome);
-		}
+		val outcome = estimate(text =task.text, 
+								budget = task.budget, 
+								image_url =task.imageUrl,
+								image_alt_text =task.imgAltTxt,
+								title = task.title, 
+								default_sample_size = task.sampleSize,
+								pay_all_on_failure = task.payAllOnFailure,
+								dont_reject  = task.dontReject,
+								dry_run  = task.dryRun,
+								wage = task.wage,
+								confidence = task.confidence, 
+								confidence_interval = ci,
+								max_value = task.maxValue,
+								min_value = task.minValue,
+								initial_worker_timeout_in_s = task.initialWorkerTimeoutInS,
+								question_timeout_multiplier = task.questionTimeoutMultiplier);
+		addToResultMap(taskID,outcome);
 	}
 
 	/** wrapper method for launching and estimation task

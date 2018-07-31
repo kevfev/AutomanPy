@@ -71,7 +71,7 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 		*  @return the Future outcome returned by AutoMan for this task ID
 		*							
 		*/
-		def waitOnResultID(id: String, timeout_minutes: Int) : AnyRef = {
+		def waitOnResult(id: String, timeout_minutes: Int) : AnyRef = {
 			var wait_count : Int = 0;
 			val max_checks = (timeout_minutes * 60.0 * 1000.0 / pollFrequency) + 10.0;
 			while(answerMap.get(id) == null)
@@ -96,11 +96,11 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 		def executeTask(taskId: String, task : AutomanTask) : TaskResponse = {	
 			val timeout = task.timeout;
 			taskQueue.add((taskId, task.taskType))
-			val automan_outcome = waitOnResultID(taskId, timeout).asInstanceOf[EstimationOutcome]
+			val automan_outcome = waitOnResult(taskId, timeout).asInstanceOf[EstimationOutcome]
 			val est_out = automan_outcome.answer match{
 				case Estimate(est, low, high, cost, conf, _, _) => makeValueOutcome(est, low, high, cost, conf, OutcomeType.CONFIDENT);
 				case LowConfidenceEstimate(est, low, high, cost, conf, _, _) => makeValueOutcome(est, low, high, cost, conf, OutcomeType.LOW_CONFIDENCE);
-				case OverBudgetEstimate(need, have, _) => makeOverBudgetOutcome(need,have);
+				case OverBudgetEstimate(need, have, _) => makeOverBudgetOutcome(need,have); 
 			}
 			return TaskResponse().withReturnCode(TaskResponse.TaskReturnCode.VALID).withEstimateOutcome(est_out);
 		}
