@@ -15,7 +15,7 @@ else
 	exit 1
 fi
 echo "==>  sbt compiling/packing project.."
-if sbt clean compile pack; then
+if sbt compile pack; then
 	echo "==> sbt successfully compiled/packed pyautoman.."
 	cp -R target/pack src/main/pyautoman/pyautoman/core/rpc_server/
 	echo "==>  compiling python protobuf files.."

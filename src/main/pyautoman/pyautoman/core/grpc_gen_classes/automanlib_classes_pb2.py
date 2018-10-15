@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='automanlib_classes.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x18\x61utomanlib_classes.proto\"\x17\n\tDimension\x12\n\n\x02id\x18\x01 \x01(\t\"\xd7\x03\n\x04Task\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x11\n\timage_url\x18\x02 \x01(\t\x12\r\n\x05title\x18\x03 \x01(\t\x12\x13\n\x0bimg_alt_txt\x18\x04 \x01(\t\x12\x0f\n\x07pattern\x18\x05 \x01(\t\x12\x0e\n\x06\x62udget\x18\x06 \x01(\x01\x12\x12\n\nconfidence\x18\x07 \x01(\x01\x12\x13\n\x0bsample_size\x18\x08 \x01(\x05\x12\x0f\n\x07options\x18\t \x03(\t\x12\x1e\n\ndimensions\x18\n \x03(\x0b\x32\n.Dimension\x12\x13\n\x0b\x64ont_reject\x18\x0b \x01(\x08\x12\x1a\n\x12pay_all_on_failure\x18\x0c \x01(\x08\x12\x0f\n\x07\x64ry_run\x18\r \x01(\x08\x12\x1b\n\x13\x61llow_empty_pattern\x18\x0e \x01(\x08\x12\x1a\n\x12pattern_error_text\x18\x10 \x01(\t\x12#\n\x1bquestion_timeout_multiplier\x18\x11 \x01(\x05\x12#\n\x1binitial_worker_timeout_in_s\x18\x12 \x01(\x05\x12\x0c\n\x04wage\x18\x13 \x01(\x01\x12\x11\n\tmax_value\x18\x14 \x01(\x01\x12\x11\n\tmin_value\x18\x15 \x01(\x01\x12\x16\n\x0e\x63onfidence_int\x18\x16 \x01(\x01\"\x15\n\x13UnconstrainedConInt\"\x1e\n\x0fSymmetricConInt\x12\x0b\n\x03\x65rr\x18\x01 \x01(\x01\"5\n\x10\x41symmetricConInt\x12\x0f\n\x07low_err\x18\x01 \x01(\x01\x12\x10\n\x08high_err\x18\x02 \x01(\x01\"R\n\x0cValueOutcome\x12\x0b\n\x03\x65st\x18\x01 \x01(\x01\x12\x0b\n\x03low\x18\x02 \x01(\x01\x12\x0c\n\x04high\x18\x03 \x01(\x01\x12\x0c\n\x04\x63ost\x18\x04 \x01(\x01\x12\x0c\n\x04\x63onf\x18\x05 \x01(\x01\"\x1f\n\rStringOutcome\x12\x0e\n\x06option\x18\x01 \x01(\t\"\xbc\x02\n\x12\x41\x64\x61pterCredentials\x12\x33\n\nadptr_type\x18\x01 \x01(\x0e\x32\x1f.AdapterCredentials.AdapterType\x12\x11\n\taccess_id\x18\x02 \x01(\t\x12\x12\n\naccess_key\x18\x03 \x01(\t\x12@\n\x0f\x61\x64\x61pter_options\x18\x04 \x03(\x0b\x32\'.AdapterCredentials.AdapterOptionsEntry\x12\x11\n\tlog_level\x18\x05 \x01(\x05\x12\x0f\n\x07logging\x18\x06 \x01(\x05\x1a\x35\n\x13\x41\x64\x61pterOptionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"-\n\x0b\x41\x64\x61pterType\x12\x13\n\x0fUNKNOWN_ADAPTER\x10\x00\x12\t\n\x05MTURK\x10\x01*U\n\x0bOutcomeType\x12\x13\n\x0fUNKNOWN_OUTCOME\x10\x00\x12\r\n\tCONFIDENT\x10\x01\x12\x12\n\x0eLOW_CONFIDENCE\x10\x02\x12\x0e\n\nOVERBUDGET\x10\x03\x62\x06proto3')
+  serialized_pb=_b('\n\x18\x61utomanlib_classes.proto\"\x17\n\tDimension\x12\n\n\x02id\x18\x01 \x01(\t\"\xe6\x03\n\x04Task\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\x11\n\timage_url\x18\x02 \x01(\t\x12\r\n\x05title\x18\x03 \x01(\t\x12\x13\n\x0bimg_alt_txt\x18\x04 \x01(\t\x12\x0f\n\x07pattern\x18\x05 \x01(\t\x12\x0e\n\x06\x62udget\x18\x06 \x01(\x01\x12\x12\n\nconfidence\x18\x07 \x01(\x01\x12\x13\n\x0bsample_size\x18\x08 \x01(\x05\x12\x1e\n\x07options\x18\t \x01(\x0b\x32\r.OptionsTuple\x12\x1e\n\ndimensions\x18\n \x03(\x0b\x32\n.Dimension\x12\x13\n\x0b\x64ont_reject\x18\x0b \x01(\x08\x12\x1a\n\x12pay_all_on_failure\x18\x0c \x01(\x08\x12\x0f\n\x07\x64ry_run\x18\r \x01(\x08\x12\x1b\n\x13\x61llow_empty_pattern\x18\x0e \x01(\x08\x12\x1a\n\x12pattern_error_text\x18\x10 \x01(\t\x12#\n\x1bquestion_timeout_multiplier\x18\x11 \x01(\x05\x12#\n\x1binitial_worker_timeout_in_s\x18\x12 \x01(\x05\x12\x0c\n\x04wage\x18\x13 \x01(\x01\x12\x11\n\tmax_value\x18\x14 \x01(\x01\x12\x11\n\tmin_value\x18\x15 \x01(\x01\x12\x16\n\x0e\x63onfidence_int\x18\x16 \x01(\x01\"\x15\n\x13UnconstrainedConInt\"\x1e\n\x0fSymmetricConInt\x12\x0b\n\x03\x65rr\x18\x01 \x01(\x01\"5\n\x10\x41symmetricConInt\x12\x0f\n\x07low_err\x18\x01 \x01(\x01\x12\x10\n\x08high_err\x18\x02 \x01(\x01\"(\n\x0b\x44oubleTuple\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03url\x18\x02 \x01(\t\"\x1b\n\x0bSingleTuple\x12\x0c\n\x04name\x18\x01 \x01(\t\"\xad\x02\n\x0cOptionsTuple\x12)\n\x06single\x18\x01 \x03(\x0b\x32\x19.OptionsTuple.SingleEntry\x12)\n\x06\x64ouble\x18\x02 \x03(\x0b\x32\x19.OptionsTuple.DoubleEntry\x12*\n\ntuple_type\x18\x03 \x01(\x0e\x32\x16.OptionsTuple.tup_type\x1a-\n\x0bSingleEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1a;\n\x0b\x44oubleEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x1b\n\x05value\x18\x02 \x01(\x0b\x32\x0c.DoubleTuple:\x02\x38\x01\"/\n\x08tup_type\x12\x0b\n\x07UNKNOWN\x10\x00\x12\n\n\x06SINGLE\x10\x01\x12\n\n\x06\x44OUBLE\x10\x02\"R\n\x0cValueOutcome\x12\x0b\n\x03\x65st\x18\x01 \x01(\x01\x12\x0b\n\x03low\x18\x02 \x01(\x01\x12\x0c\n\x04high\x18\x03 \x01(\x01\x12\x0c\n\x04\x63ost\x18\x04 \x01(\x01\x12\x0c\n\x04\x63onf\x18\x05 \x01(\x01\"\x1f\n\rStringOutcome\x12\x0e\n\x06option\x18\x01 \x01(\t\"\xbc\x02\n\x12\x41\x64\x61pterCredentials\x12\x33\n\nadptr_type\x18\x01 \x01(\x0e\x32\x1f.AdapterCredentials.AdapterType\x12\x11\n\taccess_id\x18\x02 \x01(\t\x12\x12\n\naccess_key\x18\x03 \x01(\t\x12@\n\x0f\x61\x64\x61pter_options\x18\x04 \x03(\x0b\x32\'.AdapterCredentials.AdapterOptionsEntry\x12\x11\n\tlog_level\x18\x05 \x01(\x05\x12\x0f\n\x07logging\x18\x06 \x01(\x05\x1a\x35\n\x13\x41\x64\x61pterOptionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"-\n\x0b\x41\x64\x61pterType\x12\x13\n\x0fUNKNOWN_ADAPTER\x10\x00\x12\t\n\x05MTURK\x10\x01*U\n\x0bOutcomeType\x12\x13\n\x0fUNKNOWN_OUTCOME\x10\x00\x12\r\n\tCONFIDENT\x10\x01\x12\x12\n\x0eLOW_CONFIDENCE\x10\x02\x12\x0e\n\nOVERBUDGET\x10\x03\x62\x06proto3')
 )
 
 _OUTCOMETYPE = _descriptor.EnumDescriptor(
@@ -48,8 +48,8 @@ _OUTCOMETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1073,
-  serialized_end=1158,
+  serialized_start=1463,
+  serialized_end=1548,
 )
 _sym_db.RegisterEnumDescriptor(_OUTCOMETYPE)
 
@@ -59,6 +59,32 @@ CONFIDENT = 1
 LOW_CONFIDENCE = 2
 OVERBUDGET = 3
 
+
+_OPTIONSTUPLE_TUP_TYPE = _descriptor.EnumDescriptor(
+  name='tup_type',
+  full_name='OptionsTuple.tup_type',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='UNKNOWN', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='SINGLE', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='DOUBLE', index=2, number=2,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=978,
+  serialized_end=1025,
+)
+_sym_db.RegisterEnumDescriptor(_OPTIONSTUPLE_TUP_TYPE)
 
 _ADAPTERCREDENTIALS_ADAPTERTYPE = _descriptor.EnumDescriptor(
   name='AdapterType',
@@ -77,8 +103,8 @@ _ADAPTERCREDENTIALS_ADAPTERTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1026,
-  serialized_end=1071,
+  serialized_start=1416,
+  serialized_end=1461,
 )
 _sym_db.RegisterEnumDescriptor(_ADAPTERCREDENTIALS_ADAPTERTYPE)
 
@@ -179,8 +205,8 @@ _TASK = _descriptor.Descriptor(
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='options', full_name='Task.options', index=8,
-      number=9, type=9, cpp_type=9, label=3,
-      has_default_value=False, default_value=[],
+      number=9, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
@@ -281,7 +307,7 @@ _TASK = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=54,
-  serialized_end=525,
+  serialized_end=540,
 )
 
 
@@ -304,8 +330,8 @@ _UNCONSTRAINEDCONINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=527,
-  serialized_end=548,
+  serialized_start=542,
+  serialized_end=563,
 )
 
 
@@ -335,8 +361,8 @@ _SYMMETRICCONINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=550,
-  serialized_end=580,
+  serialized_start=565,
+  serialized_end=595,
 )
 
 
@@ -373,8 +399,197 @@ _ASYMMETRICCONINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=582,
-  serialized_end=635,
+  serialized_start=597,
+  serialized_end=650,
+)
+
+
+_DOUBLETUPLE = _descriptor.Descriptor(
+  name='DoubleTuple',
+  full_name='DoubleTuple',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='DoubleTuple.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='url', full_name='DoubleTuple.url', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=652,
+  serialized_end=692,
+)
+
+
+_SINGLETUPLE = _descriptor.Descriptor(
+  name='SingleTuple',
+  full_name='SingleTuple',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='SingleTuple.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=694,
+  serialized_end=721,
+)
+
+
+_OPTIONSTUPLE_SINGLEENTRY = _descriptor.Descriptor(
+  name='SingleEntry',
+  full_name='OptionsTuple.SingleEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='OptionsTuple.SingleEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='OptionsTuple.SingleEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=870,
+  serialized_end=915,
+)
+
+_OPTIONSTUPLE_DOUBLEENTRY = _descriptor.Descriptor(
+  name='DoubleEntry',
+  full_name='OptionsTuple.DoubleEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='OptionsTuple.DoubleEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='OptionsTuple.DoubleEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=917,
+  serialized_end=976,
+)
+
+_OPTIONSTUPLE = _descriptor.Descriptor(
+  name='OptionsTuple',
+  full_name='OptionsTuple',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='single', full_name='OptionsTuple.single', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='double', full_name='OptionsTuple.double', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='tuple_type', full_name='OptionsTuple.tuple_type', index=2,
+      number=3, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_OPTIONSTUPLE_SINGLEENTRY, _OPTIONSTUPLE_DOUBLEENTRY, ],
+  enum_types=[
+    _OPTIONSTUPLE_TUP_TYPE,
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=724,
+  serialized_end=1025,
 )
 
 
@@ -432,8 +647,8 @@ _VALUEOUTCOME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=637,
-  serialized_end=719,
+  serialized_start=1027,
+  serialized_end=1109,
 )
 
 
@@ -463,8 +678,8 @@ _STRINGOUTCOME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=721,
-  serialized_end=752,
+  serialized_start=1111,
+  serialized_end=1142,
 )
 
 
@@ -501,8 +716,8 @@ _ADAPTERCREDENTIALS_ADAPTEROPTIONSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=971,
-  serialized_end=1024,
+  serialized_start=1361,
+  serialized_end=1414,
 )
 
 _ADAPTERCREDENTIALS = _descriptor.Descriptor(
@@ -567,11 +782,19 @@ _ADAPTERCREDENTIALS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=755,
-  serialized_end=1071,
+  serialized_start=1145,
+  serialized_end=1461,
 )
 
+_TASK.fields_by_name['options'].message_type = _OPTIONSTUPLE
 _TASK.fields_by_name['dimensions'].message_type = _DIMENSION
+_OPTIONSTUPLE_SINGLEENTRY.containing_type = _OPTIONSTUPLE
+_OPTIONSTUPLE_DOUBLEENTRY.fields_by_name['value'].message_type = _DOUBLETUPLE
+_OPTIONSTUPLE_DOUBLEENTRY.containing_type = _OPTIONSTUPLE
+_OPTIONSTUPLE.fields_by_name['single'].message_type = _OPTIONSTUPLE_SINGLEENTRY
+_OPTIONSTUPLE.fields_by_name['double'].message_type = _OPTIONSTUPLE_DOUBLEENTRY
+_OPTIONSTUPLE.fields_by_name['tuple_type'].enum_type = _OPTIONSTUPLE_TUP_TYPE
+_OPTIONSTUPLE_TUP_TYPE.containing_type = _OPTIONSTUPLE
 _ADAPTERCREDENTIALS_ADAPTEROPTIONSENTRY.containing_type = _ADAPTERCREDENTIALS
 _ADAPTERCREDENTIALS.fields_by_name['adptr_type'].enum_type = _ADAPTERCREDENTIALS_ADAPTERTYPE
 _ADAPTERCREDENTIALS.fields_by_name['adapter_options'].message_type = _ADAPTERCREDENTIALS_ADAPTEROPTIONSENTRY
@@ -581,6 +804,9 @@ DESCRIPTOR.message_types_by_name['Task'] = _TASK
 DESCRIPTOR.message_types_by_name['UnconstrainedConInt'] = _UNCONSTRAINEDCONINT
 DESCRIPTOR.message_types_by_name['SymmetricConInt'] = _SYMMETRICCONINT
 DESCRIPTOR.message_types_by_name['AsymmetricConInt'] = _ASYMMETRICCONINT
+DESCRIPTOR.message_types_by_name['DoubleTuple'] = _DOUBLETUPLE
+DESCRIPTOR.message_types_by_name['SingleTuple'] = _SINGLETUPLE
+DESCRIPTOR.message_types_by_name['OptionsTuple'] = _OPTIONSTUPLE
 DESCRIPTOR.message_types_by_name['ValueOutcome'] = _VALUEOUTCOME
 DESCRIPTOR.message_types_by_name['StringOutcome'] = _STRINGOUTCOME
 DESCRIPTOR.message_types_by_name['AdapterCredentials'] = _ADAPTERCREDENTIALS
@@ -622,6 +848,43 @@ AsymmetricConInt = _reflection.GeneratedProtocolMessageType('AsymmetricConInt', 
   ))
 _sym_db.RegisterMessage(AsymmetricConInt)
 
+DoubleTuple = _reflection.GeneratedProtocolMessageType('DoubleTuple', (_message.Message,), dict(
+  DESCRIPTOR = _DOUBLETUPLE,
+  __module__ = 'automanlib_classes_pb2'
+  # @@protoc_insertion_point(class_scope:DoubleTuple)
+  ))
+_sym_db.RegisterMessage(DoubleTuple)
+
+SingleTuple = _reflection.GeneratedProtocolMessageType('SingleTuple', (_message.Message,), dict(
+  DESCRIPTOR = _SINGLETUPLE,
+  __module__ = 'automanlib_classes_pb2'
+  # @@protoc_insertion_point(class_scope:SingleTuple)
+  ))
+_sym_db.RegisterMessage(SingleTuple)
+
+OptionsTuple = _reflection.GeneratedProtocolMessageType('OptionsTuple', (_message.Message,), dict(
+
+  SingleEntry = _reflection.GeneratedProtocolMessageType('SingleEntry', (_message.Message,), dict(
+    DESCRIPTOR = _OPTIONSTUPLE_SINGLEENTRY,
+    __module__ = 'automanlib_classes_pb2'
+    # @@protoc_insertion_point(class_scope:OptionsTuple.SingleEntry)
+    ))
+  ,
+
+  DoubleEntry = _reflection.GeneratedProtocolMessageType('DoubleEntry', (_message.Message,), dict(
+    DESCRIPTOR = _OPTIONSTUPLE_DOUBLEENTRY,
+    __module__ = 'automanlib_classes_pb2'
+    # @@protoc_insertion_point(class_scope:OptionsTuple.DoubleEntry)
+    ))
+  ,
+  DESCRIPTOR = _OPTIONSTUPLE,
+  __module__ = 'automanlib_classes_pb2'
+  # @@protoc_insertion_point(class_scope:OptionsTuple)
+  ))
+_sym_db.RegisterMessage(OptionsTuple)
+_sym_db.RegisterMessage(OptionsTuple.SingleEntry)
+_sym_db.RegisterMessage(OptionsTuple.DoubleEntry)
+
 ValueOutcome = _reflection.GeneratedProtocolMessageType('ValueOutcome', (_message.Message,), dict(
   DESCRIPTOR = _VALUEOUTCOME,
   __module__ = 'automanlib_classes_pb2'
@@ -652,6 +915,10 @@ _sym_db.RegisterMessage(AdapterCredentials)
 _sym_db.RegisterMessage(AdapterCredentials.AdapterOptionsEntry)
 
 
+_OPTIONSTUPLE_SINGLEENTRY.has_options = True
+_OPTIONSTUPLE_SINGLEENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
+_OPTIONSTUPLE_DOUBLEENTRY.has_options = True
+_OPTIONSTUPLE_DOUBLEENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _ADAPTERCREDENTIALS_ADAPTEROPTIONSENTRY.has_options = True
 _ADAPTERCREDENTIALS_ADAPTEROPTIONSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 # @@protoc_insertion_point(module_scope)

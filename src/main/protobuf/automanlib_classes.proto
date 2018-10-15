@@ -39,7 +39,7 @@ message Task{
 	double budget = 6;
 	double confidence = 7;
 	int32 sample_size=8;
-	repeated string options = 9;
+	OptionsTuple options = 9;
 	repeated Dimension dimensions = 10;
 	bool dont_reject = 11;
 	bool pay_all_on_failure = 12;
@@ -70,6 +70,50 @@ message AsymmetricConInt{
 	double high_err  = 2;
 }
 
+
+/*
+This message class is a member of the options OptionsTuple wrapper class
+fields:
+
+name 	name of choice
+
+url 	url for choice
+*/
+message DoubleTuple{
+	string name = 1;
+	string url = 2;
+}
+
+/*
+This message class is a member of the options OptionsTuple wrapper class
+fields:
+
+name 	name of choice
+
+*/
+message SingleTuple{
+	string name = 1;
+}
+
+/*
+This message class is a wrapper for specifying options for various tasks
+fields:
+
+single_tup 	key_name -> choice_name dictionary of choices
+
+double_tup 	key_name -> (choice_name,url) dictionary of choices
+*/
+message OptionsTuple{
+	map<string, string> single = 1;
+	map<string, DoubleTuple> double = 2;
+
+	enum tup_type{
+		UNKNOWN = 0;
+		SINGLE =1;
+		DOUBLE =2;
+	}
+	tup_type tuple_type =3;
+}
 
 /*
 This message class is part of the reply for an estimation task

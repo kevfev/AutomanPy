@@ -292,7 +292,8 @@ class Automan():
 
 	def _args_check(self,  budget=None, image_url=None, confidence=None, confidence_int=None, dry_run=None, dont_reject=None,
 					initial_worker_timeout_in_s=None, img_alt_txt=None, max_value=None, min_value=None, options = None,
-					pay_all_on_failure=None, question_timeout_multiplier=None,  sample_size=None, text=None,title=None,  wage=None):
+					pay_all_on_failure=None, question_timeout_multiplier=None,  sample_size=None, text=None,title=None,  wage=None,
+					options_required=False):
 		'''
 		Parameters
 		----------
@@ -311,9 +312,19 @@ class Automan():
 		min_conf_int=50
 		max_conf_flo=1.0
 		min_conf_flo=0.5
+		#special check for certain tasks that require options to be specified
+		if options_required:
+			if options is None or not isinstance(options, dict):
+				raise ArgumentError("(required argument) options must be a dictionary, where dict key is type string and entries are tuples of type (string[name]), (string[name],string[url])")
+			if options is not None:
+				singles_test = [isinstance(options[key], str) for key in options.keys()]
+				doubles_test = [isinstance(options[key], tuple) and isinstance(options[key][0], str) and isinstance(options[key][1], str) for key in options.keys()]
+			if not((all(singles_test) and not any(doubles_test)) or (all(doubles_test) and not any(singles_test))):
+				raise ArgumentError("entries of options dict must be tuples of type (string[name]), (string[name],string[url]). Note: cannot mix the two formats")
+		
 		# type checking and basic error checking
 		# -1 specifies use default value for parameter, do not need ot check
-		if budget is not None and (not isinstance(budget, (int, float)) or budget <= 0): raise ArgumentError("(required argument) budget must be of type float, must be strictly greater than 0")
+		if budget is None or (not isinstance(budget, (int, float)) or budget <= 0): raise ArgumentError("(required argument) budget must be of type float, must be strictly greater than 0")
 		if confidence is not None and (not isinstance(confidence, (int, float)) or ((confidence<min_conf_int or confidence>max_conf_int) and (confidence<min_conf_flo or confidence>max_conf_flo))): raise ArgumentError("confidence must be of type float, must be strictly greater than 0")
 		if confidence_int is not None and confidence_int != -1:
 			if not isinstance(confidence_int, (int, float)) or confidence_int <= 0: raise ArgumentError("confidence_int must be of type float, must be strictly greater than 0")
@@ -324,17 +335,16 @@ class Automan():
 		if img_alt_txt is not None and not isinstance(img_alt_txt, str): raise ArgumentError("img_alt_txt must be of type str")
 		if max_value is not None and (not isinstance(max_value, (int, float))): raise ArgumentError("max_value must be of type float, must be strictly greater than 0")
 		if min_value is not None and (not isinstance(min_value, (int, float))): raise ArgumentError("min_value must be of type float, must be strictly greater than 0")
-		if options is not None and (not isinstance(options, list) or any(not isinstance(opt, str) for opt in options)): raise ArgumentError("options must be a list of strings")
 		if pay_all_on_failure is not None and not isinstance(pay_all_on_failure, bool): raise ArgumentError("pay_all_on_failure must be of type bool")
 		if question_timeout_multiplier is not None and (not isinstance(question_timeout_multiplier, int) or question_timeout_multiplier <= 0): raise ArgumentError("question_timeout_multiplier must be of type int, must be strictly greater than 0")
 		if sample_size is not None and sample_size != -1:
 			if not isinstance(sample_size, int) or sample_size <= 0: raise ArgumentError("sample_size must be of type int, must be strictly greater than 0")
-		if text is not None and (not isinstance(text, str) or not text.strip()): raise ArgumentError("(required argument) text must be of type str, cannot be empty")
+		if text is None or (not isinstance(text, str) or not text.strip()): raise ArgumentError("(required argument) text must be of type str, cannot be empty")
 		if title is not None and not isinstance(title, str): raise ArgumentError("title must be of type str")
 		if wage is not None and (not isinstance(wage, (int, float)) or wage <= 0): raise ArgumentError("wage must be of type float, must be strictly greater than 0")
 		
 	
-	def estimateBatchUrl(self, text, budget, image_urls=None, title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",sample_size = -1, dont_reject = True, 
+	def estimateBatchUrl(self, text=None, budget=None, image_urls=None, title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",sample_size = -1, dont_reject = True, 
 				pay_all_on_failure = True, dry_run = False, wage = 11.00, max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500, 
 				initial_worker_timeout_in_s = 30):
 		if len(image_urls) < 2: raise ArgumentError("batch estimation method requires list of urls as input, at least size 2")
@@ -353,7 +363,7 @@ class Automan():
 
 		return batch
 
-	def estimate(self, text, budget, confidence = 0.95, confidence_int = -1, dont_reject = True, dry_run = False,initial_worker_timeout_in_s = 30, 
+	def estimate(self, text=None, budget=None, confidence = 0.95, confidence_int = -1, dont_reject = True, dry_run = False,initial_worker_timeout_in_s = 30, 
 				img_alt_txt = "",image_url="", max_value = sys.float_info.max, min_value = sys.float_info.min, 
 				pay_all_on_failure = True, question_timeout_multiplier = 500, sample_size = -1,  title = "",wage = 11.00):
 		"""
@@ -435,7 +445,7 @@ class Automan():
 			self._force_svr_shutdown()
 			raise
 
-	def radio(self, text, budget, options, confidence = 0.95, dont_reject = True, dry_run = False,initial_worker_timeout_in_s = 30, 
+	def radio(self, text=None, budget=None, options=None, confidence = 0.95, dont_reject = True, dry_run = False,initial_worker_timeout_in_s = 30, 
 				img_alt_txt = "",image_url="", pay_all_on_failure = True, question_timeout_multiplier = 500, title = "",wage = 11.00):
 		"""
 		Estimates the answer to the provided task. Calls AutoMan's estimate functionality on the back-end
@@ -446,8 +456,12 @@ class Automan():
 			The text description of the task, to display to workers on the crowdsource platform
 		budget : float
 			The total budget allocated for this task
-		options : list(String)
-			The list of possible radio choices, represented as list of strings
+		options : dict(String -> (String) or String -> (String, String))
+			A dictionary of possible of possible radio choices: 
+				-key of entry represents choice name
+				-entries are either:
+					- 1-tuples, where the first item is the name(string) of the choice
+					- 2-tuples, where the first item is the name(string) of the choice, and the second item is a url(string)
 		confidence : float
 			The desired confidence level 
 		dont_reject : boolean
@@ -483,7 +497,7 @@ class Automan():
 		self._args_check(text=text, budget=budget, image_url=image_url, title=title, confidence=confidence, 
 						img_alt_txt=img_alt_txt, dont_reject=dont_reject, pay_all_on_failure=pay_all_on_failure, 
 						dry_run=dry_run, wage=wage, question_timeout_multiplier=question_timeout_multiplier, 
-						options=options, initial_worker_timeout_in_s=initial_worker_timeout_in_s)
+						options=options, initial_worker_timeout_in_s=initial_worker_timeout_in_s, options_required=True)
 
 		task = pyAutomanlib.make_rad_task(text_ = text,
 										budget_ = float(budget),

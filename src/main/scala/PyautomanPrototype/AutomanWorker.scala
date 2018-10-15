@@ -84,6 +84,7 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 			case TaskType.Checkbox(chtask) 		=>	launchCheckboxTask(taskID=taskID, task=chtask.getTask);
 			case TaskType.CheckboxDist(chdtask) =>	launchCheckboxDistTask(taskID=taskID, task=chdtask.getTask);
 			case TaskType.Empty					=>	println("ERROR: Unknown type of task received by RPC AutoMan worker. Server generated bad task");
+													throw new Exception("Task is empty! this exception should be handled by RPC server")
 		}
 	}
 
@@ -91,13 +92,37 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 	*	access the result. If a duplicate key was randomly generated and somehow was not 
 	*	regenerated, this method should throw an exception
 	*
-	*  @param resultKey - the key associated with this outcome
-	*  @param outcome - the future outcome
+	*  	@param resultKey - the key associated with this outcome
+	*  	@param outcome - the future outcome
 	*							
 	*/
 	def addToResultMap(taskID: String, outcome: AnyRef) : Unit = {
 		// add future to map
 		resultMap.put(taskID, outcome);
+	}
+
+	/** Makes options from OptionsTuple for tasks that require option choices 
+	*
+	*  	@param options - the OptionsTuple to create options for
+	*	@return a List of options
+	*					
+	*/
+	def makeOptions(options: Option[OptionsTuple]) : List[AnyRef] = {
+		println("makeOptions")
+		var opts: OptionsTuple = options.getOrElse(throw new Exception("options not specified for task, this should throw an exception!"))
+		if(opts.tupleType.isSingle){
+			opts.single.foreach{ case (choice_name,name) => printf("choice=%s \nname=%s",choice_name, name)}; 
+			return opts.single.map{ case(choice_name,name) => choice(Symbol(choice_name), name)}.toList
+		}
+		if(opts.tupleType.isDouble){	
+			opts.double.foreach{ case (choice_name,d_tup) => printf("choice=%s \nname=%s \nurl=%s",choice_name, d_tup.name, d_tup.url)}; 
+			return opts.double.map{ case(choice_name,d_tup) => choice(Symbol(choice_name), d_tup.name, d_tup.url)}.toList
+		}
+		if(opts.tupleType.isUnknown){
+			throw new Exception("options not specified for task, this should throw an exception!")
+		}
+		return {(Symbol("n/a") -> "n/a")}.toList
+
 	}
 
 	/** Main loops of worker thread. Until server stops worker, 
@@ -201,9 +226,10 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 	def launchRadioTask(taskID: String, task : Task) : Unit = {
 		//TODO
 		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
+		val opts = makeOptions(task.options)
 		val outcome = radio(text =task.text, 
 								budget = task.budget, 
-								options = task.options.toList,
+								options = opts,
 								image_url =task.imageUrl,
 								image_alt_text =task.imgAltTxt,
 								title = task.title, 

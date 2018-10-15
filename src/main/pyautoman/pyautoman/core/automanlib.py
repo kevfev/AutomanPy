@@ -157,8 +157,9 @@ def make_rad_task(text_, options_, budget_, image_url_=None, img_alt_txt_ = None
 		A Task object initialized to the supplied parameters
 	------
 	"""
+	opts = make_options(options_)
 	task = make_task(text_=text_, image_url_=image_url_, budget_=budget_, img_alt_txt_=img_alt_txt_ , title_=title_ , 
-						confidence_=confidence_ ,dont_reject_ =dont_reject_ , options_=options_,
+						confidence_=confidence_ ,dont_reject_ =dont_reject_ , options_=opts,
 						pay_all_on_failure_ =pay_all_on_failure_  , dry_run_ = dry_run_ , wage_ = wage_, 
 						question_timeout_multiplier_ = question_timeout_multiplier_ , 
 						initial_worker_timeout_in_s_ =initial_worker_timeout_in_s_) 
@@ -232,6 +233,44 @@ def make_task(text_, budget_, image_url_=None, img_alt_txt_ = None, title_ = Non
 					min_value = min_value_, question_timeout_multiplier = question_timeout_multiplier_, initial_worker_timeout_in_s = initial_worker_timeout_in_s_)
 
 	return t
+
+def make_options(options_):
+	"""
+	Creates the OptionsTuple object for tasks that require answer option choices to be specified
+
+	Parameters
+	----------
+	options : dict(String -> (String) or String -> (String, String))
+			A dictionary of possible of possible radio choices: 
+				-key of entry represents choice name
+				-entries are either:
+					- 1-tuples, where the first item is the name(string) of the choice
+					- 2-tuples, where the first item is the name(string) of the choice, and the second item is a url(string)
+			
+	Returns
+	-------
+	OptionsTuple
+		An OptionsTuple object
+	"""
+	opts = None
+	single_tasks=None
+	for key in options_.keys():
+		if single_tasks is None:
+			opts = OptionsTuple()
+			if isinstance(options_[key], str):
+				single_tasks = True
+				opts.tuple_type = OptionsTuple.SINGLE
+			elif isinstance(options_[key], tuple):
+				single_tasks = False
+				opts.tuple_type = OptionsTuple.DOUBLE
+			else:
+				raise ArgumentError(" badly formed options dict")
+		if single_tasks ==True:
+			opts.single[key] = options_[key]
+		if single_tasks ==False:
+			opts.double[key].name = options_[key][0]
+			opts.double[key].url = options_[key][1]
+	return opts
 
 def submit_task(channel_,automan_task_, adapter_):
 	"""
