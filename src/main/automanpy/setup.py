@@ -20,7 +20,7 @@ with open("README.md", "r") as fh:
 	ld = fh.read()
 
 setup(name = 'automanpy',
-	version= '0.4.1.a0',
+	version= '0.4.2.a0',
 	description = 'Python bindings for AutoMan Runtime. Software is current in development, and not properly tested.',
 	author = 'Kevin Feveck',
 	cmdclass={

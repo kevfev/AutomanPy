@@ -35,8 +35,12 @@ python setup.py clean sdist
 Alternaltively, you can run `./buildproject.sh` located in the root directory, to do the steps outlined above.
 
 ### How to Install
-Use pip to install AutoManPy. This software package is currently in development, and will be updated regularly for bug fixes, etc. 
-To ensure you are always installing the latest version be sure to use '--no-cache-dir' and '--upgrade'
+Use pip to install AutoManPy. 
+```
+pip install automanpy
+```
+This software package is currently in development, and will be updated regularly for bug fixes, etc. 
+If you want to upgrade, or force the installation of the latest version, use '--no-cache-dir' and '--upgrade'
 ```
 pip install --no-cache-dir automanpy --upgrade
 ```
