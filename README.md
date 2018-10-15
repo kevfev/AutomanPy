@@ -109,17 +109,17 @@ Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output 
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
 estimate of a single real value.     
 ##### *Arguments*
-```
+
 * **adapter** 			- a dictionary storing adapter credentials to use to connect to the crowdsource backend. Must contain necessary adapter fields
 * **server_addr**		- the string hostname address of the gRPC Automan server to connect to
 * **port** 				- the port number to connect to the gRPC Automan server
 * **supress_output**	- the level of output to show from the gRPC Automan server. "none" displays all output, "all" supresses all output from server
 * **loglevel** 			- Specifies the AutoMan worker log level, for setting the level of output directly from AutoMan. values
-						  *'debug' 	- debug level 
-						  *'info' 	- information level 
-						  *'warn' 	- warnings only
-						  *'fatal' 	- fatal messages only (default)
-```
+						  * 'debug' 	- debug level 
+						  * 'info' 	- information level 
+						  * 'warn'	- warnings only
+						  * 'fatal' 	- fatal messages only (default)
+
 ##### *Returns*: `automanpy.Automan`
 
 #### Automan.estimate
@@ -134,7 +134,6 @@ Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtai
 estimate of a single real value.     
 
 ##### *Arguments*
-```
 * **text** 							- the text description of the task to display to the worker (required)
 * **budget** 						- the threshold cost for the task (required)
 * **image_url**  					- an image url to be associated with the task
@@ -155,7 +154,6 @@ estimate of a single real value.
 *Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
 Setting too low can cause the question to timeout too soon and result in failure to get results.  
 Use, at minimum, values 60 or higher for `question_timeout_multiplier` and 60 or higher for `initial_worker_timeout_in_s`. 
-```
 ##### *Returns* : `EstimateOutcome`  
 
 
@@ -165,7 +163,6 @@ Use, at minimum, values 60 or higher for `question_timeout_multiplier` and 60 or
 This class contains a Future, representing the outcome of the task. Value attributes in this class (e.g. high, est, cost, need, etc) are initially set to NaN so that they cannot used, until the future has resolved to a case where those values are valid (e.g., if the outcome_type was `OVERBUDGET` then `need` and `have` are the only valid attributes). To ensure that the future is always resolved first and the respective attributes are initialized, always use attributes of an EstimateOutcome in conditonal blocks where they exist, using the appropriate methods below 
 NOTE: Instances of this class will always be created for the user. This class will never need to be instantiated manually.  
 ##### *Attributes*
-```
 For `Confident` and `LowConfidence` outcomes:
 * **high** 	- the highest value a worker reported, set to NaN intially
 * **low** 	- the lowest value a worker reported, set to NaN intially
@@ -176,7 +173,6 @@ For `Confident` and `LowConfidence` outcomes:
 For `OverBudget` outcomes:  
 * **need** 	- the amount needed for AutoMan to continue attempting to obtain an estimate
 * **have** 	- the current amount budgeted for the task  
-```
 
 #### EstimateOutcome.isConfident()
 ##### *Description* : 

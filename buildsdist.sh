@@ -18,7 +18,7 @@ echo "==>  sbt compiling/packing project.."
 if sbt clean compile pack; then
 	echo "==> sbt successfully compiled/packed pyautoman.."
 	cp -R target/pack src/main/automanpy/automanpy/core/rpc_server/
-	cp -R README.md src/main/automanpy/automanpy/
+	cp -R README.md src/main/automanpy/
 	echo "==>  compiling python protobuf files.."
 	if python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/automanpy/automanpy/core/grpc_gen_classes --grpc_python_out=src/main/automanpy/automanpy/core/grpc_gen_classes src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto; then
 		cd src/main/automanpy/
