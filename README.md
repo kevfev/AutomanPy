@@ -1,13 +1,25 @@
 # AutomanPy
-Python bindings for AutoMan. See [AutoMan](https://automan-lang.github.io/)
+Python bindings for AutoMan. See [AutoMan](https://automan-lang.github.io/). 
 This package is currently in development.
 
 ### System Requirements
 To use this package you must be running Python 2.7.15 or 3.2+,Java 8, and Scala 2.11.7+. This package relies on [ScalaPB](https://scalapb.github.io/) and [gRPC](https://grpc.io/). If you use SBT to build this project, all Scala dependencies will be downloaded. To install gRPC for Python (needed for the Python client), follow these [instructions](https://grpc.io/docs/quickstart/python.html).
 
 
+### How to Install
+Use pip to install AutoManPy. 
+```
+pip install automanpy
+```
+This software package is currently in development, and will be updated regularly for bug fixes, etc. 
+If you want to upgrade, or force the installation of the latest version, use '--no-cache-dir' and '--upgrade'
+```
+pip install --no-cache-dir automanpy --upgrade
+```
+
 ### How to Build Source
-The easiest way to build this project is by using [SBT](https://www.scala-sbt.org/). To build this project, from the /AutomanPy directory, run
+The easiest way to build this project is by using [SBT](https://www.scala-sbt.org/).To build the source automatically, you can run `./buildproject.sh` located in the root directory. This relies on sbt being installed.  
+To build this project manually, from the /AutomanPy directory, run
 ```
 sbt clean compile pack
 ```
@@ -31,18 +43,6 @@ Then change to the directory containing setup.py and run it from there:
 ```
 cd src/main/automanpy/
 python setup.py clean sdist
-```
-Alternaltively, you can run `./buildproject.sh` located in the root directory, to do the steps outlined above.
-
-### How to Install
-Use pip to install AutoManPy. 
-```
-pip install automanpy
-```
-This software package is currently in development, and will be updated regularly for bug fixes, etc. 
-If you want to upgrade, or force the installation of the latest version, use '--no-cache-dir' and '--upgrade'
-```
-pip install --no-cache-dir automanpy --upgrade
 ```
 
 ### How to Use
@@ -97,7 +97,7 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ```
 
 ### Example Code 
-See example code under `examples/`
+See example usage for submitting single and multiple estimate tasks in [`examples/`](https://github.com/kevfev/AutomanPy/tree/master/examples)
 
 ## API
 ### AutoMan Class 
