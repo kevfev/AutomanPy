@@ -115,19 +115,19 @@ estimate of a single real value.
 * **port** 				- the port number to connect to the gRPC Automan server
 * **supress_output**	- the level of output to show from the gRPC Automan server. "none" displays all output, "all" supresses all output from server
 * **loglevel** 			- Specifies the AutoMan worker log level, for setting the level of output directly from AutoMan. values
-						  * 'debug' 	- debug level 
-						  * 'info' 	- information level 
-						  * 'warn'	- warnings only
-						  * 'fatal' 	- fatal messages only (default)
+	* 'debug' 	- debug level 
+	* 'info' 	- information level 
+	* 'warn'	- warnings only
+	* 'fatal' 	- fatal messages only (default)
 
 ##### *Returns*: `automanpy.Automan`
 
 #### Automan.estimate
 ```
-  Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
- 					sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False, wage = 11.00,  
- 					max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
-					initial_worker_timeout_in_s = 30)
+Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.95, confidence_int = -1, 
+				img_alt_txt = "", sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False,
+				wage = 11.00, max_value = sys.float_info.max, min_value = sys.float_info.min, 
+				question_timeout_multiplier = 500, initial_worker_timeout_in_s = 30)
 ```
 ##### *Description* : 
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
@@ -187,17 +187,17 @@ Indicates if the outcome of the task is a low confidence estimate
 #### EstimateOutcome.isOverBudget()
 ##### *Description* : 
 Indicates if the outcome of the task is over budget or not  
-#####*Returns* : `boolean` - True if the outcome was over budget, False otherwise  
+##### *Returns* : `boolean` - True if the outcome was over budget, False otherwise  
 
 #### EstimateOutcome.printOutcome()
 ##### *Description* : 
 Prints the outcome of the estimate to stdout
-#####*Returns* : `None` 
+##### *Returns* : `None` 
 
 #### EstimateOutcome.isDone()
 ##### *Description* : 
-Indicates if the call for this task has completed or not. This call does not block
-*Returns* : `boolean` - True if the estimate has returned (either "CONFIDENT", "LOW_CONFIDENCE", or "OVERBUDGET")
+Indicates if the call for this task has completed or not. This call does not block 
+##### *Returns* : `boolean` - True if the estimate has returned (either "CONFIDENT", "LOW_CONFIDENCE", or "OVERBUDGET")
 
 #### EstimateOutcome.done()
 ##### *Description* : 
