@@ -84,6 +84,20 @@ message AutomanTask{
 	int32 timeout = 9;
 }
 
+message AutomanOutcome{
+	oneof task_outcome{
+		Empty empty_outcome=1;
+		EstimateOutcome estimate_outcome = 2;
+		MultiestimateOutcome multiestimate_outcome = 3;
+		RadioOutcome radio_outcome = 4;
+		RadioDistOutcome radio_dist_outcome = 5;
+		FreetextOutcome freetext_outcome = 6;
+		FreetextDistOutcome freetext_dist_outcome = 7;
+		CheckboxOutcome checkbox_outcome = 8;
+		CheckboxDistOutcome checkbox_dist_outcome = 9;
+	}
+}
+
 
 /*
 This message class is the server response to a submitted task
@@ -121,21 +135,11 @@ message TaskResponse{
 	}
 
 	TaskReturnCode return_code = 1;
-	oneof task_outcome{
-		EstimateOutcome estimate_outcome = 2;
-		MultiestimateOutcome multiestimate_outcome = 3;
-		RadioOutcome radio_outcome = 4;
-		RadioDistOutcome radio_dist_outcome = 5;
-		FreetextOutcome freetext_outcome = 6;
-		FreetextDistOutcome freetext_dist_outcome = 7;
-		CheckboxOutcome checkbox_outcome = 8;
-		CheckboxDistOutcome checkbox_dist_outcome = 9;
-	}
-
-	ExceptionCode excep_code = 16;
-	ErrorCode err_code = 17;
-	string err_msg = 18;
-	string excep_msg = 19;
+	AutomanOutcome outcome = 2;
+	ExceptionCode excep_code = 3;
+	ErrorCode err_code = 4;
+	string err_msg = 5;
+	string excep_msg = 6;
 }
 
 /*

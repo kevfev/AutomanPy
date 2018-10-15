@@ -2,6 +2,7 @@ from grpc_gen_classes.automanlib_rpc_pb2 import *
 from grpc_gen_classes.automanlib_classes_pb2 import *
 from grpc_gen_classes.automanlib_wrappers_pb2 import *
 from grpc_gen_classes import automanlib_rpc_pb2_grpc as rpclib
+from pyautomanexceptions import *
 import grpc
 from os import path, devnull
 from time import sleep
@@ -24,14 +25,18 @@ def isGoodAadapter(adapter):
     Returns
     -------
     bool
-    	True if the adapter validates (not authenticates) successfully
-    	False otherwise
+    	returns True if the adapter validates (not authenticates) successfully, or
+    	Raises an exception if the adapter is not created properly
+
+    Raises
+	------
+	AdapterError: Indicates there was an error creating the adapter. Method will set error msg
+					to indicate which required field was not found
 	"""
 
 	required_strings = ["access_id", "access_key", "type"]
 	for req in required_strings:
 		if req not in adapter:
-			print("ERROR: Required paramater missing in adapter. Adapter needs access_id id, access_key, and adapter type")
 			return False
 	return True
 
@@ -53,29 +58,42 @@ def _make_client_stub(channel_):
 
 	return rpclib.PyautomanPrototypeStub(channel_)
 
-def make_adapter(acc_id, acc_key, lglvl, **kwargs):
+def make_adapter(adapter, lglvl, lg):
 	"""
 	Makes an adapter from the provided parameter credentials
 
 	Parameters
 	----------
-	acc_id : str
-		access_id - the access ID for the respective crowdsource back-end
-	acc_key : str
-		access_key - the secret key for the respective crowdsource back-end
-	**kwargs : dict
-		a dictionary of options associated with the adapter (e.g, sandbox_mode for MTURK adapters)
-
+	adapter : dict
+		Dictionary that holds the backend login credentials, and any additional options
+	lglvl : str
+		The log level for the Automan Worker on the RPC server
 
 	Returns
 	-------
 	AdapterCredentials
-		an adapter object for authenticating to the crowdsource back-end
+		an adapter object for authenticating to the crowdsource back-end, or raises an exception if there was a problem
+		encountered
+
+	Raises
+	------
+	AdapterError: 	Indicates there was an error creating the adapter, see msg field of exception for more info
 	"""
-
-	adptr = AdapterCredentials(adptr_type = AdapterCredentials.MTURK, access_id = acc_id, access_key = acc_key, adapter_options = kwargs , log_level = lglvl)
-	return adptr
-
+	if isGoodAadapter(adapter):
+		acc_id = adapter.pop("access_id")
+		acc_key =  adapter.pop("access_key")
+		ad_type_str = adapter.pop("type")
+		if ad_type_str.lower() == "mturk":
+			return AdapterCredentials(adptr_type = AdapterCredentials.MTURK, 
+										access_id = acc_id, 
+										access_key = acc_key, 
+										adapter_options = adapter, 
+										logging = lg,
+										log_level = lglvl)
+		else:
+			raise AdapterError("unsupported adapter type. Currently, the only supported crowdsource backend is mturk")
+	else:
+		raise AdapterError("missing required field in dict in adapter dict. The required fields are : access_id, access_key, type")
 
 def make_channel(address_, port_):
 	"""
@@ -92,12 +110,10 @@ def make_channel(address_, port_):
 	Channel
     	A gRPC channel to the specified gRPC server
 	"""
+	print "Warning: Making an insecure gRPC channel"
+	return grpc.insecure_channel(address_+":"+port_)
 
-	#assert strings here, type check, error check, throw exceptions
-	channel = grpc.insecure_channel(address_+":"+port_)
-	return channel
-
-def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, confidence_ = None, confidence_int_ = None,
+def make_est_task(text_, budget_, image_url_=None, img_alt_txt_ = None, title_ = None, confidence_ = None, confidence_int_ = None,
 				sample_size_ = -1, dont_reject_ = False, pay_all_on_failure_ = True, dry_run_ = False, 
 				wage_ = None, max_value_ = None, min_value_ = None, question_timeout_multiplier_ = None, 
 				initial_worker_timeout_in_s_ = None):
@@ -121,12 +137,39 @@ def make_est_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None
 						question_timeout_multiplier_ = question_timeout_multiplier_ , 
 						initial_worker_timeout_in_s_ =initial_worker_timeout_in_s_) 
 
-	return EstimateTask(task=task)
+	timeout = int(initial_worker_timeout_in_s_) * int(initial_worker_timeout_in_s_)
+	automan_task = AutomanTask(estimate=EstimateTask(task=task), timeout = timeout)
+	return automan_task
 
-def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pattern_ = None, confidence_ = None, confidence_int_ = None,
-				sample_size_ = -1, options_ = None, dimensions_ = None, dont_reject_ = False, pay_all_on_failure_ = True,
-				dry_run_ = False, allow_empty_pattern_ = False, pattern_error_text_ = None, wage_ = None, max_value_ = None,
-				min_value_ = None, question_timeout_multiplier_ = None, initial_worker_timeout_in_s_ = None):
+def make_rad_task(text_, options_, budget_, image_url_=None, img_alt_txt_ = None, title_ = None, confidence_ = None, 
+				dont_reject_ = False, pay_all_on_failure_ = True, dry_run_ = False, 
+				wage_ = None, question_timeout_multiplier_ = None, initial_worker_timeout_in_s_ = None):
+	"""
+	Makes a radio task for an Automan object to service
+
+	Parameters
+	----------
+	see make_task for description
+
+	Returns
+	-------
+	Task 
+		A Task object initialized to the supplied parameters
+	------
+	"""
+	task = make_task(text_=text_, image_url_=image_url_, budget_=budget_, img_alt_txt_=img_alt_txt_ , title_=title_ , 
+						confidence_=confidence_ ,dont_reject_ =dont_reject_ , options_=options_,
+						pay_all_on_failure_ =pay_all_on_failure_  , dry_run_ = dry_run_ , wage_ = wage_, 
+						question_timeout_multiplier_ = question_timeout_multiplier_ , 
+						initial_worker_timeout_in_s_ =initial_worker_timeout_in_s_) 
+	timeout = int(initial_worker_timeout_in_s_) * int(initial_worker_timeout_in_s_)
+	automan_task = AutomanTask(radio=RadioTask(task=task), timeout = timeout)
+	return automan_task
+
+def make_task(text_, budget_, image_url_=None, img_alt_txt_ = None, title_ = None, pattern_ = None, confidence_ = None, 
+			confidence_int_ = None,sample_size_ = -1, options_ = None, dimensions_ = None, dont_reject_ = False, pay_all_on_failure_ = True,
+			dry_run_ = False, allow_empty_pattern_ = False, pattern_error_text_ = None, wage_ = None, max_value_ = None,
+			min_value_ = None, question_timeout_multiplier_ = None, initial_worker_timeout_in_s_ = None):
 	"""
 	A general function for making tasks, used by other functions in this library for making specific tasks
 
@@ -138,15 +181,15 @@ def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pa
 		The text description of the task, to display to workers on the crowdsource platform
 	image_url_ : str
 		The url of the image for the task
-	budget_ : double
+	budget_ : float
 		The total budget allocated for this task
 	img_alt_txt_ : str
 		The alternate text description for the image, for browser use
 	pattern_ : str 
 		The expected pattern (Freetext tasks only)
-	confidence_ : double 
+	confidence_ : float 
 		The desired confidence level of the estimation	
-	confidence_int_ : double
+	confidence_int_ : float
 			The desired confidence interval. If 'None', an Unconstrained Confidence Internal is used,
 			if set to a value, a symmetric confidence interval of with confidence_int is used.	
 	sample_size_ : int 
@@ -165,24 +208,23 @@ def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pa
 		?
 	pattern_error_text_ = str 
 		The error message to display if worker response does not match expected pattern (Freetext tasks only)
-	wage_ : double
+	wage_ : float
 		? 
-	max_value_: double
+	max_value_: float
 		? 
-	min_value : double
+	min_value_ : float
 		? 
-	question_timeout_multiplier_ : : double
-		? 
-	initial_worker_timeout_in_s : int
-		? 
+	question_timeout_multiplier_ : float
+		Value of this multiplier determines how long the question lives on the crowdsource backend before expiring.
+		For example: if this value is 60, and the initial_worker_timeout_in_s_ is 60, the question will live for 1 hour
+	initial_worker_timeout_in_s_ : int
+		The time limit for the worker to complete the task once accepted  
 
 	Returns
 	-------
 	Task 
 		A general Task object initialized to the supplied parameters
 	"""
-
-	#consider using a task builder classs to make tasks in this method
 	t = Task(text = text_, image_url = image_url_, budget = budget_, img_alt_txt = img_alt_txt_ , title = title_ , 
 					pattern = pattern_ , confidence = confidence_, confidence_int = confidence_int_, sample_size = sample_size_, options = options_ , 
 					dimensions = dimensions_ , dont_reject = dont_reject_ , pay_all_on_failure = pay_all_on_failure_,dry_run = dry_run_, 
@@ -191,7 +233,7 @@ def make_task(text_, image_url_, budget_, img_alt_txt_ = None, title_ = None, pa
 
 	return t
 
-def submit_task(channel_,task_, adapter_):
+def submit_task(channel_,automan_task_, adapter_):
 	"""
 	Submits task_ to the gRPC server listening on channel_
 
@@ -222,13 +264,11 @@ def submit_task(channel_,task_, adapter_):
 	"""
 
 	# type check, error check, throw exceptions
-	timeout_ = int(task_.task.question_timeout_multiplier) * int(task_.task.initial_worker_timeout_in_s)
-	at_task_ = AutomanTask(estimate=task_, timeout = timeout_)
 	client_stub = _make_client_stub(channel_)
-	response = client_stub.SubmitTask.future(at_task_)
+	response = client_stub.SubmitTask.future(automan_task_)
 	return response
 
-def start_rpc_server(port=50051, sleep_time=5, suppress_output = 'all', stdout_file = None, stderr_file = None):
+def start_rpc_server(port=50051, suppress_output = 'all', stdout_file = None, stderr_file = None):
 	"""
 	Start the remote gRPC server process
 
@@ -236,8 +276,6 @@ def start_rpc_server(port=50051, sleep_time=5, suppress_output = 'all', stdout_f
     ----------
     port : int
     	The desired port number to have the started server listen on
-    sleep_time : int
-    	The amount of time to wait to give to let the server boot up 
 	suppress_output : string
 		Setting for suppressing the output of the RPC server from stdout.
 		Values are:
@@ -256,15 +294,17 @@ def start_rpc_server(port=50051, sleep_time=5, suppress_output = 'all', stdout_f
 		stout = open(devnull, 'w')
 		sterr = None
 	if suppress_output.lower() == "file":
-		stout = stdout_file
-		sterr = stderr_file
+		print("Redirecting output to file not yet implemented! Defaulting to stdout/stderr")
+		#stout = stdout_file
+		#sterr = stderr_file
+		stout = None
+		sterr = None
 	if suppress_output.lower() == "none":
 		stout = None
 		sterr = None
 
 	# launch server and wait for it to get ready
 	p = Popen(cmd_string, stdout = stout, stderr = sterr)
-	sleep(sleep_time)
 	return p
 
 def shutdown_rpc_server(channel_):

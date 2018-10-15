@@ -92,7 +92,7 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ```
 
 
-
+# MENTION AUTOMATIC SHUTDOWN AT END OF SCRIPT, EXPLICIT SHUTDOWN WITH METHOD, FUTURE FEATURE OF CONTEXT MANAGER FOR CASES WHERE FUTURES WILL BE ONLY BE NEEDED IN ENCLOSED CODE BLOCK
 
 ### Example Code 
 ```python
@@ -157,17 +157,23 @@ Estimate low: 62.000000 high:62.000000 est:62.000000
 ### AutoMan Class 
 #### Constructor
 ```python
-Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', loglevel='info')
+Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', loglevel='info', logging='none')
 ```
 * **adapter** 			- a dictionary storing adapter credentials to use to connect to the crowdsource backend. Must contain necessary adapter fields
 * **server_addr**		- the string hostname address of the gRPC Automan server to connect to
 * **port** 				- the port number to connect to the gRPC Automan server
 * **supress_output**	- the level of output to show from the gRPC Automan server. "none" displays all output, "all" supresses all output from server
-* **loglevel** 			- Specifies the AutoMan worker log level, for setting the level of output directly from AutoMan. values
+* **loglevel** 			- Specifies the AutoMan worker log verbosity, for setting the level of logging output directly from AutoMan Worker. values
 						  *'debug' 	- debug level 
 						  *'info' 	- information level 
 						  *'warn' 	- warnings only
 						  *'fatal' 	- fatal messages only (default)
+* **logging** 			- Specifies the AutoMan worker logging behaviour, for setting the logging behaviour of AutoMan worker. values
+						  *'none' 	- no logging 
+						  *'t' 	- log trace only
+						  *'tm' 	- log trace and use for memoization
+						  *'tv' 	- log trace and output debug information
+						  *'tmv' 	- log trace, use for memoization and output debug info
 
 #### AutoMan Class Methods
 ```python

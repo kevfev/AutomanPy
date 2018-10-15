@@ -2,6 +2,7 @@ package pyautomanlib;
 import edu.umass.cs.automan.core.answer._;
 import automanlib_rpc._;
 import automanlib_rpc.AutomanTask.TaskType;
+import automanlib_rpc.AutomanOutcome;
 import automanlib_classes._;
 import automanlib_wrappers._;
 import scala.concurrent.{ ExecutionContext, Future };
@@ -10,12 +11,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.{AbstractQueue, UUID};
 
 object PyautomanPrototypeServicer extends GrpcServer{ self => 
+	Thread.currentThread().setName("RPC-AutoMan-Server");
 	private class PyautomanServicer extends PyautomanPrototypeGrpc.PyautomanPrototype {	
 		val taskQueue: AbstractQueue[(String, AutomanTask.TaskType)] = new ConcurrentLinkedQueue;
 		val answerMap: ConcurrentMap[String, AnyRef] = new ConcurrentHashMap;
 		val workerPool: ExecutorService = Executors.newSingleThreadExecutor();
 		var stopWorkers: AtomicBoolean = new AtomicBoolean(false);
 		val pollFrequency: Int = 6000;
+
+
+		Thread.currentThread().setName("RPC-AutoMan-Server-Thread");
 
 		/** rpc method used by client to submit a task to Automan.
 		*
@@ -30,37 +35,6 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 			val response = executeTask(taskId = task_id, task=automanTask);
 			Future.successful(response);
 		}
-
-		/**  make and EstimateOutcome with ValueOutcome message field set
-		*
-		*  @param _est - estimate returned by AutoMan
-		*  @param _low - lowest worker response
-		*  @param _high - highest worker response
-		*  @param _cost - cost of task
-		*  @param _conf - confidence of result
-		*  @return an EstimateOutcome with all fields but outcomeType initialized
-		*							
-		*/
-		def makeValueOutcome( _est : BigDecimal, _low : BigDecimal, _high: BigDecimal, _cost: BigDecimal, _conf: BigDecimal, outcome_type: OutcomeType): EstimateOutcome = {
-			return EstimateOutcome().withAnswer(ValueOutcome(est = _est.toDouble,low = _low.toDouble,high = _high.toDouble,cost = _cost.toDouble,conf = _conf.toDouble))
-									.withNeed(-1.0)
-									.withHave(-1.0)
-									.withOutcomeType(outcome_type);
-		}
-
-		/** make an overbudget EstimateOutcome
-		*
-		*  @param _need - the amount needed by AutoMan to continue trying the task
-		*  @param _have - the amount originally allocated for the task
-		*  @return an EstimateOutcome for an overbudget result
-		*							
-		*/
-		def makeOverBudgetOutcome( _need: BigDecimal, _have: BigDecimal): EstimateOutcome = {
-			return EstimateOutcome().withOutcomeType(OutcomeType.OVERBUDGET)
-									.withNeed(_need.toDouble)
-									.withHave(_have.toDouble);
-		}
-
 
 		/** waits on the result specified by ID. This method calculates the max number of checks (plus a few extra) to make
 		*	based on the specified question timeout for the task. For example, if the user made a task with a question timeout
@@ -96,17 +70,167 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 		def executeTask(taskId: String, task : AutomanTask) : TaskResponse = {	
 			val timeout = task.timeout;
 			taskQueue.add((taskId, task.taskType))
-			val automan_outcome = waitOnResult(taskId, timeout).asInstanceOf[EstimationOutcome]
-			val est_out = automan_outcome.answer match{
-				case Estimate(est, low, high, cost, conf, _, _) => makeValueOutcome(est, low, high, cost, conf, OutcomeType.CONFIDENT);
-				case LowConfidenceEstimate(est, low, high, cost, conf, _, _) => makeValueOutcome(est, low, high, cost, conf, OutcomeType.LOW_CONFIDENCE);
-				case OverBudgetEstimate(need, have, _) => makeOverBudgetOutcome(need,have); 
+			val automan_outcome = waitOnResult(taskId, timeout)
+			val outcome = task.taskType match{
+				case TaskType.Estimate(etask)		=> 	makeEstimateOutcome(automan_outcome.asInstanceOf[EstimationOutcome]);
+				case TaskType.Multiestimate(metask) => 	makeMultiEstimateOutcome(automan_outcome.asInstanceOf[MultiEstimationOutcome]);
+				case TaskType.Freetext(frtask)		=>	makeFreetextOutcome(automan_outcome.asInstanceOf[ScalarOutcome[Symbol]]);
+				case TaskType.FreetextDist(frdtask) =>	makeFreetextDistOutcome(automan_outcome.asInstanceOf[VectorOutcome[Symbol]]);
+				case TaskType.Radio(rtask) 			=>	makeRadioOutcome(automan_outcome.asInstanceOf[ScalarOutcome[Symbol]]);
+				case TaskType.RadioDist(rdtask) 	=>	makeRadioDistOutcome(automan_outcome.asInstanceOf[VectorOutcome[Symbol]]);
+				case TaskType.Checkbox(chtask) 		=>	makeCheckboxOutcome(automan_outcome.asInstanceOf[ScalarOutcome[Symbol]]);
+				case TaskType.CheckboxDist(chdtask) =>	makeCheckboxDistOutcome(automan_outcome.asInstanceOf[VectorOutcome[Symbol]]);
+				case TaskType.Empty					=>	println("ERROR: Unknown type of task received by RPC AutoMan worker. Server generated bad task");
+														AutomanOutcome().withEmptyOutcome(Empty());
 			}
-			return TaskResponse().withReturnCode(TaskResponse.TaskReturnCode.VALID).withEstimateOutcome(est_out);
+			return TaskResponse().withReturnCode(TaskResponse.TaskReturnCode.VALID).withOutcome(outcome);
 		}
 
-		
+		/**  make an EstimateOutcome message with answer field set
+		*
+		*  @param automan_outcome - the outcome returned by automan, cast to it's correct type
+		*  @return an EstimateOutcome with all fields initialized
+		*							
+		*/
+		def makeEstimateOutcome(automan_outcome: EstimationOutcome): AutomanOutcome = {
+			var _est : Double=0.0;
+			var _low : Double=0.0;
+			var _high: Double=0.0;
+			var _cost: Double=0.0;
+			var _conf: Double=0.0;
+			var _need : Double=0.0;
+			var _have : Double=0.0;
+			var outcome_type: OutcomeType = OutcomeType.UNKNOWN_OUTCOME
+			automan_outcome.answer match{
+				case Estimate(est, low, high, cost, conf, _, _) => 	_est =est.toDouble;
+																	_low =low.toDouble;
+																	_high =high.toDouble;
+																	_cost =cost.toDouble;
+																	_conf =conf.toDouble;
+																	outcome_type = OutcomeType.CONFIDENT;
+				case LowConfidenceEstimate(est, low, high, cost, conf, _, _) => _est =est.toDouble;
+																				_low =low.toDouble;
+																				_high =high.toDouble;
+																				_cost =cost.toDouble;
+																				_conf =conf.toDouble;
+																				outcome_type = OutcomeType.LOW_CONFIDENCE
+				case OverBudgetEstimate(need, have, _) =>	_need =need.toDouble;
+															_have =have.toDouble;
+															outcome_type= OutcomeType.OVERBUDGET
+			}
+			if((outcome_type == OutcomeType.CONFIDENT)||(outcome_type == OutcomeType.LOW_CONFIDENCE)){
+				return AutomanOutcome().withEstimateOutcome(EstimateOutcome().withAnswer(ValueOutcome(est = _est,low = _low,high = _high,cost = _cost,conf = _conf))
+															.withNeed(-1.0)
+															.withHave(-1.0)
+															.withOutcomeType(outcome_type));
+			}
+			return AutomanOutcome().withEstimateOutcome(EstimateOutcome().withOutcomeType(OutcomeType.OVERBUDGET)
+														.withNeed(_need)
+														.withHave(_have));
+		}
 
+		/**  make a MultiEstimateOutcome message with answer field set
+		*
+		*  @param automan_outcome - the outcome returned by automan, cast to it's correct type
+		*  @return a MultiEstimateOutcome with all fields initialized
+		*							
+		*/
+		def makeMultiEstimateOutcome(automan_outcome: MultiEstimationOutcome): AutomanOutcome = {
+			//TODO
+			return AutomanOutcome()
+		}
+
+		/**  make a RadioOutcome message with answer field set
+		*
+		*  @param automan_outcome - the outcome returned by automan, cast to it's correct type
+		*  @return a RadioOutcome with all fields initialized
+		*							
+		*/
+		def makeRadioOutcome(automan_outcome: ScalarOutcome[Symbol]): AutomanOutcome = {
+			var _option: String = "n/a" ;
+			var _cost: Double=0.0;
+			var _conf: Double=0.0;
+			var _need : Double=0.0;
+			var _have : Double=0.0;
+			var outcome_type: OutcomeType = OutcomeType.CONFIDENT;
+			automan_outcome.answer match{
+				case Answer(value, cost, conf, _, _) => _option = value.asInstanceOf[String];
+														_cost =cost.toDouble;
+														_conf =conf.toDouble;
+														outcome_type  = OutcomeType.CONFIDENT;
+				case LowConfidenceAnswer(value, cost, conf, _, _) => _option = value.asInstanceOf[String];
+																	_cost =cost.toDouble;
+																	_conf =conf.toDouble;
+																	outcome_type = OutcomeType.LOW_CONFIDENCE
+				case OverBudgetAnswer(need, have, _) =>	_need =need.toDouble;
+														_have =have.toDouble;
+														outcome_type = OutcomeType.OVERBUDGET
+			}
+		 	if((outcome_type == OutcomeType.CONFIDENT) || (outcome_type == OutcomeType.LOW_CONFIDENCE)){
+				return AutomanOutcome().withRadioOutcome(RadioOutcome().withAnswer(StringOutcome(option=_option))
+														.withNeed(-1.0)
+														.withHave(-1.0)
+														.withOutcomeType(outcome_type));
+			}
+			return AutomanOutcome().withRadioOutcome(RadioOutcome().withOutcomeType(OutcomeType.OVERBUDGET)
+													.withNeed(_need.toDouble)
+													.withHave(_have.toDouble));
+		}
+
+		/**  make a RadioDistOutcome message with answer field set
+		*
+		*  @param automan_outcome - the outcome returned by automan, cast to it's correct type
+		*  @return a RadioDistOutcome with all fields initialized
+		*							
+		*/
+		def makeRadioDistOutcome(automan_outcome: VectorOutcome[Symbol]): AutomanOutcome = {
+			//TODO
+			return AutomanOutcome()
+		}
+
+		/**  make a FreetextOutcome message with answer field set
+		*
+		*  @param automan_outcome - the outcome returned by automan, cast to it's correct type
+		*  @return a FreetextOutcome with all fields initialized
+		*							
+		*/
+		def makeFreetextOutcome(automan_outcome: ScalarOutcome[Symbol]): AutomanOutcome = {
+			//TODO
+			return AutomanOutcome();
+		}
+
+		/**  make a FreetextDistOutcome message with answer field set
+		*
+		*  @param automan_outcome - the outcome returned by automan, cast to it's correct type
+		*  @return a FreetextDistOutcome with all fields initialized
+		*							
+		*/
+		def makeFreetextDistOutcome(automan_outcome: VectorOutcome[Symbol]): AutomanOutcome = {
+			//TODO
+			return AutomanOutcome()
+		}
+
+		/**  make a CheckboxOutcome message with answer field set
+		*
+		*  @param automan_outcome - the outcome returned by automan, cast to it's correct type
+		*  @return a CheckboxOutcome with all fields initialized
+		*							
+		*/
+		def makeCheckboxOutcome(automan_outcome: ScalarOutcome[Symbol]): AutomanOutcome = {
+			//TODO
+			return AutomanOutcome()
+		}
+
+		/**  make a CheckboxDistOutcome message with answer field set
+		*
+		*  @param automan_outcome - the outcome returned by automan, cast to it's correct type
+		*  @return a CheckboxDistOutcome with all fields initialized
+		*							
+		*/
+		def makeCheckboxDistOutcome(automan_outcome: VectorOutcome[Symbol]): AutomanOutcome = {
+			//TODO
+			return AutomanOutcome()
+		}
 		/** rpc method used by client to register an adapter with one of the worker threads.
 		*
 		*  @param automanTask - submitted AdapterCredentials

@@ -43,8 +43,3 @@ if(estim.isLowConfidence()):
 if(estim.isOverBudget()):
 	print("Outcome: Over Budget")
 	print(" need: %f have:%f"%(estim.need, estim.have))
-
-# this is temporary, in future client will automatically handle shutdown
-# to be safe, only call _shutdown() after the future has resolved,
-# or else the server will kill itself before the computation is finished 
-a._shutdown()

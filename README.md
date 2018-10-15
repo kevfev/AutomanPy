@@ -1,9 +1,9 @@
 # PyAutoman
-See [AutoMan](https://automan-lang.github.io/)
+Python bindings for AutoMan. See [AutoMan](https://automan-lang.github.io/)
 This package is currently in development.
 
 ### System Requirements
-To use this package you must be running Python 2.7.15 or 3.2+, and Scala 2.11.7+. This package relies on [ScalaPB](https://scalapb.github.io/) and [gRPC](https://grpc.io/). If you use SBT to build this project, all Scala dependencies will be downloaded. To install gRPC for Python (needed for the Python client), follow these [instructions](https://grpc.io/docs/quickstart/python.html).
+To use this package you must be running Python 2.7.15 or 3.2+,Java 8, and Scala 2.11.7+. This package relies on [ScalaPB](https://scalapb.github.io/) and [gRPC](https://grpc.io/). If you use SBT to build this project, all Scala dependencies will be downloaded. To install gRPC for Python (needed for the Python client), follow these [instructions](https://grpc.io/docs/quickstart/python.html).
 
 
 ### How to Build 
@@ -183,7 +183,7 @@ estimate of a single real value.
   
 *Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
 Setting too low can cause the question to timeout too soon and result in failure to get results.  
-Use, at minimum, values 40 or higher for `question_timeout_multiplier` and 30 or higher for `initial_worker_timeout_in_s`. 
+Use, at minimum, values 60 or higher for `question_timeout_multiplier` and 60 or higher for `initial_worker_timeout_in_s`. 
 ```
 *Returns* : `EstimateOutcome`  
 *Parameters*
@@ -244,4 +244,26 @@ Indicates if the outcome of the task is a low confidence estimate
 Indicates if the outcome of the task is over budget or not  
 ```
 *Returns* : `boolean` - True if the outcome was over budget, False otherwise  
+
+##### EstimateOutcome.printOutcome()
+*Description* : 
+```
+Prints the outcome of the estimate to stdout
+```
+*Returns* : `None` 
+
+##### EstimateOutcome.isDone()
+*Description* : 
+```
+Indicates if the call for this task has completed or not. This call does not block
+```
+*Returns* : `boolean` - True if the estimate has returned (either "CONFIDENT", "LOW_CONFIDENCE", or "OVERBUDGET")
+
+##### EstimateOutcome.done()
+*Description* : 
+```
+This function waits for the function call for this task to complete (waits for future to resolve). This call blocks.
+```
+*Returns* : `None'
+
 

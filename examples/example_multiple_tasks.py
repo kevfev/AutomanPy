@@ -41,10 +41,5 @@ for i in range(spawn):
 for task in task_list:
 	task.done()
 
-# this is temporary, in future client will automatically handle shutdown
-# to be safe, only call _shutdown() after the future has resolved,
-# or else the server will kill itself before the computation is finished 
-a._shutdown()
-
 for task in task_list:
 	task.printOutcome()

@@ -2,6 +2,7 @@ package pyautomanlib;
 import edu.umass.cs.automan.adapters.mturk.DSL._;
 import edu.umass.cs.automan.core.question.confidence.ConfidenceInterval;
 import edu.umass.cs.automan.core.logging.{LogLevel, LogLevelFatal, LogLevelInfo, LogLevelWarn, LogLevelDebug}
+import edu.umass.cs.automan.core.logging.LogConfig.LogConfig
 import edu.umass.cs.automan.core.MagicNumbers;
 import automanlib_rpc.AutomanTask.TaskType;
 import automanlib_rpc._;
@@ -23,6 +24,7 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 
 	var ll = adptr.logLevel;
 	var loglevel : LogLevel = LogLevelInfo()
+	// 1 is same as LogLevelInfo, default option
  	ll match {
 		case 0 => loglevel = LogLevelDebug()
 		case 2 => loglevel = LogLevelWarn()
@@ -31,22 +33,34 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 
 	}
 
+	var lg = adptr.logging;
+	var log: LogConfig = LogConfig.TRACE_MEMOIZE;
+ 	lg match {
+ 		case 0 => log = LogConfig.TRACE_MEMOIZE
+		case 1 => log = LogConfig.NO_LOGGING
+		case 2 => log = LogConfig.TRACE
+		case 3 => log = LogConfig.TRACE_VERBOSE
+		case 4 => log = LogConfig.TRACE_MEMOIZE_VERBOSE
+		case _ => log = LogConfig.TRACE_MEMOIZE
+
+	}
+
 	implicit val mt = mturk (access_key_id = adptr.accessId,
 							secret_access_key = adptr.accessKey,
 							log_verbosity = loglevel,
+							logging = log,
 							sandbox_mode = adptr.adapterOptions("sandbox_mode").toBoolean)
 
+	Thread.currentThread().setName("RPC-AutoMan-Worker");
 
 	/** check if there is another job
 	*
-	*  @param * - estimation task paramaters
-	*  @return Future outcome, returned by AutoMan
+	*  @return Boolean,return true if there is a new task submitted, else return false
 	*							
 	*/
 	def newTaskAvail() : Boolean = {
 		// check if there 
 		if (workQueue.peek() == null){
-			Thread.sleep(5000);
 			return false;
 		}	
 		return true;
@@ -86,7 +100,8 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 		resultMap.put(taskID, outcome);
 	}
 
-	/** Main loops of worker thread. Fetch task (or wait for one), then launch task
+	/** Main loops of worker thread. Until server stops worker, 
+	*	fetch task (or wait for one), then launch task
 	*	and add the future outcome to the outcome map
 	*
 	*							
@@ -94,23 +109,28 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 	def run(){
 		while(!stopWorker.get){
 			if(newTaskAvail()){
-				val taskTup = workQueue.poll();
-				val taskID: String = taskTup._1;
-				val task: AutomanTask.TaskType = taskTup._2;
+				val taskTuple = workQueue.poll();
+				val taskID: String = taskTuple._1;
+				val task: AutomanTask.TaskType = taskTuple._2;
 				launchTask(taskID, task);
+			}
+			else
+			{
+				Thread.sleep(5000);
 			}
 			
 		}
 	}
 
-	/**  method for launching and estimation task
-	*
-	*  @param task - submitted task
-	*  @return returns Future outcome returned by AutoMan
+	/**  method for launching an estimation task
+	*	@param taskID - ID of submitted task
+	*  	@param task - submitted task
+	*  	@return returns Future outcome returned by AutoMan
 	*							
 	*/
 	def launchEstimateTask(taskID: String, task : Task) : Unit = {
-
+		//TODO
+		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
 		var ci : ConfidenceInterval = UnconstrainedCI();
 		if (task.confidenceInt > 0) {
 			ci = SymmetricCI(task.confidenceInt)
@@ -134,102 +154,103 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 		addToResultMap(taskID,outcome);
 	}
 
-	/** wrapper method for launching and estimation task
+	/** wrapper method for launching a multiestimation task
 	*
-	*  @param task - submitted task
-	*  @return returns Future outcome returned by AutoMan
+	*	@param taskID - ID of submitted task
+	*  	@param task - submitted task
+	*  	@return returns Future outcome returned by AutoMan
 	*							
 	*/
 	def launchMultiEstimateTask(taskID: String, task : Task) : Unit = {
-		var ci : ConfidenceInterval = UnconstrainedCI()
-		if (task.confidenceInt > 0) {
-			ci = SymmetricCI(task.confidenceInt)
-		}
-
+		//TODO
+		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
 	}
 
 
-	/** wrapper method for launching and estimation task
+	/** wrapper method for launching a freetext task
 	*
-	*  @param task - submitted task
-	*  @return returns Future outcome returned by AutoMan
+	*	@param taskID - ID of submitted task
+	*  	@param task - submitted task
+	*  	@return returns Future outcome returned by AutoMan
 	*							
 	*/
 	def launchFreetextTask(taskID: String, task : Task) : Unit = {
-		var ci : ConfidenceInterval = UnconstrainedCI()
-		if (task.confidenceInt > 0) {
-			ci = SymmetricCI(task.confidenceInt)
-		}
-
+		//TODO
+		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
 	}
 
-	/** wrapper method for launching and estimation task
+	/** wrapper method for launching a freetext distribution task
 	*
-	*  @param task - submitted task
-	*  @return returns Future outcome returned by AutoMan
+	*	@param taskID - ID of submitted task
+	*  	@param task - submitted task
+	*  	@return returns Future outcome returned by AutoMan
 	*							
 	*/
 	def launchFreetextDistTask(taskID: String, task : Task) : Unit = {
-		var ci : ConfidenceInterval = UnconstrainedCI()
-		if (task.confidenceInt > 0) {
-			ci = SymmetricCI(task.confidenceInt)
-		}
-
+		//TODO
+		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
 	}
 
-	/** wrapper method for launching radio task
+	/** wrapper method for launching a radio task
 	*
-	*  @param task - submitted task
-	*  @return returns Future outcome returned by AutoMan
+	*	@param taskID - ID of submitted task
+	*  	@param task - submitted task
+	*  	@return returns Future outcome returned by AutoMan
 	*							
 	*/
 	def launchRadioTask(taskID: String, task : Task) : Unit = {
-		var ci : ConfidenceInterval = UnconstrainedCI()
-		if (task.confidenceInt > 0) {
-			ci = SymmetricCI(task.confidenceInt)
-		}
-
+		//TODO
+		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
+		val outcome = radio(text =task.text, 
+								budget = task.budget, 
+								options = task.options.toList,
+								image_url =task.imageUrl,
+								image_alt_text =task.imgAltTxt,
+								title = task.title, 
+								pay_all_on_failure = task.payAllOnFailure,
+								dont_reject  = task.dontReject,
+								dry_run  = task.dryRun,
+								wage = task.wage,
+								confidence = task.confidence, 
+								initial_worker_timeout_in_s = task.initialWorkerTimeoutInS,
+								question_timeout_multiplier = task.questionTimeoutMultiplier);
+		addToResultMap(taskID,outcome);
 	}
 
 	/** wrapper method for launching radio distribution task
 	*
-	*  @param task - submitted task
-	*  @return returns Future outcome returned by AutoMan
+	*	@param taskID - ID of submitted task
+	*  	@param task - submitted task
+	*  	@return returns Future outcome returned by AutoMan
 	*							
 	*/
 	def launchRadioDistTask(taskID: String, task : Task) : Unit = {
-		var ci : ConfidenceInterval = UnconstrainedCI()
-		if (task.confidenceInt > 0) {
-			ci = SymmetricCI(task.confidenceInt)
-		}
-
+		//TODO
+		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
 	}
 
-	/** wrapper method for launching checkbox tasks
+	/** wrapper method for launching a checkbox task
 	*
-	*  @param task - submitted task
-	*  @return returns Future outcome returned by AutoMan
+	*	@param taskID - ID of submitted task
+	*  	@param task - submitted task
+	*  	@return returns Future outcome returned by AutoMan
 	*							
 	*/
 	def launchCheckboxTask(taskID: String, task : Task) : Unit = {
-		var ci : ConfidenceInterval = UnconstrainedCI()
-		if (task.confidenceInt > 0) {
-			ci = SymmetricCI(task.confidenceInt)
-		}
-
+		//TODO
+		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
 	}
 
 	/** wrapper method for launching checkbox distribution tasks
 	*
-	*  @param task - submitted task
-	*  @return returns Future outcome returned by AutoMan
+	*	@param taskID - ID of submitted task
+	*  	@param task - submitted task
+	*  	@return returns Future outcome returned by AutoMan
 	*							
 	*/
 	def launchCheckboxDistTask(taskID: String, task : Task) : Unit = {
-		var ci : ConfidenceInterval = UnconstrainedCI()
-		if (task.confidenceInt > 0) {
-			ci = SymmetricCI(task.confidenceInt)
-		}
+		//TODO
+		//MAKE RETURN TYPE RESULT OR THROW EXCEPTIONS
 
 	}
 }
