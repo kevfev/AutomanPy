@@ -154,11 +154,11 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 			var _have : Double=0.0;
 			var outcome_type: OutcomeType = OutcomeType.CONFIDENT;
 			automan_outcome.answer match{
-				case Answer(value, cost, conf, _, _) => _option = value.asInstanceOf[String];
+				case Answer(value, cost, conf, _, _) => _option = value.asInstanceOf[Symbol].toString;
 														_cost =cost.toDouble;
 														_conf =conf.toDouble;
 														outcome_type  = OutcomeType.CONFIDENT;
-				case LowConfidenceAnswer(value, cost, conf, _, _) => _option = value.asInstanceOf[String];
+				case LowConfidenceAnswer(value, cost, conf, _, _) => _option = value.asInstanceOf[Symbol].toString;
 																	_cost =cost.toDouble;
 																	_conf =conf.toDouble;
 																	outcome_type = OutcomeType.LOW_CONFIDENCE
@@ -167,7 +167,7 @@ object PyautomanPrototypeServicer extends GrpcServer{ self =>
 														outcome_type = OutcomeType.OVERBUDGET
 			}
 		 	if((outcome_type == OutcomeType.CONFIDENT) || (outcome_type == OutcomeType.LOW_CONFIDENCE)){
-				return AutomanOutcome().withRadioOutcome(RadioOutcome().withAnswer(StringOutcome(option=_option))
+				return AutomanOutcome().withRadioOutcome(RadioOutcome().withAnswer(StringOutcome(option=_option, cost=_cost, conf=_conf))
 														.withNeed(-1.0)
 														.withHave(-1.0)
 														.withOutcomeType(outcome_type));

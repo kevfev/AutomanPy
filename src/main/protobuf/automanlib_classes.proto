@@ -144,6 +144,8 @@ option 				The result of the AutoMan task
 */
 message StringOutcome{
 	string option = 1;
+	double cost = 2;
+	double conf = 3;
 }
 
 

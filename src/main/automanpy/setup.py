@@ -6,10 +6,11 @@ from os import path
 with open("README.md", "r") as fh:
 	ld = fh.read()
 
-setup(name = 'automan',
-	version= '0.4.0.dev0',
-	description = 'Python bindings for AutoMan Runtime',
+setup(name = 'automanpy',
+	version= '0.4.0',
+	description = 'Python bindings for AutoMan Runtime. Software is current in development, and not properly tested.',
 	author = 'Kevin Feveck',
+	url="https://github.com/kevfev/AutomanPy/",
 	packages = find_packages(),
 	license = "GNU GPLv2",
 	keywords = 'automan crowdsource quality-assurance',
@@ -21,6 +22,7 @@ setup(name = 'automan',
 						'grpcio>=1.13.0',
 						'grpcio-tools>=1.13.0'],
 	classifiers=(
+		"Development Status :: 3 - Alpha"
 		"Programming Language :: Python :: 2.7",
 		"Programming Language :: Python :: 3.2",
 		"Programming Language :: Python :: 3.3",

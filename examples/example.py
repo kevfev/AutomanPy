@@ -1,4 +1,4 @@
-from pyautoman.automan import Automan, EstimateOutcome
+from automanpy.automan import Automan, EstimateOutcome
 
 # make mechanical turk adapter
 adapter = {
