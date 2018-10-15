@@ -132,7 +132,9 @@ Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.9
 ##### *Description* : 
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
 estimate of a single real value.     
-
+*Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
+Setting too low can cause the question to timeout too soon and result in failure to get results.  
+Use, at minimum, values 30 or higher for `question_timeout_multiplier` and 30 or higher for `initial_worker_timeout_in_s`. 
 ##### *Arguments*
 * **text** 							- the text description of the task to display to the worker (required)
 * **budget** 						- the threshold cost for the task (required)
@@ -151,14 +153,9 @@ estimate of a single real value.
 * **question_timeout_multiplier** 	- multiplier to calculate question timeout on MTurk. Question timeout = question_timeout_multiplier * initial_worker_timeout_in_s
 * **initial_worker_timeout_in_s** 	- timeout in seconds for the worker thread in the RPC server 
 
-*Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
-Setting too low can cause the question to timeout too soon and result in failure to get results.  
-Use, at minimum, values 60 or higher for `question_timeout_multiplier` and 60 or higher for `initial_worker_timeout_in_s`. 
 ##### *Returns* : `automanpy.automan.EstimateOutcome`  
 
-
 ### EstimateOutcome Class
-
 ##### *Description* : 
 This class contains a Future, representing the outcome of the task. Value attributes in this class (e.g. high, est, cost, need, etc) are initially set to NaN so that they cannot used, until the future has resolved to a case where those values are valid (e.g., if the outcome_type was `OVERBUDGET` then `need` and `have` are the only valid attributes). To ensure that the future is always resolved first and the respective attributes are initialized, always use attributes of an EstimateOutcome in conditonal blocks where they exist, using the appropriate methods below 
 NOTE: Instances of this class will always be created for the user. This class will never need to be instantiated manually.  
