@@ -30,14 +30,15 @@ cp -r target/pack/ src/main/automanpy/automanpy/core/rpc/server/
 Then change to the directory containing setup.py and run it from there:
 ```
 cd src/main/automanpy/
-python setup.py sdist
+python setup.py clean sdist
 ```
 Alternaltively, you can run `./buildproject.sh` located in the root directory, to do the steps outlined above.
 
 ### How to Install
-Use pip to install AutoManPy
+Use pip to install AutoManPy. This software package is currently in development, and will be updated regularly for bug fixes, etc. 
+To ensure you are always installing the latest version be sure to use '--no-cache-dir' and '--upgrade'
 ```
-pip install automanpy
+pip install --no-cache-dir automanpy --upgrade
 ```
 
 ### How to Use
