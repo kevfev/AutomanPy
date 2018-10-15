@@ -1,2 +1,3 @@
-include pyautoman/core/rpc_server/pack/bin/*
-include pyautoman/core/rpc_server/pack/lib/*.*
+include automanpy/core/rpc_server/pack/bin/*.*
+include automanpy/core/rpc_server/pack/lib/*.*
+include automanpy/core/rpc_server/pack/*.*

@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 	ld = fh.read()
 
 setup(name = 'automanpy',
-	version= '0.4.0',
+	version= '0.4.1.b0',
 	description = 'Python bindings for AutoMan Runtime. Software is current in development, and not properly tested.',
 	author = 'Kevin Feveck',
 	url="https://github.com/kevfev/AutomanPy/",
@@ -22,7 +22,7 @@ setup(name = 'automanpy',
 						'grpcio>=1.13.0',
 						'grpcio-tools>=1.13.0'],
 	classifiers=(
-		"Development Status :: 3 - Alpha"
+		"Development Status :: 3 - Alpha",
 		"Programming Language :: Python :: 2.7",
 		"Programming Language :: Python :: 3.2",
 		"Programming Language :: Python :: 3.3",

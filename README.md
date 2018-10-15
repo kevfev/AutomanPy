@@ -6,7 +6,7 @@ This package is currently in development.
 To use this package you must be running Python 2.7.15 or 3.2+,Java 8, and Scala 2.11.7+. This package relies on [ScalaPB](https://scalapb.github.io/) and [gRPC](https://grpc.io/). If you use SBT to build this project, all Scala dependencies will be downloaded. To install gRPC for Python (needed for the Python client), follow these [instructions](https://grpc.io/docs/quickstart/python.html).
 
 
-### How to Build 
+### How to Build Source
 The easiest way to build this project is by using [SBT](https://www.scala-sbt.org/). To build this project, from the /AutomanPy directory, run
 ```
 sbt clean compile pack
