@@ -96,73 +96,19 @@ Outcome: Low Confidence Estimate
 Estimate low: 62.000000 high:62.000000 est:62.000000
 ```
 
-
-
-
 ### Example Code 
-```python
-from automanpy.automan import Automan, EstimateOutcome
+See example code under `examples/`
 
-# make mechanical turk adapter
-adapter = {
-	"access_id" : "access id here",
-	"access_key" : "access key here",
-	"sandbox_mode" : "true",
-	"type" : "MTurk"
-}
-
-# image to submit with our task
-photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
-
-# make AutoMan object 
-# 'suppress_output' sets the how much output from the RPC server to print to stdout. current valid values are
-# 		"all" 	- suppress all output
-# 		"none "	- show all output 
-
-# 'loglevel' sets the the logging level for Automan. valid values are
-#		'debug' - debug level 
-#		'info' 	- information level 
-#		'warn' 	- warnings only
-#		'fatal' - fatal messages only (default)
-
-a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none", loglevel='fatal')
-
-estim = a.estimate(text = "How many cars are in this parking lot?",
-	budget = 6.00,
-	title = "Car Counting",
-	confidence_int = 10,
-#	question_timeout_multiplier = 40,# uncomment to set question to timeout on mturk, good for testing purposes, set no less than 40. see docs for more detail
-	image_url = photo_url)
-
-if(estim.isConfident()):
-	print("Outcome: Estimate")
-	print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
-
-
-if(estim.isLowConfidence()):
-	print("Outcome: Low Confidence Estimate")
-	print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
-
-if(estim.isOverBudget()):
-	print("Outcome: Over Budget")
-	print(" need: %f have:%f"%(estim.need, estim.have))
-
-# this is temporary, in future client will automatically handle shutdown
-# to be safe, only call _shutdown() after the future has resolved,
-# or else the server will kill itself before the computation is finished 
-a._shutdown()
-```
-You can run this code on MTurk with the 'sandbox_mode' option set to 'true' to submit dummy worker responses (need to create requester developer sandbox and worker sandbox accounts). Here is what the output would look like if a single worker submitted a response of 62.  
-Output:
-```python
-Outcome: Low Confidence Estimate
-Estimate low: 62.000000 high:62.000000 est:62.000000 
-```
 ## API
 ### AutoMan Class 
 #### Constructor
 ```python
 Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output = 'all', loglevel='info')
+```
+##### *Description* : 
+Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
+estimate of a single real value.     
+##### *Arguments*
 ```
 * **adapter** 			- a dictionary storing adapter credentials to use to connect to the crowdsource backend. Must contain necessary adapter fields
 * **server_addr**		- the string hostname address of the gRPC Automan server to connect to
@@ -173,25 +119,22 @@ Automan(self, adapter, server_addr = 'localhost', port = 50051, suppress_output 
 						  *'info' 	- information level 
 						  *'warn' 	- warnings only
 						  *'fatal' 	- fatal messages only (default)
+```
+##### *Returns*: `automanpy.Automan`
 
-#### AutoMan Class Methods
-```python
-Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
-sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False, wage = 11.00,  
-max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
-initial_worker_timeout_in_s = 30)
+#### Automan.estimate
 ```
-*Description* : 
+  Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.95, confidence_int = -1, img_alt_txt = "",  
+ 					sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False, wage = 11.00,  
+ 					max_value = sys.float_info.max, min_value = sys.float_info.min, question_timeout_multiplier = 500,  
+					initial_worker_timeout_in_s = 30)
 ```
+##### *Description* : 
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
 estimate of a single real value.     
-  
-*Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
-Setting too low can cause the question to timeout too soon and result in failure to get results.  
-Use, at minimum, values 60 or higher for `question_timeout_multiplier` and 60 or higher for `initial_worker_timeout_in_s`. 
+
+##### *Arguments*
 ```
-*Returns* : `EstimateOutcome`  
-*Parameters*
 * **text** 							- the text description of the task to display to the worker (required)
 * **budget** 						- the threshold cost for the task (required)
 * **image_url**  					- an image url to be associated with the task
@@ -209,13 +152,20 @@ Use, at minimum, values 60 or higher for `question_timeout_multiplier` and 60 or
 * **question_timeout_multiplier** 	- multiplier to calculate question timeout on MTurk. Question timeout = question_timeout_multiplier * initial_worker_timeout_in_s
 * **initial_worker_timeout_in_s** 	- timeout in seconds for the worker thread in the RPC server 
 
-### EstimateOutcome Class
-Instances of this class will always be created for the user. This class will never need to be instantiated manually.  
+*Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
+Setting too low can cause the question to timeout too soon and result in failure to get results.  
+Use, at minimum, values 60 or higher for `question_timeout_multiplier` and 60 or higher for `initial_worker_timeout_in_s`. 
+```
+##### *Returns* : `EstimateOutcome`  
 
-#### EstimateOutcome Class Attributes
-This class contains a Future, representing the outcome of the task. Value attributes in this class (e.g. high, est, cost, need, etc) are initially set to NaN so that they're values cannot be accidentally used unless the future has resolved to a case where those values are valid (e.g., if the outcome_type was `OVERBUDGET` then `need` and `have` are the only valid attributes). To ensure that the future is always resolved first
-and the respective attributes are initialized, always use attributes of an EstimateOutcome in a code block that ensures
-those values are set. Attributes are as follows:  
+
+### EstimateOutcome Class
+
+##### *Description* : 
+This class contains a Future, representing the outcome of the task. Value attributes in this class (e.g. high, est, cost, need, etc) are initially set to NaN so that they cannot used, until the future has resolved to a case where those values are valid (e.g., if the outcome_type was `OVERBUDGET` then `need` and `have` are the only valid attributes). To ensure that the future is always resolved first and the respective attributes are initialized, always use attributes of an EstimateOutcome in conditonal blocks where they exist, using the appropriate methods below 
+NOTE: Instances of this class will always be created for the user. This class will never need to be instantiated manually.  
+##### *Attributes*
+```
 For `Confident` and `LowConfidence` outcomes:
 * **high** 	- the highest value a worker reported, set to NaN intially
 * **low** 	- the lowest value a worker reported, set to NaN intially
@@ -226,49 +176,37 @@ For `Confident` and `LowConfidence` outcomes:
 For `OverBudget` outcomes:  
 * **need** 	- the amount needed for AutoMan to continue attempting to obtain an estimate
 * **have** 	- the current amount budgeted for the task  
+```
 
-#### EstimateOutcome Class Methods
-##### EstimateOutcome.isConfident()
-*Description* : 
-```
-Indicates if the outcome of the task is a confident estimate
-```  
-*Returns* : `boolean` - True if the outcome met the desired confidence level and interval, False otherwise  
+#### EstimateOutcome.isConfident()
+##### *Description* : 
+Indicates if the outcome of the task is a confident estimate  
+##### *Returns* : `boolean` - True if the outcome met the desired confidence level and interval, False otherwise  
  
-##### EstimateOutcome.isLowConfidence()
-*Description* : 
-```
+#### EstimateOutcome.isLowConfidence()
+##### *Description* : 
 Indicates if the outcome of the task is a low confidence estimate  
-```
-*Returns* : `boolean` - True if the outcome was a low confidence estimate, False otherwise  
+##### *Returns* : `boolean` - True if the outcome was a low confidence estimate, False otherwise  
  
- 
-##### EstimateOutcome.isOverBudget()
-*Description* : 
-```
+#### EstimateOutcome.isOverBudget()
+##### *Description* : 
 Indicates if the outcome of the task is over budget or not  
-```
-*Returns* : `boolean` - True if the outcome was over budget, False otherwise  
+#####*Returns* : `boolean` - True if the outcome was over budget, False otherwise  
 
-##### EstimateOutcome.printOutcome()
-*Description* : 
-```
+#### EstimateOutcome.printOutcome()
+##### *Description* : 
 Prints the outcome of the estimate to stdout
-```
-*Returns* : `None` 
+#####*Returns* : `None` 
 
-##### EstimateOutcome.isDone()
-*Description* : 
-```
+#### EstimateOutcome.isDone()
+##### *Description* : 
 Indicates if the call for this task has completed or not. This call does not block
-```
 *Returns* : `boolean` - True if the estimate has returned (either "CONFIDENT", "LOW_CONFIDENCE", or "OVERBUDGET")
 
-##### EstimateOutcome.done()
-*Description* : 
-```
+#### EstimateOutcome.done()
+##### *Description* : 
 This function waits for the function call for this task to complete (waits for future to resolve). This call blocks.
-```
-*Returns* : `None'
+##### *Returns* : `None`
+
 
 

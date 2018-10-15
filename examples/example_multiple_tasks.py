@@ -1,6 +1,7 @@
 from automanpy.automan import Automan, EstimateOutcome
 
 # make mechanical turk adapter
+# sandbox_mode is boolean, if true, will post tasks to MTurk developer sandbox
 adapter = {
 	"access_id" : "access id here",
 	"access_key" : "access key here",
@@ -8,32 +9,35 @@ adapter = {
 	"type" : "MTurk"
 }
 
-# image to submit with our task
-photo_url = "https://docs.google.com/uc?id=1ZQ-oL8qFt2tx_T_-thev2O4dsugVbKI2"
+# images to submit with our task
+images = ["https://docs.google.com/uc?id=1kpw8sjiZtJwRlVJ3_tYBo26ZcqAeVb5c",
+			"https://docs.google.com/uc?id=1Gdlsk24_dAP3YP6eT6Q9A_khVPsMpJzL",
+			"https://docs.google.com/uc?id=1tN9E4wpacVpFmTaAkgoUeIyBZek5cBv7"]
 
-# make AutoMan object 
-# 'suppress_output' sets the how much output from the RPC server to print to stdout. current valid values are
-# 		"all" 	- suppress all output
-# 		"none "	- show all output 
 
-# 'loglevel' sets the the logging level for Automan. valid values are
-#		'debug' - debug level 
-#		'info' 	- information level (default)
-#		'warn' 	- warnings only
-#		'fatal' - fatal messages only
-
-a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none", loglevel='fatal')
+# logging : string
+#			Specifies the log configuration of the AutoMan worker. Values are 
+#				'none' 	- no logging 
+#				't' 	- log trace only
+#				'tm' 	- log trace and use for memoization
+#				'tv' 	- log trace and output debug information
+#				'tmv' 	- log trace, use for memoization and output debug info
+#
+# logging is set to none. when doing multiple jobs, memory footprint can be reduced by turning trace/memoization
+#	logging off
+# 
+a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none", loglevel='warn', logging='none')
 
 # spawns 'spawn' number of dummy tasks of same image. Note: each task must have unique text and title for automan to post HIT correctly
 task_list = list()
-spawn = 20
+spawn = 3
 for i in range(spawn):
-	task_list.append(a.estimate(text = "task-%d :How many cars are in this parking lot?"%(i),
-	    budget = 1.00,
-	    title = "Car Counting-v2-%d"%(i),
-	    confidence_int = 10,
-#=		question_timeout_multiplier = 40,# uncomment to set question to timeout on mturk, good for testing purposes, set no less than 40. see docs for more detail
-		image_url = photo_url)
+	task_list.append(a.estimate(text = "task-%d :Count the number of vehicles in this parking lot"%(i),
+							    budget = 1.50,
+							    title = "Car Counting-v2-%d"%(i),
+							    confidence = 0.9,
+								question_timeout_multiplier = 10,
+								image_url = images[i]))
 
 # this is temporary, in future there will be a better construct for
 # handling results from AutoMan as the futures resolve, rather than
@@ -43,3 +47,4 @@ for task in task_list:
 
 for task in task_list:
 	task.printOutcome()
+
