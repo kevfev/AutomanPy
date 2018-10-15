@@ -120,14 +120,14 @@ estimate of a single real value.
 	* 'warn'	- warnings only
 	* 'fatal' 	- fatal messages only (default)
 
-##### *Returns*: `automanpy.Automan`
+##### *Returns*: `automanpy.automan.Automan`
 
 #### Automan.estimate
 ```
 Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.95, confidence_int = -1, 
-				img_alt_txt = "", sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False,
-				wage = 11.00, max_value = sys.float_info.max, min_value = sys.float_info.min, 
-				question_timeout_multiplier = 500, initial_worker_timeout_in_s = 30)
+		img_alt_txt = "", sample_size = -1,dont_reject = True, pay_all_on_failure = True, dry_run = False,
+		wage = 11.00, max_value = sys.float_info.max, min_value = sys.float_info.min, 
+		question_timeout_multiplier = 500, initial_worker_timeout_in_s = 30)
 ```
 ##### *Description* : 
 Provides AutoMan's estimate functionality. Uses the crowdsource backend to obtain a quality-controlled  
@@ -154,7 +154,7 @@ estimate of a single real value.
 *Note*: Be careful when setting 'question_timeout_multiplier' and 'initial_worker_timeout_in_s' in tasks.  
 Setting too low can cause the question to timeout too soon and result in failure to get results.  
 Use, at minimum, values 60 or higher for `question_timeout_multiplier` and 60 or higher for `initial_worker_timeout_in_s`. 
-##### *Returns* : `EstimateOutcome`  
+##### *Returns* : `automanpy.automan.EstimateOutcome`  
 
 
 ### EstimateOutcome Class
