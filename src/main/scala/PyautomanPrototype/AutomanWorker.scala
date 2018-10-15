@@ -108,14 +108,11 @@ class AutomanWorker(worker_id: String, adptr: AdapterCredentials, workQueue: Abs
 	*					
 	*/
 	def makeOptions(options: Option[OptionsTuple]) : List[AnyRef] = {
-		println("makeOptions")
 		var opts: OptionsTuple = options.getOrElse(throw new Exception("options not specified for task, this should throw an exception!"))
 		if(opts.tupleType.isSingle){
-			opts.single.foreach{ case (choice_name,name) => printf("choice=%s \nname=%s",choice_name, name)}; 
 			return opts.single.map{ case(choice_name,name) => choice(Symbol(choice_name), name)}.toList
 		}
-		if(opts.tupleType.isDouble){	
-			opts.double.foreach{ case (choice_name,d_tup) => printf("choice=%s \nname=%s \nurl=%s",choice_name, d_tup.name, d_tup.url)}; 
+		if(opts.tupleType.isDouble){	 
 			return opts.double.map{ case(choice_name,d_tup) => choice(Symbol(choice_name), d_tup.name, d_tup.url)}.toList
 		}
 		if(opts.tupleType.isUnknown){

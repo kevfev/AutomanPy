@@ -512,7 +512,6 @@ class Automan():
 										wage_ = float(wage),
 										question_timeout_multiplier_ = question_timeout_multiplier,
 										initial_worker_timeout_in_s_ = initial_worker_timeout_in_s)
-		print("trying radio task")
 		try:
 			resp = pyAutomanlib.submit_task(self.channel, task, self.adptr)
 			ro = RadioOutcome(future_tr=resp)
