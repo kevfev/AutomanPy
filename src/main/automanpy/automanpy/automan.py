@@ -1,9 +1,9 @@
-import core.automanlib as pyAutomanlib
-from core.batchjob import Batch
-from core.outcomes import *
-from core.grpc_gen_classes.automanlib_rpc_pb2 import TaskResponse, ServerStatusResponse
-from core.grpc_gen_classes.automanlib_classes_pb2 import SymmetricConInt, AsymmetricConInt, UnconstrainedConInt, Task
-from core.pyautomanexceptions import ArgumentError, UnsupportedServerError, AdapterError, RPCServerError
+from automanpy.core.automanlib import make_adapter,start_rpc_server, shutdown_rpc_server, get_server_status, register_adapter_to_server,shutdown_rpc_server,make_channel,make_est_task, make_rad_task, submit_task
+from automanpy.core.batchjob import Batch 
+from automanpy.core.outcomes import EstimateOutcome, RadioOutcome
+from automanpy.core.automanlib_rpc_pb2 import TaskResponse, ServerStatusResponse
+from automanpy.core.grpc_classes.automanlib_classes_pb2 import SymmetricConInt, AsymmetricConInt, UnconstrainedConInt, Task
+from automanpy.core.pyautomanexceptions import ArgumentError, UnsupportedServerError, AdapterError, RPCServerError
 from time import sleep
 import sys
 import grpc
@@ -198,7 +198,7 @@ class Automan():
 		self.channel = None
 
 		try:
-			_adptr = pyAutomanlib.make_adapter(adapter, self.lglvl, self.lg) 
+			_adptr = make_adapter(adapter, self.lglvl, self.lg) 
 		except AdapterError:
 			raise
 		self.adptr = _adptr
@@ -215,7 +215,7 @@ class Automan():
 				Private method. Shutdown the gRPC server
 
 				"""
-				pyAutomanlib.shutdown_rpc_server(chanl)
+				shutdown_rpc_server(chanl)
 
 	def _start(self, sleep_time = 5):
 		"""
@@ -224,10 +224,10 @@ class Automan():
 
 		"""
 		try:
-			resp = pyAutomanlib.get_server_status(self.channel)
+			resp = get_server_status(self.channel)
 		except grpc.RpcError as rpc_err:
 			if rpc_err.code() == grpc.StatusCode.UNAVAILABLE:
-				self.srvr_popen_obj = pyAutomanlib.start_rpc_server(port=self.port, 
+				self.srvr_popen_obj = start_rpc_server(port=self.port, 
 																	suppress_output = self.supr_lvl,
 																	stdout_file = self.stdout_file, 
 																	stderr_file = self.stderr_file)
@@ -235,7 +235,7 @@ class Automan():
 				try_count = 0
 				while(try_count < Automan.MAX_CON_TRIES):
 					try:
-						resp = pyAutomanlib.get_server_status(self.channel)
+						resp = get_server_status(self.channel)
 						return
 					except grpc.RpcError as rpc_err:
 						sleep(sleep_time)
@@ -252,7 +252,7 @@ class Automan():
 
 		"""
 		# handle response
-		resp = pyAutomanlib.register_adapter_to_server(self.channel, self.adptr)
+		resp = register_adapter_to_server(self.channel, self.adptr)
 
 	def _force_svr_shutdown(self):
 		"""
@@ -267,7 +267,7 @@ class Automan():
 
 		"""
 		# handle response
-		resp = pyAutomanlib.shutdown_rpc_server(self.channel)
+		resp = shutdown_rpc_server(self.channel)
 
 
 	def _init_channel(self, server_addr, port):
@@ -287,7 +287,7 @@ class Automan():
 			A channel that connects to the gRPC back-end server
 
 		"""
-		self.channel = pyAutomanlib.make_channel(server_addr,str(port))
+		self.channel = make_channel(server_addr,str(port))
 		return self.channel
 
 	def _args_check(self,  budget=None, image_url=None, confidence=None, confidence_int=None, dry_run=None, dont_reject=None,
@@ -421,7 +421,7 @@ class Automan():
 						dry_run=dry_run, wage=wage, max_value=max_value, min_value=min_value, 
 						question_timeout_multiplier=question_timeout_multiplier, initial_worker_timeout_in_s=initial_worker_timeout_in_s)
 
-		task = pyAutomanlib.make_est_task(text_ = text,
+		task = make_est_task(text_ = text,
 										budget_ = float(budget),
 										title_ = title,
 										image_url_ = image_url,
@@ -438,7 +438,7 @@ class Automan():
 										question_timeout_multiplier_ = question_timeout_multiplier,
 										initial_worker_timeout_in_s_ = initial_worker_timeout_in_s)
 		try:
-			resp = pyAutomanlib.submit_task(self.channel, task, self.adptr)
+			resp = submit_task(self.channel, task, self.adptr)
 			eo = EstimateOutcome(future_tr=resp)
 			return eo
 		except:
@@ -499,7 +499,7 @@ class Automan():
 						dry_run=dry_run, wage=wage, question_timeout_multiplier=question_timeout_multiplier, 
 						options=options, initial_worker_timeout_in_s=initial_worker_timeout_in_s, options_required=True)
 
-		task = pyAutomanlib.make_rad_task(text_ = text,
+		task = make_rad_task(text_ = text,
 										budget_ = float(budget),
 										options_ =options,
 										title_ = title,
@@ -513,7 +513,7 @@ class Automan():
 										question_timeout_multiplier_ = question_timeout_multiplier,
 										initial_worker_timeout_in_s_ = initial_worker_timeout_in_s)
 		try:
-			resp = pyAutomanlib.submit_task(self.channel, task, self.adptr)
+			resp = submit_task(self.channel, task, self.adptr)
 			ro = RadioOutcome(future_tr=resp)
 			return ro
 		except:

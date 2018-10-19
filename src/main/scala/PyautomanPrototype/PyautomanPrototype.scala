@@ -4,7 +4,6 @@ import automanlib_rpc._;
 import automanlib_rpc.AutomanTask.TaskType;
 import automanlib_rpc.AutomanOutcome;
 import automanlib_classes._;
-import automanlib_wrappers._;
 import scala.concurrent.{ ExecutionContext, Future };
 import java.util.concurrent.{Executors, ExecutorService, ConcurrentLinkedQueue, ConcurrentHashMap, ConcurrentMap}
 import java.util.concurrent.atomic.AtomicBoolean;

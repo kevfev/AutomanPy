@@ -1,9 +1,7 @@
 syntax = "proto3";
-import "automanlib_wrappers.proto";
-import "automanlib_classes.proto";
-
+import "automanpy/core/grpc_classes/automanlib_classes.proto";
 /*****
-This .proto file defins the rpc service and the messages sent
+This .proto file defines the rpc service and the messages sent
 and received by the various rpc method calls. 
 *****/
 

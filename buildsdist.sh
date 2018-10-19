@@ -20,10 +20,11 @@ if sbt clean compile pack; then
 	cp -R target/pack src/main/automanpy/automanpy/core/rpc_server/
 	cp -R README.md src/main/automanpy/
 	echo "==>  compiling python protobuf files.."
-	if python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/automanpy/automanpy/core/grpc_gen_classes --grpc_python_out=src/main/automanpy/automanpy/core/grpc_gen_classes src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto; then
-		cd src/main/automanpy/
+	cd src/main/automanpy/
+	if python -m grpc_tools.protoc -I ../protobuf/ --python_out=. --grpc_python_out=. ../protobuf/automanpy/core/*.proto ../protobuf/automanpy/core/grpc_classes/*.proto; then
+		echo "==>  running setup file..."
 		python setup.py clean sdist
-		echo "==>  finished."
+		echo "==>  finished setting up."
 	else
 		echo "$(tput setaf 1)==> ERROR: Failed to compile protobuf definition files$(tput sgr0)"
 		exit 1

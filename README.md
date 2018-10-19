@@ -31,7 +31,7 @@ pip install googleapis-common-protos
 To use gRPC generate the python files needed for interacting with the RPC service, from the /AutomanPy directory, run the following command:
 
 ```
-python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/automanpy/automanpy/core/grpc_gen_classes --grpc_python_out=src/main/automanpy/automanpy/core/grpc_gen_classes src/main/protobuf/automanlib_rpc.proto src/main/protobuf/automanlib_classes.proto src/main/protobuf/automanlib_wrappers.proto
+python -m grpc_tools.protoc -I src/main/protobuf/ --python_out=src/main/automanpy/automanpy/core/grpc_gen_classes/ --grpc_python_out=src/main/automanpy/automanpy/core/grpc_gen_classes src/main/protobuf/core/grpc_gen_classes/automanlib_rpc.proto src/main/protobuf/core/grpc_gen_classes/automanlib_classes.proto src/main/protobuf/core/grpc_gen_classes/automanlib_wrappers.proto
 ```
 
 Move the files compiled by sbt into the correct directory by copying them:

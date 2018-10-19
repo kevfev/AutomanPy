@@ -20,7 +20,7 @@ with open("README.md", "r") as fh:
 	ld = fh.read()
 
 setup(name = 'automanpy',
-	version= '0.4.2.b0',
+	version= '0.4.2.b1',
 	description = 'Python bindings for AutoMan Runtime. Software is current in development, and not properly tested.',
 	author = 'Kevin Feveck',
 	cmdclass={
@@ -33,17 +33,16 @@ setup(name = 'automanpy',
 	long_description = ld,
 	long_description_content_type="text/markdown",
 	include_package_data=True,
-	python_requires = '>=2.7.15, !=3.0.*, !=3.1.*, <3.5.*',
+	python_requires = '>=2.7.15, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
 	install_requires = ['googleapis-common-protos>=1.5.3',
 						'grpcio>=1.13.0',
 						'grpcio-tools>=1.13.0'],
 	classifiers=(
 		"Development Status :: 3 - Alpha",
 		"Programming Language :: Python :: 2.7",
-		"Programming Language :: Python :: 3.2",
-		"Programming Language :: Python :: 3.3",
 		"Programming Language :: Python :: 3.4",
 		"Programming Language :: Python :: 3.5",
+		"Programming Language :: Python :: 3.6",
 		"License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
 		"Operating System :: OS Independent",
 	),

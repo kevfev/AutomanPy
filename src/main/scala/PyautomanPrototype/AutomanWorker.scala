@@ -7,7 +7,6 @@ import edu.umass.cs.automan.core.MagicNumbers;
 import automanlib_rpc.AutomanTask.TaskType;
 import automanlib_rpc._;
 import automanlib_classes._;
-import automanlib_wrappers._;
 import scala.concurrent.{ ExecutionContext, Future };
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.ConcurrentLinkedQueue;

@@ -1,7 +1,6 @@
-from outcomes import *
-from pyautomanexceptions import ArgumentError, UnsupportedServerError, AdapterError
+from automanpy.core.outcomes import EstimateOutcome, RadioOutcome
 
-
+#from pyautomanexceptions import ArgumentError, UnsupportedServerError, AdapterError
 
 class Batch():
 	"""
@@ -47,7 +46,6 @@ class Batch():
 			for i, outcome in enumerate(outcomes_):
 				if outcome.isDone():
 					yield outcomes_.pop(i)
-			print "sleeptime happens"
 			sleep(2)
 		return
 

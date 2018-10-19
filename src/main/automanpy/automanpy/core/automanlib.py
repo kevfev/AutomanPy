@@ -1,8 +1,7 @@
-from grpc_gen_classes.automanlib_rpc_pb2 import *
-from grpc_gen_classes.automanlib_classes_pb2 import *
-from grpc_gen_classes.automanlib_wrappers_pb2 import *
-from grpc_gen_classes import automanlib_rpc_pb2_grpc as rpclib
-from pyautomanexceptions import *
+from automanpy.core.automanlib_rpc_pb2 import *
+from automanpy.core.grpc_classes.automanlib_classes_pb2 import *
+import automanpy.core.automanlib_rpc_pb2_grpc as rpclib
+from automanpy.core.pyautomanexceptions import *
 import grpc
 from os import path, devnull
 from time import sleep
@@ -110,7 +109,7 @@ def make_channel(address_, port_):
 	Channel
     	A gRPC channel to the specified gRPC server
 	"""
-	print "Warning: Making an insecure gRPC channel"
+	print("Warning: Making an insecure gRPC channel")
 	return grpc.insecure_channel(address_+":"+port_)
 
 def make_est_task(text_, budget_, image_url_=None, img_alt_txt_ = None, title_ = None, confidence_ = None, confidence_int_ = None,
