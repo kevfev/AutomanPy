@@ -24,7 +24,7 @@ estimate of a single real value.
 	* 'fatal' 	- fatal messages only (default)
 
 ##### *Returns*: `automanpy.automan.Automan`
-#### Functions
+#### Automan Functions
 ##### Automan.estimate
 ```
 Automan.estimate(self, text, budget, image_url ="", title = "", confidence = 0.95, confidence_int = -1, 
@@ -144,35 +144,13 @@ For `OverBudget` outcomes:
 * **need** 	- the amount needed for AutoMan to continue attempting to obtain an estimate
 * **have** 	- the current amount budgeted for the task  
 
-#### EstimateOutcome.isConfident()
-##### *Description* : 
-Indicates if the outcome of the task is a confident estimate  
-##### *Returns* : `boolean` - True if the outcome met the desired confidence level and interval, False otherwise  
- 
+##### *Functions - see outcome class above*
+#### EstimateOutcome.isConfident() 
 #### EstimateOutcome.isLowConfidence()
-##### *Description* : 
-Indicates if the outcome of the task is a low confidence estimate  
-##### *Returns* : `boolean` - True if the outcome was a low confidence estimate, False otherwise  
- 
 #### EstimateOutcome.isOverBudget()
-##### *Description* : 
-Indicates if the outcome of the task is over budget or not  
-##### *Returns* : `boolean` - True if the outcome was over budget, False otherwise  
-
 #### EstimateOutcome.printOutcome()
-##### *Description* : 
-Prints the outcome of the estimate to stdout
-##### *Returns* : `None` 
-
 #### EstimateOutcome.isDone()
-##### *Description* : 
-Indicates if the call for this task has completed or not. This call does not block 
-##### *Returns* : `boolean` - True if the estimate has returned (either "CONFIDENT", "LOW_CONFIDENCE", or "OVERBUDGET")
-
 #### EstimateOutcome.done()
-##### *Description* : 
-This function waits for the function call for this task to complete (waits for future to resolve). This call blocks.
-##### *Returns* : `None`
 
 ### RadioOutcome Class
 ##### *Description* : 
@@ -188,32 +166,10 @@ For `OverBudget` outcomes:
 * **need** 	- the amount needed for AutoMan to continue attempting to obtain an estimate
 * **have** 	- the current amount budgeted for the task  
 
+##### *Functions - see outcome class above* 
 #### RadioOutcome.isConfident()
-##### *Description* : 
-Indicates if the outcome of the task is a confident estimate  
-##### *Returns* : `boolean` - True if the outcome met the desired confidence level and interval, False otherwise  
- 
 #### RadioOutcome.isLowConfidence()
-##### *Description* : 
-Indicates if the outcome of the task is a low confidence estimate  
-##### *Returns* : `boolean` - True if the outcome was a low confidence answer, False otherwise  
- 
 #### RadioOutcome.isOverBudget()
-##### *Description* : 
-Indicates if the outcome of the task is over budget or not  
-##### *Returns* : `boolean` - True if the outcome was over budget, False otherwise  
-
 #### RadioOutcome.printOutcome()
-##### *Description* : 
-Prints the answer to stdout
-##### *Returns* : `None` 
-
 #### RadioOutcome.isDone()
-##### *Description* : 
-Indicates if the call for this task has completed or not. This call does not block 
-##### *Returns* : `boolean` - True if the estimate has returned (either "CONFIDENT", "LOW_CONFIDENCE", or "OVERBUDGET")
-
 #### RadioOutcome.done()
-##### *Description* : 
-This function waits for the function call for this task to complete (waits for future to resolve). This call blocks.
-##### *Returns* : `None`

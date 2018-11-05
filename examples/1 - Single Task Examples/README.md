@@ -53,4 +53,4 @@ Outcome: Low Confidence Estimate
 Estimate low: 62.000000 high:62.000000 est:62.000000
 ```
 
-For a more detailed example see:
+For a more detailed example see the above example folders.
