@@ -1,4 +1,4 @@
-from automanpy.automan import Automan, EstimateOutcome
+from automanpy.automan import Automan, RadioOutcome
 
 # make mechanical turk adapter
 # sandbox_mode is boolean, if true, will post tasks to MTurk developer sandbox
@@ -11,6 +11,11 @@ adapter = {
 
 # image to submit with our task
 photo_url = "https://docs.google.com/uc?id=1kpw8sjiZtJwRlVJ3_tYBo26ZcqAeVb5c"
+instructions_text = "Choose the matching image "
+titl = "Image match"
+
+#options dictionary, where the choice tuple is a 2-tuple (string,string), which is (choice, url)
+opts = dict(choice1=('a',night1),choice2=('b',night2), choice3=('c',night3),choice4=('d',demo_url))
 
 # make AutoMan object 
 # 'suppress_output' sets the how much output from the RPC server to print to stdout. current valid values are
@@ -26,28 +31,22 @@ photo_url = "https://docs.google.com/uc?id=1kpw8sjiZtJwRlVJ3_tYBo26ZcqAeVb5c"
 # the loglevel is currently set to 'warn', so you will see output from the RPC-Server/Worker-Thread
 a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none", loglevel='warn')
 
-estim = a.estimate(text = "How many cars are in this parking lot?",
+estim = a.radio(text = instructions_text,
 	budget = 1.50,
-	title = "Car Counting",
-	confidence = 0.9,
-	question_timeout_multiplier = 5,# uncomment to set question to timeout on mturk,
-	initial_worker_timeout_in_s = 30,
+	title = titl,
+	options = opts,
+	question_timeout_multiplier = 5,
+	initial_worker_timeout_in_s = 60,
 	image_url = photo_url)
 
-# NOTE: question_timeout_multiplier (default 500) and initial_worker_timeout_in_s (default = 30)  combine to give 
-# tme question will live on on time, given by question_timeout_multiplier * initial_worker_timeout_in_s
-# in this example, the question will be available on mturk for 150 seconds, after which it will expire.
-# when it expires, automan will attempt to repost the task at double the time and double the reward 
-# until budget is exhausted.
-
 if(estim.isConfident()):
-	print("Outcome: Estimate")
-	print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
+	print("Outcome: Confident Answer")
+	print("Answer %s "%(estim.answer))
 
 
 if(estim.isLowConfidence()):
-	print("Outcome: Low Confidence Estimate")
-	print("Estimate low: %f high:%f est:%f "%(estim.low, estim.high, estim.est))
+	print("Outcome: Low Confidence Answer")
+	print("Answer %s "%(estim.answer))
 
 if(estim.isOverBudget()):
 	print("Outcome: Over Budget")

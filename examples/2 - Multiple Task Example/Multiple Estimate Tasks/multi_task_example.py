@@ -30,8 +30,7 @@ a = Automan(adapter, server_addr='localhost',port=50051,suppress_output="none", 
 
 # spawns 'spawn' number of dummy tasks of same image. Note: each task must have unique text and title for automan to post HIT correctly
 task_list = list()
-spawn = 3
-for i in range(spawn):
+for i in range(len(images)):
 	task_list.append(a.estimate(text = "task-%d :Count the number of vehicles in this parking lot"%(i),
 							    budget = 1.50,
 							    title = "Car Counting-v2-%d"%(i),
@@ -47,4 +46,3 @@ for task in task_list:
 
 for task in task_list:
 	task.printOutcome()
-

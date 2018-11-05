@@ -449,7 +449,7 @@ class Automan():
 	def radio(self, text=None, budget=None, options=None, confidence = 0.95, dont_reject = True, dry_run = False,initial_worker_timeout_in_s = 30, 
 				img_alt_txt = "",image_url="", pay_all_on_failure = True, question_timeout_multiplier = 500, title = "",wage = 11.00):
 		"""
-		Estimates the answer to the provided task. Calls AutoMan's estimate functionality on the back-end
+		Estimates the answer to the provided radio task. Calls AutoMan's radio functionality on the back-end
 
 		Parameters
 		----------
