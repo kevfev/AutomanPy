@@ -1,12 +1,13 @@
-from automanpy.core.automanlib_rpc_pb2 import *
-from automanpy.core.grpc_classes.automanlib_classes_pb2 import *
-import automanpy.core.automanlib_rpc_pb2_grpc as rpclib
-from automanpy.core.pyautomanexceptions import *
-import grpc
 from os import path, devnull
 from time import sleep
 from subprocess import Popen
 
+from automanpy.core.automanlib_rpc_pb2 import *
+from automanpy.core.grpc_classes.automanlib_classes_pb2 import *
+import automanpy.core.automanlib_rpc_pb2_grpc as rpclib
+from automanpy.core.pyautomanexceptions import *
+
+import grpc
 
 def isGoodAadapter(adapter):
 	"""

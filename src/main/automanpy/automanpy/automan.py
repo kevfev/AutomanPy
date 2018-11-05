@@ -1,14 +1,15 @@
+import sys
+import atexit
+from time import sleep
+
 from automanpy.core.automanlib import make_adapter,start_rpc_server, shutdown_rpc_server, get_server_status, register_adapter_to_server,shutdown_rpc_server,make_channel,make_est_task, make_rad_task, submit_task
 from automanpy.core.batchjob import Batch 
 from automanpy.core.outcomes import EstimateOutcome, RadioOutcome
 from automanpy.core.automanlib_rpc_pb2 import TaskResponse, ServerStatusResponse
 from automanpy.core.grpc_classes.automanlib_classes_pb2 import SymmetricConInt, AsymmetricConInt, UnconstrainedConInt, Task
 from automanpy.core.pyautomanexceptions import ArgumentError, UnsupportedServerError, AdapterError, RPCServerError
-from time import sleep
-import sys
-import grpc
-import atexit
 
+import grpc
 
 class ConfidenceInterval():
 	"""
